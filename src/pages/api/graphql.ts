@@ -3,6 +3,8 @@ import { ApolloServer } from "apollo-server-micro";
 import Cors from "micro-cors";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "../../resolvers/User";
+import { PostResolver } from "../../resolvers/Post";
+import { TagResolver } from "../../resolvers/Tag";
 
 const cors = Cors();
 
@@ -16,7 +18,9 @@ export default cors(async function handler(req, res) {
 
   if (!server) {
     server = new ApolloServer({
-      schema: await buildSchema({ resolvers: [UserResolver] }),
+      schema: await buildSchema({
+        resolvers: [UserResolver, PostResolver, TagResolver],
+      }),
     });
     await server.start();
   }

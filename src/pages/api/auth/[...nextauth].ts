@@ -50,5 +50,21 @@ export default NextAuth({
 
       return true;
     },
+    async session({ session, token }) {
+      if (!session?.user || !token) {
+        return session;
+      }
+      console.log("SESSION", session, token);
+      if (session.user.email) {
+        const user = await dataSource
+          .getRepository(User)
+          .findOne({ where: { email: session.user.email } });
+        if (user) {
+          session.user.id = user.id;
+        }
+      }
+      console.log(session);
+      return session;
+    },
   },
 });
