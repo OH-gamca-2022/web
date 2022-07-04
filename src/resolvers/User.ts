@@ -6,8 +6,6 @@ import { Tag } from "../entities/Tag";
 import { User } from "../entities/User";
 import { MyContext } from "../types/MyContext";
 
-const dataSource = getDataSource();
-
 @Resolver()
 export class UserResolver {
   @Query(() => Boolean)
@@ -16,12 +14,14 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  getAllUsers() {
+  async getAllUsers() {
+    const dataSource = await getDataSource();
     return dataSource.getRepository(User).find();
   }
 
   @Mutation(() => Post)
   async createPost(): Promise<Post> {
+    const dataSource = await getDataSource();
     console.log("Create post");
     const tag = await dataSource
       .getRepository(Tag)

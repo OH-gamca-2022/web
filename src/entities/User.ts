@@ -1,12 +1,18 @@
+import { type } from "os";
 import { Field, ObjectType } from "type-graphql";
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { Post } from "./Post";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+export enum ROLES {
+  ADMIN = "ADMIN",
+  EDITOR = "EDITOR",
+  USER = "USER",
+}
+
+export const ROLE_LEVELS = {
+  ADMIN: 2,
+  EDITOR: 1,
+  USER: 0,
+};
 
 @Entity()
 @ObjectType()
@@ -27,7 +33,10 @@ export class User extends BaseEntity {
   @Field()
   name!: string;
 
-  // @Field(() => [Post], { nullable: true })
-  // @OneToMany(() => Post, (post) => post.user, { nullable: true })
-  // posts?: Post[];
+  @Column({
+    enum: ROLES,
+    default: ROLES.USER,
+  })
+  @Field(() => String)
+  role!: ROLES;
 }

@@ -4,12 +4,15 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { useGetPublishedPostsQuery } from "../generated/graphql";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
+  const [{ data, fetching }] = useGetPublishedPostsQuery();
 
   useEffect(() => {
     console.log(session);
+    console.log(data);
   });
 
   return (
@@ -21,6 +24,7 @@ const Home: NextPage = () => {
       >
         Sign in with Microsoft
       </a>
+      <text>{JSON.stringify(data?.getPublishedPosts)}</text>
     </div>
   );
 };

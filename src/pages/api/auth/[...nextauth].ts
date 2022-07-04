@@ -4,8 +4,6 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 import { getDataSource } from "../../../../lib/TypeORM";
 import { User } from "../../../entities/User";
 
-const dataSource = getDataSource();
-
 export default NextAuth({
   providers: [
     AzureADProvider({
@@ -17,6 +15,7 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
+      const dataSource = await getDataSource();
       //console.log(account, profile, credentials);
       if (user.email && user.name) {
         const existingUser = await dataSource.getRepository(User).findOne({
@@ -51,19 +50,21 @@ export default NextAuth({
       return true;
     },
     async session({ session, token }) {
+      const dataSource = await getDataSource();
       if (!session?.user || !token) {
         return session;
       }
-      console.log("SESSION", session, token);
+      //console.log("SESSION", session, token);
       if (session.user.email) {
         const user = await dataSource
           .getRepository(User)
           .findOne({ where: { email: session.user.email } });
         if (user) {
           session.user.id = user.id;
+          session.user.role = user.role;
         }
       }
-      console.log(session);
+      //console.log(session);
       return session;
     },
   },

@@ -1,15 +1,13 @@
 import { DataSource } from "typeorm";
-import { Category } from "../src/entities/Category";
-import { Discipline } from "../src/entities/Discipline";
 import { Post } from "../src/entities/Post";
 import { Tag } from "../src/entities/Tag";
 import { User } from "../src/entities/User";
 
 let mainDataSource: DataSource;
-export const getDataSource = () => {
+export const getDataSource = async () => {
   if (mainDataSource) {
     if (!mainDataSource.isInitialized) {
-      mainDataSource.initialize();
+      await mainDataSource.initialize();
     }
     return mainDataSource;
   } else {
@@ -19,7 +17,7 @@ export const getDataSource = () => {
       entities: [User, Post, Tag],
       synchronize: true,
     });
-    mainDataSource
+    await mainDataSource
       .initialize()
       .then(() => {
         console.log("Data Source has been initialized");

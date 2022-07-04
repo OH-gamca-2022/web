@@ -21,7 +21,9 @@ export default cors(async function handler(req, res) {
       schema: await buildSchema({
         resolvers: [UserResolver, PostResolver, TagResolver],
       }),
+      context: ({ req, res }) => ({ req, res }),
     });
+
     await server.start();
   }
 

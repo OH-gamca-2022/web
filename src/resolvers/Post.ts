@@ -1,17 +1,31 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+  UseMiddleware,
+} from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Post } from "../entities/Post";
 import { Tag } from "../entities/Tag";
+import { ROLES } from "../entities/User";
+import { requirePersmission } from "../middleware/requirePermission";
 
-const dataSource = getDataSource();
-
-@Resolver()
+@Resolver(Post)
 export class PostResolver {
+  @FieldResolver(() => String)
+  textSnippet(@Root() root: Post) {
+    return root.text.slice(0, 150);
+  }
+
   @Query(() => [Post])
-  getPosts(
+  async getPosts(
     @Arg("page", { nullable: true }) page: number,
     @Arg("limit", { nullable: true }) limit: number
   ): Promise<Post[]> {
+    const dataSource = await getDataSource();
     return dataSource
       .getRepository(Post)
       .createQueryBuilder("post")
@@ -22,10 +36,12 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
+  @UseMiddleware(requirePersmission(ROLES.ADMIN))
   async getPublishedPosts(
     @Arg("page", { nullable: true }) page: number,
     @Arg("limit", { nullable: true }) limit: number
   ) {
+    const dataSource = await getDataSource();
     const posts = await dataSource
       .getRepository(Post)
       .createQueryBuilder("post")
@@ -44,6 +60,7 @@ export class PostResolver {
     @Arg("tagIds", () => [String], { nullable: true }) tagIds: string[],
     @Arg("id", { nullable: true }) id?: string
   ): Promise<Post> {
+    const dataSource = await getDataSource();
     let post;
     if (id) {
       post = await dataSource.getRepository(Post).findOne({ where: { id } });
@@ -77,6 +94,7 @@ export class PostResolver {
 
   @Mutation(() => Boolean)
   async deleteAllPosts() {
+    const dataSource = await getDataSource();
     const posts = await dataSource.getRepository(Post).find();
     await dataSource.getRepository(Post).remove(posts);
     return true;
