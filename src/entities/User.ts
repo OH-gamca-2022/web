@@ -1,18 +1,7 @@
 import { type } from "os";
 import { Field, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-export enum ROLES {
-  ADMIN = "ADMIN",
-  EDITOR = "EDITOR",
-  USER = "USER",
-}
-
-export const ROLE_LEVELS = {
-  ADMIN: 2,
-  EDITOR: 1,
-  USER: 0,
-};
+import { ROLES } from "../types/roles";
 
 @Entity()
 @ObjectType()
@@ -34,6 +23,7 @@ export class User extends BaseEntity {
   name!: string;
 
   @Column({
+    type: "varchar",
     enum: ROLES,
     default: ROLES.USER,
   })

@@ -1,0 +1,19 @@
+mutation SavePost(
+  $title: String!
+  $subtitle: String
+  $text: String
+  $published: Boolean!
+  $tagIds: [String!]
+  $id: String
+) {
+  savePost(
+    title: $title
+    text: $text
+    tagIds: $tagIds
+    published: $published
+    subtitle: $subtitle
+    id: $id
+  ) {
+    ...Post
+  }
+}

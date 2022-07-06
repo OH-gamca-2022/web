@@ -10,8 +10,8 @@ import {
 import { getDataSource } from "../../lib/TypeORM";
 import { Post } from "../entities/Post";
 import { Tag } from "../entities/Tag";
-import { ROLES } from "../entities/User";
 import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 
 @Resolver(Post)
 export class PostResolver {
@@ -21,6 +21,7 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async getPosts(
     @Arg("page", { nullable: true }) page: number,
     @Arg("limit", { nullable: true }) limit: number
@@ -35,8 +36,15 @@ export class PostResolver {
       .getMany();
   }
 
+  @Query(() => Post)
+  async getPost(@Arg("id") id: string) {
+    const dataSource = await getDataSource();
+    return dataSource
+      .getRepository(Post)
+      .findOne({ where: { id }, relations: { tags: true } });
+  }
+
   @Query(() => [Post])
-  @UseMiddleware(requirePersmission(ROLES.ADMIN))
   async getPublishedPosts(
     @Arg("page", { nullable: true }) page: number,
     @Arg("limit", { nullable: true }) limit: number
@@ -55,10 +63,11 @@ export class PostResolver {
   @Mutation(() => Post)
   async savePost(
     @Arg("title") title: string,
-    @Arg("text") text: string,
     @Arg("published") published: boolean,
     @Arg("tagIds", () => [String], { nullable: true }) tagIds: string[],
-    @Arg("id", { nullable: true }) id?: string
+    @Arg("id", { nullable: true }) id?: string,
+    @Arg("subtitle", { nullable: true }) subtitle?: string,
+    @Arg("text", { nullable: true }) text?: string
   ): Promise<Post> {
     const dataSource = await getDataSource();
     let post;
@@ -71,25 +80,43 @@ export class PostResolver {
         .create({ title, text })
         .save();
     }
-    const tags = await dataSource
-      .createQueryBuilder(Tag, "tag")
-      .where("tag.id IN (:...ids)", { ids: tagIds })
-      .getMany();
-    console.log(tags);
-    post.tags = tags;
+    console.log(tagIds);
+    if (tagIds) {
+      const tags = await dataSource
+        .createQueryBuilder(Tag, "tag")
+        .where("tag.id IN (:...ids)", { ids: tagIds })
+        .getMany();
+      console.log(tags);
+      post.tags = tags;
+    }
 
     if (!post.published && published) {
       post.publishDate = new Date();
     }
     post.published = published;
-    post.text = text;
+    if (text) {
+      post.text = text;
+    }
     post.title = title;
-
+    post.subtitle = subtitle;
+    console.log(post);
     await dataSource.getRepository(Post).save(post);
-    console.log(
-      await dataSource.getRepository(Post).find({ relations: { tags: true } })
-    );
+    console.log(post);
     return post;
+  }
+
+  @Mutation(() => Boolean)
+  async deletePost(@Arg("id") id: string) {
+    const dataSource = await getDataSource();
+    const post = await dataSource
+      .getRepository(Post)
+      .findOne({ where: { id } });
+    if (!post) {
+      return false;
+    }
+    await dataSource.getRepository(Post).remove(post);
+    console.log(await dataSource.getRepository(Post).find());
+    return true;
   }
 
   @Mutation(() => Boolean)

@@ -1,7 +1,7 @@
 import { getSession } from "next-auth/react";
 import { MiddlewareFn } from "type-graphql";
-import { ROLES, ROLE_LEVELS } from "../entities/User";
 import { MyContext } from "../types/MyContext";
+import { ROLES, ROLE_LEVELS } from "../types/roles";
 
 export function requirePersmission(required: ROLES): MiddlewareFn<MyContext> {
   return async ({ context }, next) => {

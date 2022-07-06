@@ -5,6 +5,10 @@ import styles from "../styles/Home.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useGetPublishedPostsQuery } from "../generated/graphql";
+import { NavBar } from "../components/NavBar";
+import { Layout } from "../components/Layout";
+import { Post } from "../components/Post";
+import { Stack } from "@chakra-ui/react";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -16,16 +20,13 @@ const Home: NextPage = () => {
   });
 
   return (
-    <div className={styles.container}>
-      <a
-        onClick={() => {
-          signIn("azure-ad");
-        }}
-      >
-        Sign in with Microsoft
-      </a>
-      <text>{JSON.stringify(data?.getPublishedPosts)}</text>
-    </div>
+    <Layout>
+      <Stack>
+        {data?.getPublishedPosts.map((post, index) => (
+          <Post post={post} />
+        ))}
+      </Stack>
+    </Layout>
   );
 };
 

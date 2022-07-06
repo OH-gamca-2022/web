@@ -1,0 +1,5 @@
+query getPosts($limit: Float, $page: Float) {
+  getPosts(limit: $limit, page: $page) {
+    ...PostSnippet
+  }
+}
