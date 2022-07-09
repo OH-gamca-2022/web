@@ -1,7 +1,10 @@
 import {
+  Field,
   Arg,
   FieldResolver,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   Root,
@@ -13,6 +16,14 @@ import { Tag } from "../entities/Tag";
 import { requirePersmission } from "../middleware/requirePermission";
 import { ROLES } from "../types/roles";
 
+@ObjectType()
+class PaginatedPosts {
+  @Field(() => [Post])
+  posts!: Post[];
+
+  @Field(() => Int)
+  numOfPages!: number;
+}
 @Resolver(Post)
 export class PostResolver {
   @FieldResolver(() => String)
@@ -44,20 +55,31 @@ export class PostResolver {
       .findOne({ where: { id }, relations: { tags: true } });
   }
 
-  @Query(() => [Post])
+  @Query(() => PaginatedPosts)
   async getPublishedPosts(
     @Arg("page", { nullable: true }) page: number,
     @Arg("limit", { nullable: true }) limit: number
-  ) {
+  ): Promise<PaginatedPosts> {
     const dataSource = await getDataSource();
     const posts = await dataSource
       .getRepository(Post)
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.tags", "tag")
-      .skip(limit && page ? limit * page : 0)
-      .take(limit ? limit : 50)
       .getMany();
-    return posts.filter((post) => post.published == true);
+
+    console.log(page);
+
+    const numOfPages = limit ? Math.ceil(posts.length / limit) : 1;
+
+    const startIndex = limit && page ? limit * page : 0;
+    const realLimit = limit ? limit : 50;
+
+    const paginatedPosts = posts.slice(startIndex, startIndex + realLimit);
+
+    return {
+      posts: paginatedPosts.filter((post) => post.published == true),
+      numOfPages,
+    };
   }
 
   @Mutation(() => Post)

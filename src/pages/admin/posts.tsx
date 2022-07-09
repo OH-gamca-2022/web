@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Link,
   Stack,
@@ -55,12 +56,14 @@ const AdminPosts: NextPage = () => {
                 </NextLink>
               </Th>
               <Th>{post.subtitle}</Th>
-              <Th>
-                {post.tags?.map((tag, index) => (
-                  <Button key={index} size={"sm"}>
-                    {tag.name}
-                  </Button>
-                ))}
+              <Th overflow={"scroll"}>
+                <HStack>
+                  {post.tags?.map((tag, index) => (
+                    <Button key={index} size={"sm"}>
+                      {tag.name}
+                    </Button>
+                  ))}
+                </HStack>
               </Th>
               <Th>
                 {post.publishDate

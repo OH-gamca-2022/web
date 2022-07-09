@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { PostSnippetFragment } from "../generated/graphql";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
@@ -19,17 +19,19 @@ export const Post: React.FC<PostProps> = ({ post }) => {
       flexDirection={"column"}
     >
       <Heading>{post.title}</Heading>
-      <Text pb={3}>{post.textSnippet}</Text>
+      <Text pb={3}>{post.subtitle}</Text>
       <Flex
         flexDirection="row"
         justifyContent={"space-between"}
         alignItems="center"
       >
-        <Flex>
-          {post.tags?.map((tag) => (
-            <Button size={"sm"}>{tag.name}</Button>
+        <HStack>
+          {post.tags?.map((tag, index) => (
+            <Button key={index} size={"sm"}>
+              {tag.name}
+            </Button>
           ))}
-        </Flex>
+        </HStack>
         <Text>{dateToString(new Date(post.publishDate), false)}</Text>
       </Flex>
     </Flex>

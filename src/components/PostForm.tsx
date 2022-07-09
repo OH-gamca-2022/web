@@ -20,11 +20,14 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
   const [publish, setPublish] = useState(false);
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       setPublish(data?.getPost.published);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log("update", id, data, fetching);
+  });
 
   if (fetching) {
     return <Heading>Loading...</Heading>;
@@ -40,9 +43,10 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
         title: data?.getPost.title || "",
         subtitle: data?.getPost.subtitle || "",
         text: data?.getPost.text || "",
+        tags: data?.getPost.tags || [],
       }}
       onSubmit={async (values) => {
-        const tagIds = data?.getPost.tags?.map((tag) => tag.id);
+        const tagIds = values.tags.map((tag) => tag.id);
         console.log("tagIds", tagIds);
         const result = await savePost({
           ...values,

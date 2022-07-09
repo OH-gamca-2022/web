@@ -52,6 +52,12 @@ export type MutationSavePostArgs = {
   title: Scalars['String'];
 };
 
+export type PaginatedPosts = {
+  __typename?: 'PaginatedPosts';
+  numOfPages: Scalars['Int'];
+  posts: Array<Post>;
+};
+
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
@@ -72,7 +78,7 @@ export type Query = {
   getAllUsers: Array<User>;
   getPost: Post;
   getPosts: Array<Post>;
-  getPublishedPosts: Array<Post>;
+  getPublishedPosts: PaginatedPosts;
   getTags: Array<Tag>;
   hello: Scalars['Boolean'];
 };
@@ -116,6 +122,13 @@ export type PostSnippetFragment = { __typename?: 'Post', id: string, createdAt: 
 
 export type TagFragment = { __typename?: 'Tag', name: string, id: string };
 
+export type CreateTagMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', name: string, id: string } };
+
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -156,7 +169,7 @@ export type GetPublishedPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPublishedPostsQuery = { __typename?: 'Query', getPublishedPosts: Array<{ __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null }> };
+export type GetPublishedPostsQuery = { __typename?: 'Query', getPublishedPosts: { __typename?: 'PaginatedPosts', numOfPages: number, posts: Array<{ __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null }> } };
 
 export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -198,6 +211,17 @@ export const PostSnippetFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
+export const CreateTagDocument = gql`
+    mutation CreateTag($name: String!) {
+  createTag(name: $name) {
+    ...Tag
+  }
+}
+    ${TagFragmentDoc}`;
+
+export function useCreateTagMutation() {
+  return Urql.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument);
+};
 export const DeletePostDocument = gql`
     mutation DeletePost($id: String!) {
   deletePost(id: $id)
@@ -250,7 +274,10 @@ export function useGetPostsQuery(options?: Omit<Urql.UseQueryArgs<GetPostsQueryV
 export const GetPublishedPostsDocument = gql`
     query GetPublishedPosts($limit: Float, $page: Float) {
   getPublishedPosts(limit: $limit, page: $page) {
-    ...PostSnippet
+    numOfPages
+    posts {
+      ...PostSnippet
+    }
   }
 }
     ${PostSnippetFragmentDoc}`;

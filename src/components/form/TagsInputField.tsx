@@ -6,7 +6,7 @@ import {
 import { Flex, HStack, IconButton, Stack, Text } from "@chakra-ui/react";
 import { useField } from "formik";
 import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TagFragment, useGetTagsQuery } from "../../generated/graphql";
 import { AddIcon, CloseIcon, Icon } from "@chakra-ui/icons";
 import { AddTagsPopover } from "../AddTagsPopover";
@@ -26,18 +26,31 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
   ...props
 }) => {
   const [field, meta, helpers] = useField(name);
-  const [{ data, fetching }] = useGetTagsQuery();
   const [selectedTags, setSelectedTags] = useState<TagFragment[]>([]);
-  const onChange = useCallback((value: string) => {
+  const onChange = useCallback((value: TagFragment[]) => {
+    console.log("onchange");
+    setSelectedTags(value);
     helpers.setValue(value);
   }, []);
+
+  useEffect(() => {
+    setSelectedTags(field.value);
+  }, [field]);
+
+  useEffect(() => {
+    console.log("tagfield", field.value);
+  });
 
   return (
     <FormControl isInvalid={!!meta.error}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <HStack>
-        {selectedTags.map((tag) => (
+        <AddTagsPopover setSelectedTags={onChange} selectedTags={selectedTags}>
+          <IconButton icon={<AddIcon />} aria-label="add tags" size="sm" />
+        </AddTagsPopover>
+        {selectedTags.map((tag, index) => (
           <Flex
+            key={index}
             justifyContent="flex-start"
             bg={"gray.100"}
             borderRadius={5}
@@ -48,7 +61,7 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
             <Text mr={2}>{tag.name}</Text>
             <IconButton
               onClick={() => {
-                setSelectedTags(
+                onChange(
                   selectedTags.filter((item, index) => item.id !== tag.id)
                 );
               }}
@@ -59,12 +72,6 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
             />
           </Flex>
         ))}
-        <AddTagsPopover
-          setSelectedTags={setSelectedTags}
-          selectedTags={selectedTags}
-        >
-          <IconButton icon={<AddIcon />} aria-label="add tags" size="sm" />
-        </AddTagsPopover>
       </HStack>
       {meta.error ? <FormErrorMessage>{meta.error}</FormErrorMessage> : null}
     </FormControl>

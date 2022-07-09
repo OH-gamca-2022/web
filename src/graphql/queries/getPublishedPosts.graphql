@@ -1,5 +1,8 @@
 query GetPublishedPosts($limit: Float, $page: Float) {
   getPublishedPosts(limit: $limit, page: $page) {
-    ...PostSnippet
+    numOfPages
+    posts {
+      ...PostSnippet
+    }
   }
 }

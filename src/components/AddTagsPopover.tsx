@@ -1,3 +1,4 @@
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Popover,
   PopoverTrigger,
@@ -13,8 +14,16 @@ import {
   Text,
   Flex,
   Checkbox,
+  IconButton,
+  VStack,
+  Input,
 } from "@chakra-ui/react";
-import { TagFragment, useGetTagsQuery } from "../generated/graphql";
+import { useEffect, useState } from "react";
+import {
+  TagFragment,
+  useCreateTagMutation,
+  useGetTagsQuery,
+} from "../generated/graphql";
 
 interface AddTagsPopoverProps {
   children: React.ReactNode;
@@ -28,6 +37,40 @@ export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
   selectedTags,
 }) => {
   const [{ data, fetching }] = useGetTagsQuery();
+  const [filteredTags, setFilteredTags] = useState<TagFragment[]>([]);
+  const [, createTag] = useCreateTagMutation();
+  const [newTagName, setNewTagName] = useState("");
+
+  const filterTags = (search: string) => {
+    if (data?.getTags) {
+      setFilteredTags(
+        data.getTags.filter((tag) => {
+          if (search == "") {
+            return tag;
+          }
+          return tag.name
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase());
+        })
+      );
+    }
+  };
+
+  const checkIfChecked = (tag: TagFragment) => {
+    const isChecked = selectedTags.some((item, index) => {
+      return item.id === tag.id;
+    });
+    console.log("checkChecked", tag, selectedTags, isChecked);
+    return isChecked;
+  };
+
+  useEffect(() => {
+    console.log("popover", selectedTags);
+    if (data?.getTags) {
+      setFilteredTags(data.getTags);
+    }
+  }, [data]);
+
   return (
     <Popover>
       <PopoverTrigger>{children}</PopoverTrigger>
@@ -36,14 +79,21 @@ export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
           <PopoverArrow />
           <PopoverHeader>Tagy</PopoverHeader>
           <PopoverCloseButton />
-          <PopoverBody>
+          <PopoverBody overflow="scroll" maxH={300}>
             {fetching ? (
               <Text>loading...</Text>
             ) : (
-              <HStack>
-                {data?.getTags.map((tag, index) => (
+              <VStack alignItems="flex-start">
+                <Input
+                  placeholder="Vyhladať"
+                  onChange={(e) => {
+                    filterTags(e.target.value);
+                  }}
+                />
+                {filteredTags.map((tag, index) => (
                   <Checkbox
-                    isChecked={selectedTags.includes(tag)}
+                    key={index}
+                    isChecked={checkIfChecked(tag)}
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedTags([...selectedTags, tag]);
@@ -59,10 +109,31 @@ export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
                     {tag.name}
                   </Checkbox>
                 ))}
-              </HStack>
+              </VStack>
             )}
           </PopoverBody>
-          <PopoverFooter>This is the footer</PopoverFooter>
+          <PopoverFooter>
+            <Flex alignItems="center">
+              <Input
+                variant="unstyled"
+                placeholder="Nový tag"
+                value={newTagName}
+                onChange={(e) => {
+                  setNewTagName(e.target.value);
+                }}
+              />
+              <IconButton
+                aria-label="add tag"
+                size="sm"
+                icon={<AddIcon />}
+                onClick={() => {
+                  createTag({ name: newTagName });
+                  setNewTagName("");
+                }}
+                mr={2}
+              />
+            </Flex>
+          </PopoverFooter>
         </PopoverContent>
       </Portal>
     </Popover>

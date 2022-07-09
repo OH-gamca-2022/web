@@ -12,7 +12,14 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "dayjs/locale/sk";
 import dayjs from "dayjs";
 import { cacheExchange, Cache } from "@urql/exchange-graphcache";
-import { DeletePostMutationVariables } from "../generated/graphql";
+import {
+  CreateTagMutation,
+  DeletePostMutationVariables,
+  GetTagsDocument,
+  GetTagsQuery,
+  TagFragment,
+  TagFragmentDoc,
+} from "../generated/graphql";
 
 dayjs.locale("sk");
 
@@ -40,6 +47,17 @@ const client = createClient({
           },
           savePost(_result, args, cache, info) {
             invalidateAllPosts(cache);
+          },
+          createTag(result: CreateTagMutation, args, cache, info) {
+            cache.updateQuery(
+              { query: GetTagsDocument },
+              (data: GetTagsQuery | null) => {
+                if (result.createTag) {
+                  data?.getTags.push(result.createTag);
+                }
+                return data;
+              }
+            );
           },
         },
       },

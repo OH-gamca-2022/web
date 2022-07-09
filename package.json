@@ -31,9 +31,11 @@
     "next-auth": "^4.5.0",
     "pg": "^8.7.3",
     "react": "18.1.0",
+    "react-data-table-component": "^7.5.2",
     "react-dom": "18.1.0",
     "react-simplemde-editor": "^5.0.2",
     "reflect-metadata": "^0.1.13",
+    "styled-components": "^5.3.5",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.3.6",
     "urql": "^2.2.2"

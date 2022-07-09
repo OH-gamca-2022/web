@@ -29,9 +29,6 @@ export const NavBar: React.FC = () => {
     ) : (
       <Button onClick={() => signIn("azure-ad")}>Prihlásiť sa</Button>
     );
-  useEffect(() => {
-    console.log(session);
-  });
   return (
     <Flex
       zIndex={2}
@@ -44,7 +41,7 @@ export const NavBar: React.FC = () => {
       {session.data?.user.role == "ADMIN" && <AdminBar />}
       <Flex
         bg="black"
-        p={4}
+        p={3}
         alignItems="center"
         justifyContent="center"
         flex={1}

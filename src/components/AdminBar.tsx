@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
+  HStack,
   Link,
   Menu,
   MenuButton,
@@ -13,17 +15,19 @@ import NextLink from "next/link";
 
 export const AdminBar = () => {
   return (
-    <Box
+    <HStack
       bg="white"
-      p={4}
+      p={2}
       alignItems="center"
-      justifyContent="center"
+      justifyContent="flex-start"
       w="100%"
-      pl={20}
     >
+      <Heading size="md" mr={5}>
+        Admin Panel
+      </Heading>
       <NextLink href={"/admin/posts"}>
         <Link>Posts</Link>
       </NextLink>
-    </Box>
+    </HStack>
   );
 };
