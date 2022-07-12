@@ -21,12 +21,16 @@ export const AdminBar = () => {
       alignItems="center"
       justifyContent="flex-start"
       w="100%"
+      spacing={6}
     >
-      <Heading size="md" mr={5}>
+      <Heading size="md" mr={2}>
         Admin Panel
       </Heading>
       <NextLink href={"/admin/posts"}>
-        <Link>Posts</Link>
+        <Link>Články</Link>
+      </NextLink>
+      <NextLink href={"/admin/disciplines"}>
+        <Link>Disciplíny</Link>
       </NextLink>
     </HStack>
   );

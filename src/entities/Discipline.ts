@@ -5,9 +5,12 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
+  Relation,
 } from "typeorm";
 import { Category } from "./Category";
+import { Post } from "./Post";
 
 @Entity()
 @ObjectType()
@@ -21,10 +24,14 @@ export class Discipline extends BaseEntity {
   name!: string;
 
   @ManyToOne(() => Category, (cat) => cat.disciplines)
-  @Field()
-  category!: Category;
+  @Field(() => Category)
+  category!: Relation<Category>;
 
   @Field()
   @Column()
   categoryId!: string;
+
+  @Field(() => [Post], { nullable: true })
+  @OneToMany(() => Post, (post) => post.discipline, { nullable: true })
+  posts?: Relation<Post>[];
 }

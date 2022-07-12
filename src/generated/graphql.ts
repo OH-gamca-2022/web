@@ -16,13 +16,33 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Category = {
+  __typename?: 'Category';
+  disciplines?: Maybe<Array<Discipline>>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type Discipline = {
+  __typename?: 'Discipline';
+  category: Category;
+  categoryId: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  posts?: Maybe<Array<Post>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   changeRoleOfMe: User;
+  createCategory: Category;
+  createDiscipline: Discipline;
   createPost: Post;
   createTag: Tag;
   deleteAllPosts: Scalars['Boolean'];
   deleteAllUsers: Scalars['Boolean'];
+  deleteCategory: Scalars['Boolean'];
+  deleteDiscipline: Scalars['Boolean'];
   deletePost: Scalars['Boolean'];
   savePost: Post;
 };
@@ -33,8 +53,29 @@ export type MutationChangeRoleOfMeArgs = {
 };
 
 
+export type MutationCreateCategoryArgs = {
+  name: Scalars['String'];
+};
+
+
+export type MutationCreateDisciplineArgs = {
+  categoryId: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
 export type MutationCreateTagArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteDisciplineArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -61,6 +102,7 @@ export type PaginatedPosts = {
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
+  discipline?: Maybe<Discipline>;
   id: Scalars['String'];
   publishDate?: Maybe<Scalars['DateTime']>;
   published: Scalars['Boolean'];
@@ -76,6 +118,8 @@ export type Query = {
   __typename?: 'Query';
   checkSession: Scalars['Boolean'];
   getAllUsers: Array<User>;
+  getCategories: Array<Category>;
+  getDisciplines: Array<Discipline>;
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
@@ -116,6 +160,10 @@ export type User = {
   role: Scalars['String'];
 };
 
+export type CategoryFragment = { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null };
+
+export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string };
+
 export type PostFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, text: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null };
 
 export type PostSnippetFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null };
@@ -148,6 +196,11 @@ export type SavePostMutationVariables = Exact<{
 
 export type SavePostMutation = { __typename?: 'Mutation', savePost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, text: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } };
 
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null }> };
+
 export type GetPostQueryVariables = Exact<{
   getPostId: Scalars['String'];
 }>;
@@ -176,6 +229,21 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', name: string, id: string }> };
 
+export const DisciplineFragmentDoc = gql`
+    fragment Discipline on Discipline {
+  id
+  name
+}
+    `;
+export const CategoryFragmentDoc = gql`
+    fragment Category on Category {
+  id
+  name
+  disciplines {
+    ...Discipline
+  }
+}
+    ${DisciplineFragmentDoc}`;
 export const TagFragmentDoc = gql`
     fragment Tag on Tag {
   name
@@ -248,6 +316,17 @@ export const SavePostDocument = gql`
 
 export function useSavePostMutation() {
   return Urql.useMutation<SavePostMutation, SavePostMutationVariables>(SavePostDocument);
+};
+export const GetCategoriesDocument = gql`
+    query GetCategories {
+  getCategories {
+    ...Category
+  }
+}
+    ${CategoryFragmentDoc}`;
+
+export function useGetCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetCategoriesQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCategoriesQuery>({ query: GetCategoriesDocument, ...options });
 };
 export const GetPostDocument = gql`
     query GetPost($getPostId: String!) {

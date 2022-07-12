@@ -5,6 +5,8 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "../../resolvers/User";
 import { PostResolver } from "../../resolvers/Post";
 import { TagResolver } from "../../resolvers/Tag";
+import { DisciplineResolver } from "../../resolvers/Discipline";
+import { CategoryResolver } from "../../resolvers/Category";
 
 const cors = Cors();
 
@@ -19,7 +21,13 @@ export default cors(async function handler(req, res) {
   if (!server) {
     server = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver, PostResolver, TagResolver],
+        resolvers: [
+          UserResolver,
+          PostResolver,
+          TagResolver,
+          DisciplineResolver,
+          CategoryResolver,
+        ],
       }),
       context: ({ req, res }) => ({ req, res }),
     });

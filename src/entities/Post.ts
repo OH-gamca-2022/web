@@ -8,8 +8,10 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
 } from "typeorm";
+import { Discipline } from "./Discipline";
 import { Tag } from "./Tag";
 import { User } from "./User";
 
@@ -38,7 +40,11 @@ export class Post extends BaseEntity {
     onDelete: "SET NULL",
   })
   @JoinTable()
-  tags?: Tag[];
+  tags?: Relation<Tag>[];
+
+  @Field(() => Discipline, { nullable: true })
+  @ManyToOne(() => Discipline, (disc) => disc.posts, { nullable: true })
+  discipline?: Relation<Discipline>;
 
   @Column({ default: false })
   @Field()

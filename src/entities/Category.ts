@@ -4,7 +4,9 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
+  Relation,
 } from "typeorm";
 import { Discipline } from "./Discipline";
 
@@ -19,7 +21,7 @@ export class Category extends BaseEntity {
   @Field()
   name!: string;
 
-  @ManyToOne(() => Discipline, (disc) => disc.category, { nullable: true })
+  @OneToMany(() => Discipline, (disc) => disc.category, { nullable: true })
   @Field(() => [Discipline], { nullable: true })
-  disciplines?: Discipline[];
+  disciplines?: Relation<Discipline>[];
 }

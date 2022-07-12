@@ -1,4 +1,6 @@
 import { DataSource } from "typeorm";
+import { Category } from "../src/entities/Category";
+import { Discipline } from "../src/entities/Discipline";
 import { Post } from "../src/entities/Post";
 import { Tag } from "../src/entities/Tag";
 import { User } from "../src/entities/User";
@@ -14,7 +16,7 @@ export const getDataSource = async () => {
     mainDataSource = new DataSource({
       type: "postgres",
       database: "OH-gamca-2022",
-      entities: [User, Post, Tag],
+      entities: [User, Post, Tag, Discipline, Category],
       synchronize: true,
     });
     await mainDataSource
