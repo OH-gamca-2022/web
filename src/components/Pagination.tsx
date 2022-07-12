@@ -29,10 +29,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onClick(0)}
       />
       <IconButton
-        aria-label="go to first page"
+        aria-label="go to next page"
         icon={<ChevronLeftIcon />}
         variant="outline"
-        onClick={() => onClick(Math.min(page - 1, 0))}
+        onClick={() => onClick(Math.max(page - 1, 0))}
       />
       {[...Array(count).keys()].map((number, index) => (
         <Button
@@ -44,10 +44,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         </Button>
       ))}
       <IconButton
-        aria-label="go to first page"
+        aria-label="go to previous page"
         icon={<ChevronRightIcon />}
         variant="outline"
-        onClick={() => onClick(Math.max(page + 1, count - 1))}
+        onClick={() => onClick(Math.min(page + 1, count - 1))}
       />
       <IconButton
         aria-label="go to first page"

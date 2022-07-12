@@ -1,8 +1,19 @@
-import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  LinkBox,
+  Text,
+  Link,
+} from "@chakra-ui/react";
 import { PostSnippetFragment } from "../generated/graphql";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import { dateToString } from "../utils/dateFormatter";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 interface PostProps {
   post: PostSnippetFragment;
@@ -18,7 +29,11 @@ export const Post: React.FC<PostProps> = ({ post }) => {
       borderWidth={1}
       flexDirection={"column"}
     >
-      <Heading>{post.title}</Heading>
+      <NextLink href={`/post/${post.id}`}>
+        <Link>
+          <Heading>{post.title}</Heading>
+        </Link>
+      </NextLink>
       <Text pb={3}>{post.subtitle}</Text>
       <Flex
         flexDirection="row"

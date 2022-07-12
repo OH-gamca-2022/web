@@ -6,6 +6,7 @@ import { InputField } from "./form/InputField";
 import { MDInputField } from "./form/MDInputField";
 import "easymde/dist/easymde.min.css";
 import { TagsInputField } from "./form/TagsInputField";
+import { useRouter } from "next/router";
 
 interface PostFormProps {
   id?: string;
@@ -18,6 +19,7 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
 
   const [, savePost] = useSavePostMutation();
   const [publish, setPublish] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (data) {
@@ -47,14 +49,15 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
       }}
       onSubmit={async (values) => {
         const tagIds = values.tags.map((tag) => tag.id);
-        console.log("tagIds", tagIds);
         const result = await savePost({
           ...values,
           published: publish,
           id: data?.getPost.id,
           tagIds,
         });
-        console.log(result);
+        if (!id) {
+          router.push(`/admin/post/${result.data?.savePost.id}`);
+        }
       }}
     >
       {({ isSubmitting }) => (

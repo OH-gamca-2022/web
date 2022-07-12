@@ -37,10 +37,6 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
     setSelectedTags(field.value);
   }, [field]);
 
-  useEffect(() => {
-    console.log("tagfield", field.value);
-  });
-
   return (
     <FormControl isInvalid={!!meta.error}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>

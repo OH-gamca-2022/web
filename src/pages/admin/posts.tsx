@@ -1,112 +1,120 @@
 import {
-  Button,
   Flex,
   Heading,
+  Button,
   HStack,
   IconButton,
   Link,
-  Stack,
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
 import { Layout } from "../../components/Layout";
 import {
-  useDeletePostMutation,
   useGetPostsQuery,
+  useDeletePostMutation,
   useSavePostMutation,
+  PostFragment,
 } from "../../generated/graphql";
-import { dateToString } from "../../utils/dateFormatter";
 import NextLink from "next/link";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { dateToString } from "../../utils/dateFormatter";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { DeletePostAlert } from "../../components/alerts/DeletePostAlert";
 
-const AdminPosts: NextPage = () => {
-  const [{ data: posts }] = useGetPostsQuery();
+const AdminPosts = () => {
+  const [{ data: posts, fetching }] = useGetPostsQuery();
   const [, deletePost] = useDeletePostMutation();
   const [{ fetching: publishFetching }, savePost] = useSavePostMutation();
+  const columns: TableColumn<PostFragment>[] = [
+    {
+      name: "Nadpis",
+      selector: (row) => row.title,
+      cell: (row) => (
+        <NextLink href={`/admin/post/${row.id}`}>
+          <Link>{row.title}</Link>
+        </NextLink>
+      ),
+    },
+    {
+      name: "Podnadpis",
+      selector: (row) => row.subtitle || "",
+      grow: 2,
+    },
+    {
+      name: "Tagy",
+      cell: (row, index, column, id) => (
+        <HStack overflow="scroll">
+          {row.tags?.map((tag, index) => (
+            <Button key={index} size={"sm"}>
+              {tag.name}
+            </Button>
+          ))}
+        </HStack>
+      ),
+      maxWidth: "500",
+      grow: 2,
+    },
+    {
+      name: "Dátum publikovania",
+      selector: (row) => row.publishDate,
+      format: (row) =>
+        row.publishDate ? dateToString(new Date(row.publishDate), false) : "",
+    },
+    {
+      name: "Publikované",
+      cell: (row) => (
+        <Button
+          size={"sm"}
+          isLoading={publishFetching}
+          onClick={() => {
+            savePost({
+              title: row.title,
+              subtitle: row.subtitle,
+              id: row.id,
+              published: row.published ? false : true,
+              tagIds: row.tags?.map((tag) => tag.id),
+            });
+          }}
+        >
+          {row.published ? "Publikované" : "Publikovať"}
+        </Button>
+      ),
+      center: true,
+    },
+    {
+      name: "Vymazať",
+      cell: (row) => (
+        <DeletePostAlert
+          onDelete={() => {
+            deletePost({ id: row.id });
+          }}
+        >
+          {(onOpen) => (
+            <IconButton
+              onClick={onOpen}
+              icon={<DeleteIcon color="red" />}
+              aria-label="Delete post"
+              variant="outline"
+              borderColor="red"
+            />
+          )}
+        </DeletePostAlert>
+      ),
+      center: true,
+    },
+  ];
+
+  if (fetching || !posts) {
+    return <Heading>Loading...</Heading>;
+  }
+
   return (
-    <Layout>
+    <Layout wide>
       <Flex mb={4} justifyContent="space-between" alignItems="center" px={4}>
         <Heading>Články</Heading>
         <NextLink href="/admin/post/create">
           <Button>Nový článok</Button>
         </NextLink>
       </Flex>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>Title</Th>
-            <Th>Podnadpis</Th>
-            <Th>Tags</Th>
-            <Th>Dátum publikovania</Th>
-            <Th>Publikované</Th>
-            <Th>Vymazať</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {posts?.getPosts.map((post, index) => (
-            <Tr key={index}>
-              <Th>
-                <NextLink href={`/admin/post/${post.id}`}>
-                  <Link>{post.title}</Link>
-                </NextLink>
-              </Th>
-              <Th>{post.subtitle}</Th>
-              <Th overflow={"scroll"}>
-                <HStack>
-                  {post.tags?.map((tag, index) => (
-                    <Button key={index} size={"sm"}>
-                      {tag.name}
-                    </Button>
-                  ))}
-                </HStack>
-              </Th>
-              <Th>
-                {post.publishDate
-                  ? dateToString(new Date(post.publishDate), false)
-                  : ""}
-              </Th>
-              <Th>
-                <Button
-                  isLoading={publishFetching}
-                  onClick={() => {
-                    savePost({
-                      title: post.title,
-                      subtitle: post.subtitle,
-                      id: post.id,
-                      published: post.published ? false : true,
-                      tagIds: post.tags?.map((tag) => tag.id),
-                    });
-                  }}
-                >
-                  {post.published ? "Publikované" : "Publikovať"}
-                </Button>
-              </Th>
-              <Th>
-                <DeletePostAlert
-                  onDelete={() => {
-                    deletePost({ id: post.id });
-                  }}
-                >
-                  {(onOpen) => (
-                    <IconButton
-                      onClick={onOpen}
-                      icon={<DeleteIcon color="red" />}
-                      aria-label="Delete post"
-                      variant="outline"
-                      borderColor="red"
-                    />
-                  )}
-                </DeletePostAlert>
-              </Th>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DataTable columns={columns} data={posts.getPosts as PostFragment[]} />
     </Layout>
   );
 };

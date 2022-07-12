@@ -26,9 +26,9 @@ dayjs.locale("sk");
 const invalidateAllPosts = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
   console.log(allFields);
-  const fieldInfos = allFields.filter((info) => info.fieldName == "posts");
+  const fieldInfos = allFields.filter((info) => info.fieldName == "getPosts");
   fieldInfos.forEach((fi) => {
-    cache.invalidate("Query", "posts", fi.arguments);
+    cache.invalidate("Query", "getPosts", fi.arguments);
   });
 };
 

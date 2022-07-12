@@ -15,15 +15,21 @@ import { useRouter } from "next/router";
 const Home: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [page, setPage] = useState(0);
   const [{ data, fetching, error }, fetchPosts] = useGetPublishedPostsQuery({
     variables: {
-      page:
-        router.query.page && typeof router.query.page == "string"
-          ? parseInt(router.query.page)
-          : null,
+      page: page,
+      limit: 3,
     },
   });
-  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    setPage(
+      router.query.page && typeof router.query.page == "string"
+        ? parseInt(router.query.page)
+        : 0
+    );
+  }, [router.query.page]);
 
   if (!data) {
     return <Heading>Loading...</Heading>;

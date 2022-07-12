@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   Field,
   Arg,
@@ -38,13 +39,16 @@ export class PostResolver {
     @Arg("limit", { nullable: true }) limit: number
   ): Promise<Post[]> {
     const dataSource = await getDataSource();
-    return dataSource
+    const posts = await dataSource
       .getRepository(Post)
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.tags", "tag")
       .skip(limit && page ? limit * page : 0)
       .take(limit ? limit : 50)
       .getMany();
+
+    posts.sort((a, b) => dayjs(b.createdAt).diff(a.createdAt));
+    return posts;
   }
 
   @Query(() => Post)
@@ -66,18 +70,22 @@ export class PostResolver {
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.tags", "tag")
       .getMany();
-
-    console.log(page);
-
-    const numOfPages = limit ? Math.ceil(posts.length / limit) : 1;
-
     const startIndex = limit && page ? limit * page : 0;
     const realLimit = limit ? limit : 50;
 
-    const paginatedPosts = posts.slice(startIndex, startIndex + realLimit);
+    const publishedPosts = posts.filter((post) => post.published == true);
+
+    const numOfPages = limit ? Math.ceil(publishedPosts.length / limit) : 1;
+
+    const paginatedPosts = publishedPosts.slice(
+      startIndex,
+      startIndex + realLimit
+    );
+
+    paginatedPosts.sort((a, b) => dayjs(b.publishDate).diff(a.publishDate));
 
     return {
-      posts: paginatedPosts.filter((post) => post.published == true),
+      posts: paginatedPosts,
       numOfPages,
     };
   }
@@ -103,7 +111,7 @@ export class PostResolver {
         .save();
     }
     console.log(tagIds);
-    if (tagIds) {
+    if (tagIds && tagIds.length > 0) {
       const tags = await dataSource
         .createQueryBuilder(Tag, "tag")
         .where("tag.id IN (:...ids)", { ids: tagIds })

@@ -60,7 +60,6 @@ export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
     const isChecked = selectedTags.some((item, index) => {
       return item.id === tag.id;
     });
-    console.log("checkChecked", tag, selectedTags, isChecked);
     return isChecked;
   };
 
