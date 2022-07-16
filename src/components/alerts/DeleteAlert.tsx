@@ -10,14 +10,23 @@ import {
 } from "@chakra-ui/react";
 import React, { Children } from "react";
 
-interface DeletePostAlertProps {
+interface DeleteAlertProps {
+  headerText: string;
+  bodyText: string;
+
   children: (onOpen: () => void) => React.ReactNode;
   onDelete?: () => void;
+  cancelText?: string;
+  deleteText?: string;
 }
 
-export const DeletePostAlert: React.FC<DeletePostAlertProps> = ({
+export const DeleteAlert: React.FC<DeleteAlertProps> = ({
+  headerText,
+  bodyText,
   children,
   onDelete,
+  cancelText = "Zrušiť",
+  deleteText = "Vymazať",
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.createRef<HTMLButtonElement>();
@@ -41,19 +50,17 @@ export const DeletePostAlert: React.FC<DeletePostAlertProps> = ({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Vymazať článok
+              {headerText}
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Ste si istí? Túto akciu už nemôžete vrátiť.
-            </AlertDialogBody>
+            <AlertDialogBody>{bodyText}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
-                Zrušiť
+                {cancelText}
               </Button>
               <Button colorScheme="red" onClick={onDeletePress} ml={3}>
-                Vymazať
+                {deleteText}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

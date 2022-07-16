@@ -170,12 +170,34 @@ export type PostSnippetFragment = { __typename?: 'Post', id: string, createdAt: 
 
 export type TagFragment = { __typename?: 'Tag', name: string, id: string };
 
+export type CreateCategoryMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null } };
+
+export type CreateDisciplineMutationVariables = Exact<{
+  name: Scalars['String'];
+  categoryId: Scalars['String'];
+}>;
+
+
+export type CreateDisciplineMutation = { __typename?: 'Mutation', createDiscipline: { __typename?: 'Discipline', id: string, name: string } };
+
 export type CreateTagMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
 
 
 export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', name: string, id: string } };
+
+export type DeleteDisciplineMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteDisciplineMutation = { __typename?: 'Mutation', deleteDiscipline: boolean };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['String'];
@@ -279,6 +301,28 @@ export const PostSnippetFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
+export const CreateCategoryDocument = gql`
+    mutation CreateCategory($name: String!) {
+  createCategory(name: $name) {
+    ...Category
+  }
+}
+    ${CategoryFragmentDoc}`;
+
+export function useCreateCategoryMutation() {
+  return Urql.useMutation<CreateCategoryMutation, CreateCategoryMutationVariables>(CreateCategoryDocument);
+};
+export const CreateDisciplineDocument = gql`
+    mutation CreateDiscipline($name: String!, $categoryId: String!) {
+  createDiscipline(name: $name, categoryId: $categoryId) {
+    ...Discipline
+  }
+}
+    ${DisciplineFragmentDoc}`;
+
+export function useCreateDisciplineMutation() {
+  return Urql.useMutation<CreateDisciplineMutation, CreateDisciplineMutationVariables>(CreateDisciplineDocument);
+};
 export const CreateTagDocument = gql`
     mutation CreateTag($name: String!) {
   createTag(name: $name) {
@@ -289,6 +333,15 @@ export const CreateTagDocument = gql`
 
 export function useCreateTagMutation() {
   return Urql.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument);
+};
+export const DeleteDisciplineDocument = gql`
+    mutation DeleteDiscipline($id: String!) {
+  deleteDiscipline(id: $id)
+}
+    `;
+
+export function useDeleteDisciplineMutation() {
+  return Urql.useMutation<DeleteDisciplineMutation, DeleteDisciplineMutationVariables>(DeleteDisciplineDocument);
 };
 export const DeletePostDocument = gql`
     mutation DeletePost($id: String!) {

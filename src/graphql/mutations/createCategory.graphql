@@ -1,0 +1,5 @@
+mutation CreateCategory($name: String!) {
+  createCategory(name: $name) {
+    ...Category
+  }
+}

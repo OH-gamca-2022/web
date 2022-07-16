@@ -1,0 +1,5 @@
+mutation CreateDiscipline($name: String!, $categoryId: String!) {
+  createDiscipline(name: $name, categoryId: $categoryId) {
+    ...Discipline
+  }
+}

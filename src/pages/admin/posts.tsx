@@ -17,7 +17,7 @@ import NextLink from "next/link";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { dateToString } from "../../utils/dateFormatter";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { DeletePostAlert } from "../../components/alerts/DeletePostAlert";
+import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 
 const AdminPosts = () => {
   const [{ data: posts, fetching }] = useGetPostsQuery();
@@ -82,10 +82,12 @@ const AdminPosts = () => {
     {
       name: "Vymazať",
       cell: (row) => (
-        <DeletePostAlert
+        <DeleteAlert
           onDelete={() => {
             deletePost({ id: row.id });
           }}
+          headerText="Vymazať článok"
+          bodyText="Ste si istí? Túto akciu už nemôžete vrátiť."
         >
           {(onOpen) => (
             <IconButton
@@ -96,7 +98,7 @@ const AdminPosts = () => {
               borderColor="red"
             />
           )}
-        </DeletePostAlert>
+        </DeleteAlert>
       ),
       center: true,
     },

@@ -1,0 +1,3 @@
+mutation DeleteDiscipline($id: String!) {
+  deleteDiscipline(id: $id)
+}

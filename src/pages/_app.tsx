@@ -13,8 +13,12 @@ import "dayjs/locale/sk";
 import dayjs from "dayjs";
 import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import {
+  CreateCategoryMutation,
   CreateTagMutation,
+  DeleteDisciplineMutationVariables,
   DeletePostMutationVariables,
+  GetCategoriesDocument,
+  GetCategoriesQuery,
   GetTagsDocument,
   GetTagsQuery,
   TagFragment,
@@ -29,6 +33,17 @@ const invalidateAllPosts = (cache: Cache) => {
   const fieldInfos = allFields.filter((info) => info.fieldName == "getPosts");
   fieldInfos.forEach((fi) => {
     cache.invalidate("Query", "getPosts", fi.arguments);
+  });
+};
+
+const invalidateAllCategories = (cache: Cache) => {
+  const allFields = cache.inspectFields("Query");
+  console.log(allFields);
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName == "getCategories"
+  );
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "getCategories", fi.arguments);
   });
 };
 
@@ -54,6 +69,26 @@ const client = createClient({
               (data: GetTagsQuery | null) => {
                 if (result.createTag) {
                   data?.getTags.push(result.createTag);
+                }
+                return data;
+              }
+            );
+          },
+          deleteDiscipline(_result, args, cache, info) {
+            cache.invalidate({
+              __typename: "Discipline",
+              id: (args as DeleteDisciplineMutationVariables).id,
+            });
+          },
+          createDiscipline(_result, args, cache, info) {
+            invalidateAllCategories(cache);
+          },
+          createCategory(result: CreateCategoryMutation, args, cache, info) {
+            cache.updateQuery(
+              { query: GetCategoriesDocument },
+              (data: GetCategoriesQuery | null) => {
+                if (result.createCategory) {
+                  data?.getCategories.push(result.createCategory);
                 }
                 return data;
               }
