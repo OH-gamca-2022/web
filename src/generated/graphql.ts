@@ -30,6 +30,7 @@ export type Discipline = {
   id: Scalars['String'];
   name: Scalars['String'];
   posts?: Maybe<Array<Post>>;
+  tag: Tag;
 };
 
 export type Mutation = {
@@ -146,6 +147,7 @@ export type QueryGetPublishedPostsArgs = {
 
 export type Tag = {
   __typename?: 'Tag';
+  discipline?: Maybe<Discipline>;
   id: Scalars['String'];
   name: Scalars['String'];
   posts?: Maybe<Array<Post>>;
@@ -191,6 +193,13 @@ export type CreateTagMutationVariables = Exact<{
 
 
 export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', name: string, id: string } };
+
+export type DeleteCategoryMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
 
 export type DeleteDisciplineMutationVariables = Exact<{
   id: Scalars['String'];
@@ -333,6 +342,15 @@ export const CreateTagDocument = gql`
 
 export function useCreateTagMutation() {
   return Urql.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument);
+};
+export const DeleteCategoryDocument = gql`
+    mutation DeleteCategory($id: String!) {
+  deleteCategory(id: $id)
+}
+    `;
+
+export function useDeleteCategoryMutation() {
+  return Urql.useMutation<DeleteCategoryMutation, DeleteCategoryMutationVariables>(DeleteCategoryDocument);
 };
 export const DeleteDisciplineDocument = gql`
     mutation DeleteDiscipline($id: String!) {

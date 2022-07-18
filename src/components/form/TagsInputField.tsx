@@ -11,10 +11,6 @@ import { TagFragment, useGetTagsQuery } from "../../generated/graphql";
 import { AddIcon, CloseIcon, Icon } from "@chakra-ui/icons";
 import { AddTagsPopover } from "../AddTagsPopover";
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
-
 type TagsInputFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label: string;

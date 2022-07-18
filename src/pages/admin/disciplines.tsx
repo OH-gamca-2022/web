@@ -23,6 +23,7 @@ import {
   useDeleteDisciplineMutation,
   useGetCategoriesQuery,
   useCreateDisciplineMutation,
+  useDeleteCategoryMutation,
 } from "../../generated/graphql";
 import NextLink from "next/link";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -37,6 +38,7 @@ const AdminDisciplines: NextPage = () => {
     name: string;
     category: string;
   } | null>(null);
+  const [, deleteCategory] = useDeleteCategoryMutation();
 
   useEffect(() => {
     console.log(data);
@@ -58,7 +60,25 @@ const AdminDisciplines: NextPage = () => {
         {data.getCategories.map((cat, index) => (
           <WrapItem key={index}>
             <Card>
-              <Heading mb={2}>{cat.name}</Heading>
+              <Flex alignItems="center" justifyContent="space-between">
+                <Heading mb={2}>{cat.name}</Heading>
+                <DeleteAlert
+                  headerText="Vymazať kategóriu"
+                  bodyText="Ste si isťí? Túto akciu už nemôžete vrátiť."
+                  onDelete={() => deleteCategory({ id: cat.id })}
+                >
+                  {(onOpen) => (
+                    <IconButton
+                      color="red"
+                      size="md"
+                      variant="unstyled"
+                      icon={<DeleteIcon />}
+                      aria-label="delete discipline"
+                      onClick={onOpen}
+                    />
+                  )}
+                </DeleteAlert>
+              </Flex>
               <Stack>
                 <UnorderedList>
                   {cat.disciplines?.map((disc, index) => (

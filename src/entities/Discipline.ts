@@ -3,14 +3,17 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Relation,
 } from "typeorm";
 import { Category } from "./Category";
 import { Post } from "./Post";
+import { Tag } from "./Tag";
 
 @Entity()
 @ObjectType()
@@ -23,7 +26,7 @@ export class Discipline extends BaseEntity {
   @Field()
   name!: string;
 
-  @ManyToOne(() => Category, (cat) => cat.disciplines)
+  @ManyToOne(() => Category, (cat) => cat.disciplines, { onDelete: "CASCADE" })
   @Field(() => Category)
   category!: Relation<Category>;
 
@@ -34,4 +37,8 @@ export class Discipline extends BaseEntity {
   @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.discipline, { nullable: true })
   posts?: Relation<Post>[];
+
+  @Field(() => Tag)
+  @OneToOne(() => Tag, (tag) => tag.discipline)
+  tag!: Tag;
 }

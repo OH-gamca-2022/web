@@ -2,6 +2,7 @@ import { Arg, Resolver } from "type-graphql";
 import { Query, Mutation } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Category } from "../entities/Category";
+import { Tag } from "../entities/Tag";
 
 @Resolver()
 export class CategoryResolver {
@@ -12,17 +13,21 @@ export class CategoryResolver {
       .getRepository(Category)
       .find({ relations: { disciplines: true } });
 
-    console.log(result);
     return result;
   }
 
   @Mutation(() => Category)
   async createCategory(@Arg("name") name: string) {
     const dataSource = await getDataSource();
-    const result = await dataSource
-      .getRepository(Category)
-      .create({ name })
-      .save();
+
+    const tag = await dataSource.getRepository(Tag).create({ name }).save();
+
+    const category = new Category();
+    category.name = name;
+    category.tag = tag;
+
+    const result = await dataSource.getRepository(Category).save(category);
+
     return result;
   }
 
@@ -31,11 +36,16 @@ export class CategoryResolver {
     const dataSource = await getDataSource();
     const category = await dataSource
       .getRepository(Category)
-      .find({ where: { id } });
+      .findOne({ where: { id }, relations: ["tag"] });
+
     if (!category) {
       return false;
     } else {
+      const tag = await dataSource
+        .getRepository(Tag)
+        .find({ where: { id: category.tag.id } });
       dataSource.getRepository(Category).remove(category);
+      dataSource.getRepository(Tag).remove(tag);
       return true;
     }
   }

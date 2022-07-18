@@ -15,6 +15,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useState } from "react";
 import style from "../../styles/github-markdown-css.module.css";
+import { Card } from "../../components/Card";
 
 const Post: NextPage = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const Post: NextPage = () => {
   }
   return (
     <Layout>
-      <Box borderWidth={1} p={4} borderRadius={15}>
+      <Card mb={4}>
         <Stack>
           <Heading>{data.getPost.title}</Heading>
           <HStack>
@@ -39,15 +40,16 @@ const Post: NextPage = () => {
             ))}
           </HStack>
           <Text>{data.getPost.subtitle}</Text>
-          <Divider />
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            className={style.markdownBody}
-          >
-            {data.getPost.text}
-          </ReactMarkdown>
         </Stack>
-      </Box>
+      </Card>
+      <Card>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          className={style.markdownBody}
+        >
+          {data.getPost.text}
+        </ReactMarkdown>
+      </Card>
     </Layout>
   );
 };

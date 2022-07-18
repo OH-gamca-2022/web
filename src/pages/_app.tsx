@@ -15,6 +15,7 @@ import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import {
   CreateCategoryMutation,
   CreateTagMutation,
+  DeleteCategoryMutationVariables,
   DeleteDisciplineMutationVariables,
   DeletePostMutationVariables,
   GetCategoriesDocument,
@@ -78,6 +79,12 @@ const client = createClient({
             cache.invalidate({
               __typename: "Discipline",
               id: (args as DeleteDisciplineMutationVariables).id,
+            });
+          },
+          deleteCategory(_result, args, cache, info) {
+            cache.invalidate({
+              __typename: "Category",
+              id: (args as DeleteCategoryMutationVariables).id,
             });
           },
           createDiscipline(_result, args, cache, info) {
