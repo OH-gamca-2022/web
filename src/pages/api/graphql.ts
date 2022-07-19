@@ -7,6 +7,7 @@ import { PostResolver } from "../../resolvers/Post";
 import { TagResolver } from "../../resolvers/Tag";
 import { DisciplineResolver } from "../../resolvers/Discipline";
 import { CategoryResolver } from "../../resolvers/Category";
+import { EventResolver } from "../../resolvers/Event";
 
 const cors = Cors();
 
@@ -27,6 +28,7 @@ export default cors(async function handler(req, res) {
           TagResolver,
           DisciplineResolver,
           CategoryResolver,
+          EventResolver,
         ],
       }),
       context: ({ req, res }) => ({ req, res }),

@@ -12,26 +12,43 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { generateURL } from "../utils/google-signin";
 
 export const AdminBar = () => {
+  const router = useRouter();
   return (
-    <HStack
-      bg="white"
-      p={2}
+    <Flex
+      justifyContent="space-between"
       alignItems="center"
-      justifyContent="flex-start"
+      flex={1}
       w="100%"
-      spacing={6}
+      p={2}
     >
-      <Heading size="md" mr={2}>
-        Admin Panel
-      </Heading>
-      <NextLink href={"/admin/posts"}>
-        <Link>Články</Link>
-      </NextLink>
-      <NextLink href={"/admin/disciplines"}>
-        <Link>Disciplíny</Link>
-      </NextLink>
-    </HStack>
+      <HStack
+        bg="white"
+        alignItems="center"
+        justifyContent="flex-start"
+        spacing={6}
+      >
+        <Heading size="md" mr={2}>
+          Admin Panel
+        </Heading>
+        <NextLink href={"/admin/posts"}>
+          <Link>Články</Link>
+        </NextLink>
+        <NextLink href={"/admin/disciplines"}>
+          <Link>Disciplíny</Link>
+        </NextLink>
+      </HStack>
+      <Button
+        size="sm"
+        onClick={() => {
+          router.push("/api/google-oauth");
+        }}
+      >
+        Sign In with Google
+      </Button>
+    </Flex>
   );
 };
