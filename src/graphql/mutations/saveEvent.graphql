@@ -3,12 +3,16 @@ mutation SaveEvent(
   $endDate: DateTime!
   $startDate: DateTime!
   $name: String!
+  $tagIds: [String!]
+  $id: String
 ) {
   saveEvent(
     googleId: $googleId
     endDate: $endDate
     startDate: $startDate
     name: $name
+    id: $id
+    tagIds: $tagIds
   ) {
     ...CalendarEvent
   }

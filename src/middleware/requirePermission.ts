@@ -2,6 +2,7 @@ import { getSession } from "next-auth/react";
 import { MiddlewareFn } from "type-graphql";
 import { MyContext } from "../types/MyContext";
 import { ROLES, ROLE_LEVELS } from "../types/roles";
+import { hasPermission } from "../utils/hasPermission";
 
 export function requirePersmission(required: ROLES): MiddlewareFn<MyContext> {
   return async ({ context }, next) => {
@@ -13,7 +14,7 @@ export function requirePersmission(required: ROLES): MiddlewareFn<MyContext> {
 
     const role = session.user.role as ROLES;
 
-    if (ROLE_LEVELS[role] < ROLE_LEVELS[required]) {
+    if (!hasPermission(session.user.role as ROLES, required)) {
       throw new Error("you don't have permission for this action");
     }
 

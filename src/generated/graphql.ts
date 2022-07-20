@@ -121,8 +121,10 @@ export type MutationDeletePostArgs = {
 export type MutationSaveEventArgs = {
   endDate: Scalars['DateTime'];
   googleId: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   startDate: Scalars['DateTime'];
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -280,6 +282,8 @@ export type SaveEventMutationVariables = Exact<{
   endDate: Scalars['DateTime'];
   startDate: Scalars['DateTime'];
   name: Scalars['String'];
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -490,12 +494,14 @@ export function useDeletePostMutation() {
   return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument);
 };
 export const SaveEventDocument = gql`
-    mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!) {
+    mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!, $tagIds: [String!], $id: String) {
   saveEvent(
     googleId: $googleId
     endDate: $endDate
     startDate: $startDate
     name: $name
+    id: $id
+    tagIds: $tagIds
   ) {
     ...CalendarEvent
   }

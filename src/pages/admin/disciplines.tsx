@@ -29,8 +29,10 @@ import NextLink from "next/link";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 import { AddCategoryModal } from "../../components/modals/AddCategoryModal";
+import { useIsAdminPage } from "../../utils/useIsAdminPage";
 
 const AdminDisciplines: NextPage = () => {
+  useIsAdminPage();
   const [{ data }] = useGetCategoriesQuery();
   const [, deleteDiscipline] = useDeleteDisciplineMutation();
   const [, createDiscipline] = useCreateDisciplineMutation();

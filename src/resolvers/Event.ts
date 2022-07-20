@@ -12,6 +12,7 @@ import { google } from "googleapis";
 import dayjs from "dayjs";
 import { CalendarEvent } from "../entities/CalendarEvent";
 import { getDataSource } from "../../lib/TypeORM";
+import { Tag } from "../entities/Tag";
 
 @ObjectType()
 export class GoogleCalendar {
@@ -115,13 +116,41 @@ export class EventResolver {
     @Arg("name") name: string,
     @Arg("startDate") startDate: Date,
     @Arg("endDate") endDate: Date,
-    @Arg("googleId") googleId: string
+    @Arg("googleId") googleId: string,
+    @Arg("tagIds", () => [String], { nullable: true }) tagIds?: string[],
+    @Arg("id", { nullable: true }) id?: string
   ) {
     const dataSource = await getDataSource();
-    const event = dataSource
-      .getRepository(CalendarEvent)
-      .create({ name, startDate, endDate, googleId });
-    const result = await dataSource.getRepository(CalendarEvent).save(event);
-    return result;
+    let event;
+    if (id) {
+      event = await dataSource
+        .getRepository(CalendarEvent)
+        .findOne({ where: { id } });
+    }
+    if (!event) {
+      event = await dataSource
+        .getRepository(CalendarEvent)
+        .save(
+          dataSource
+            .getRepository(CalendarEvent)
+            .create({ name, startDate, endDate, googleId })
+        );
+    }
+
+    if (tagIds && tagIds.length > 0) {
+      const tags = await dataSource
+        .createQueryBuilder(Tag, "tag")
+        .where("tag.id IN (:...ids)", { ids: tagIds })
+        .getMany();
+      event.tags = tags;
+    }
+
+    event.name = name;
+    event.startDate = startDate;
+    event.endDate = endDate;
+
+    dataSource.getRepository(CalendarEvent).save(event);
+
+    return event;
   }
 }
