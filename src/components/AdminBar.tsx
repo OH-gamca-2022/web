@@ -24,13 +24,9 @@ export const AdminBar = () => {
       flex={1}
       w="100%"
       p={2}
+      bg="white"
     >
-      <HStack
-        bg="white"
-        alignItems="center"
-        justifyContent="flex-start"
-        spacing={6}
-      >
+      <HStack alignItems="center" justifyContent="flex-start" spacing={6}>
         <Heading size="md" mr={2}>
           Admin Panel
         </Heading>
@@ -39,6 +35,9 @@ export const AdminBar = () => {
         </NextLink>
         <NextLink href={"/admin/disciplines"}>
           <Link>Disciplíny</Link>
+        </NextLink>
+        <NextLink href={"/admin/events"}>
+          <Link>Udalosti</Link>
         </NextLink>
       </HStack>
       <Button

@@ -1,0 +1,6 @@
+fragment GoogleEvent on GoogleEvent {
+  id
+  name
+  startDate
+  endDate
+}

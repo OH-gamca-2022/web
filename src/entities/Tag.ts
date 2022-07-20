@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Category } from "./Category";
 import { Discipline } from "./Discipline";
+import { CalendarEvent } from "./CalendarEvent";
 import { Post } from "./Post";
 
 @Entity()
@@ -31,6 +32,13 @@ export class Tag extends BaseEntity {
   })
   @Field(() => [Post], { nullable: true })
   posts?: Relation<Post>[];
+
+  @ManyToMany(() => CalendarEvent, (event) => event.tags, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
+  @Field(() => [CalendarEvent], { nullable: true })
+  events?: Relation<CalendarEvent>[];
 
   @Field(() => Discipline, { nullable: true })
   @OneToOne(() => Discipline, (disc) => disc.tag, {

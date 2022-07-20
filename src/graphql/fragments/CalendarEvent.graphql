@@ -1,0 +1,10 @@
+fragment CalendarEvent on CalendarEvent {
+  name
+  id
+  startDate
+  endDate
+  googleId
+  tags {
+    ...Tag
+  }
+}

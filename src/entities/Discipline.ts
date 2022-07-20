@@ -40,5 +40,5 @@ export class Discipline extends BaseEntity {
 
   @Field(() => Tag)
   @OneToOne(() => Tag, (tag) => tag.discipline)
-  tag!: Tag;
+  tag!: Relation<Tag>;
 }

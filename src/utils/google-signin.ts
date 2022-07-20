@@ -29,3 +29,16 @@ export const saveRefreshToken = (refreshToken: string) => {
     })
   );
 };
+
+export const loadRefreshToken = () => {
+  const restoredInfo = JSON.parse(
+    fs.readFileSync("./galleryInfo.json", "utf8")
+  );
+  return restoredInfo.refreshToken;
+};
+
+export const getCalendar = () => {
+  const refreshToken = loadRefreshToken();
+  oauth2Client.setCredentials({ refresh_token: refreshToken });
+  return google.calendar({ version: "v3", auth: oauth2Client });
+};

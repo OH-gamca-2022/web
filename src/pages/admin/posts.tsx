@@ -64,6 +64,7 @@ const AdminPosts = () => {
         <Button
           size={"sm"}
           isLoading={publishFetching}
+          colorScheme={row.published ? "gray" : "blue"}
           onClick={() => {
             savePost({
               title: row.title,

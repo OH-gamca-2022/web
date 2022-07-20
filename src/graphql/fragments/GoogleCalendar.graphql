@@ -1,0 +1,4 @@
+fragment GoogleCalendar on GoogleCalendar {
+  name
+  id
+}

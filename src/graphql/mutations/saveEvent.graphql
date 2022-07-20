@@ -1,0 +1,15 @@
+mutation SaveEvent(
+  $googleId: String!
+  $endDate: DateTime!
+  $startDate: DateTime!
+  $name: String!
+) {
+  saveEvent(
+    googleId: $googleId
+    endDate: $endDate
+    startDate: $startDate
+    name: $name
+  ) {
+    ...CalendarEvent
+  }
+}

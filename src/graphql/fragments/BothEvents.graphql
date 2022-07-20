@@ -1,0 +1,8 @@
+fragment BothEvents on BothEvents {
+  savedEvent {
+    ...CalendarEvent
+  }
+  googleEvent {
+    ...GoogleEvent
+  }
+}
