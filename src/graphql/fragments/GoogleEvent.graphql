@@ -3,4 +3,5 @@ fragment GoogleEvent on GoogleEvent {
   name
   startDate
   endDate
+  allDay
 }

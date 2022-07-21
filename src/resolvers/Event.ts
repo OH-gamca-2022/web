@@ -8,11 +8,28 @@ import {
 } from "type-graphql";
 import fs from "fs";
 import { getCalendar, oauth2Client } from "../utils/google-signin";
-import { google } from "googleapis";
+import { calendar_v3, google } from "googleapis";
 import dayjs from "dayjs";
 import { CalendarEvent } from "../entities/CalendarEvent";
 import { getDataSource } from "../../lib/TypeORM";
 import { Tag } from "../entities/Tag";
+
+const formatGoogleEvent = (event: calendar_v3.Schema$Event) => {
+  const startDate = event.start?.date
+    ? dayjs(event.start.date).toDate()
+    : dayjs(event.start?.dateTime).toDate();
+  const endDate = event.end?.date
+    ? dayjs(event.end.date).toDate()
+    : dayjs(event.end?.dateTime).toDate();
+  const formattedEvent = {
+    id: event.id as string,
+    name: event.summary as string,
+    startDate: startDate,
+    endDate: endDate,
+    allDay: event.start?.dateTime ? false : true,
+  };
+  return formattedEvent;
+};
 
 @ObjectType()
 export class GoogleCalendar {
@@ -36,6 +53,9 @@ export class GoogleEvent {
 
   @Field()
   endDate!: Date;
+
+  @Field()
+  allDay!: boolean;
 }
 
 @ObjectType()
@@ -80,35 +100,32 @@ export class EventResolver {
         const existingEvent = savedEvents.find(
           (savedEvent) => savedEvent.googleId == item.id
         );
-        console.log(existingEvent);
-        const isSaved = Boolean(existingEvent);
-        const startDate = item.start?.date
-          ? dayjs(item.start.date).toDate()
-          : dayjs(item.start?.dateTime).toDate();
-        const endDate = item.end?.date
-          ? dayjs(item.end.date).toDate()
-          : dayjs(item.end?.dateTime).toDate();
         return {
-          googleEvent: {
-            name: item.summary as string,
-            id: item.id as string,
-            startDate,
-            endDate,
-          },
-          savedEvent: existingEvent
-            ? {
-                id: existingEvent.id,
-                name: existingEvent.name,
-                startDate: existingEvent.startDate,
-                endDate: existingEvent.endDate,
-                googleId: existingEvent.googleId,
-              }
-            : null,
+          googleEvent: formatGoogleEvent(item),
+          savedEvent: existingEvent ? existingEvent : null,
         };
       });
       return formattedEvents;
     }
     return [];
+  }
+
+  @Query(() => GoogleEvent)
+  async getGoogleEvent(
+    @Arg("id") id: string,
+    @Arg("calendarId") calendarId: string
+  ): Promise<GoogleEvent> {
+    const calendar = getCalendar();
+    const event = (await calendar.events.get({ eventId: id, calendarId })).data;
+    return formatGoogleEvent(event);
+  }
+
+  @Query(() => CalendarEvent)
+  async getSavedEvent(@Arg("id") id: string): Promise<CalendarEvent | null> {
+    const dataSource = getDataSource();
+    return (await dataSource)
+      .getRepository(CalendarEvent)
+      .findOne({ where: { id } });
   }
 
   @Mutation(() => CalendarEvent)
@@ -117,9 +134,11 @@ export class EventResolver {
     @Arg("startDate") startDate: Date,
     @Arg("endDate") endDate: Date,
     @Arg("googleId") googleId: string,
+    @Arg("allDay") allDay: boolean,
     @Arg("tagIds", () => [String], { nullable: true }) tagIds?: string[],
     @Arg("id", { nullable: true }) id?: string
   ) {
+    console.log("here");
     const dataSource = await getDataSource();
     let event;
     if (id) {
@@ -133,7 +152,7 @@ export class EventResolver {
         .save(
           dataSource
             .getRepository(CalendarEvent)
-            .create({ name, startDate, endDate, googleId })
+            .create({ name, startDate, endDate, googleId, allDay })
         );
     }
 
@@ -148,9 +167,32 @@ export class EventResolver {
     event.name = name;
     event.startDate = startDate;
     event.endDate = endDate;
+    event.allDay = allDay;
 
     dataSource.getRepository(CalendarEvent).save(event);
 
     return event;
+  }
+
+  @Query(() => [CalendarEvent])
+  async getEvents() {
+    const dataSource = await getDataSource();
+    return dataSource
+      .getRepository(CalendarEvent)
+      .find({ relations: { tags: true } });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteEvent(@Arg("id") id: string) {
+    const dataSource = await getDataSource();
+    const event = await dataSource
+      .getRepository(CalendarEvent)
+      .findOne({ where: { id } });
+    if (event) {
+      dataSource.getRepository(CalendarEvent).remove(event);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

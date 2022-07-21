@@ -13,9 +13,9 @@ import { Tag } from "./Tag";
 @Entity()
 @ObjectType()
 export class CalendarEvent {
-  @Field({ nullable: true })
+  @Field()
   @PrimaryGeneratedColumn("uuid")
-  id?: string;
+  id!: string;
 
   @Field()
   @Column()
@@ -41,6 +41,7 @@ export class CalendarEvent {
   @Column()
   googleId?: string;
 
-  @Field({ nullable: true })
-  isSaved?: boolean;
+  @Field()
+  @Column()
+  allDay!: boolean;
 }

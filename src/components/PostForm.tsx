@@ -27,10 +27,6 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log("update", id, data, fetching);
-  });
-
   if (fetching) {
     return <Heading>Loading...</Heading>;
   }

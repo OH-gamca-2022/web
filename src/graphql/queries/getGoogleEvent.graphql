@@ -1,0 +1,5 @@
+query GetGoogleEvent($id: String!, $calendarId: String!) {
+  getGoogleEvent(id: $id, calendarId: $calendarId) {
+    ...GoogleEvent
+  }
+}

@@ -24,10 +24,10 @@ export type BothEvents = {
 
 export type CalendarEvent = {
   __typename?: 'CalendarEvent';
+  allDay: Scalars['Boolean'];
   endDate: Scalars['DateTime'];
   googleId: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  isSaved?: Maybe<Scalars['Boolean']>;
+  id: Scalars['String'];
   name: Scalars['String'];
   startDate: Scalars['DateTime'];
   tags?: Maybe<Array<Tag>>;
@@ -59,6 +59,7 @@ export type GoogleCalendar = {
 
 export type GoogleEvent = {
   __typename?: 'GoogleEvent';
+  allDay: Scalars['Boolean'];
   endDate: Scalars['DateTime'];
   id: Scalars['String'];
   name: Scalars['String'];
@@ -76,6 +77,7 @@ export type Mutation = {
   deleteAllUsers: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
   deleteDiscipline: Scalars['Boolean'];
+  deleteEvent: Scalars['Boolean'];
   deletePost: Scalars['Boolean'];
   saveEvent: CalendarEvent;
   savePost: Post;
@@ -113,12 +115,18 @@ export type MutationDeleteDisciplineArgs = {
 };
 
 
+export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeletePostArgs = {
   id: Scalars['String'];
 };
 
 
 export type MutationSaveEventArgs = {
+  allDay: Scalars['Boolean'];
   endDate: Scalars['DateTime'];
   googleId: Scalars['String'];
   id?: InputMaybe<Scalars['String']>;
@@ -164,13 +172,22 @@ export type Query = {
   getAllUsers: Array<User>;
   getCategories: Array<Category>;
   getDisciplines: Array<Discipline>;
+  getEvents: Array<CalendarEvent>;
   getGoogleCalendars: Array<GoogleCalendar>;
+  getGoogleEvent: GoogleEvent;
   getGoogleEvents: Array<BothEvents>;
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
+  getSavedEvent: CalendarEvent;
   getTags: Array<Tag>;
   hello: Scalars['Boolean'];
+};
+
+
+export type QueryGetGoogleEventArgs = {
+  calendarId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
@@ -195,6 +212,11 @@ export type QueryGetPublishedPostsArgs = {
   page?: InputMaybe<Scalars['Float']>;
 };
 
+
+export type QueryGetSavedEventArgs = {
+  id: Scalars['String'];
+};
+
 export type Tag = {
   __typename?: 'Tag';
   category?: Maybe<Category>;
@@ -216,9 +238,9 @@ export type User = {
   role: Scalars['String'];
 };
 
-export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id?: string | null, startDate: any, endDate: any, googleId: string, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any } };
+export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } };
 
-export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id?: string | null, startDate: any, endDate: any, googleId: string, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null };
+export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null };
 
 export type CategoryFragment = { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null };
 
@@ -226,7 +248,7 @@ export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: 
 
 export type GoogleCalendarFragment = { __typename?: 'GoogleCalendar', name: string, id: string };
 
-export type GoogleEventFragment = { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any };
+export type GoogleEventFragment = { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean };
 
 export type PostFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, text: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null };
 
@@ -270,6 +292,13 @@ export type DeleteDisciplineMutationVariables = Exact<{
 
 export type DeleteDisciplineMutation = { __typename?: 'Mutation', deleteDiscipline: boolean };
 
+export type DeleteEventMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: boolean };
+
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -277,17 +306,23 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost: boolean };
 
+export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null }> };
+
 export type SaveEventMutationVariables = Exact<{
   googleId: Scalars['String'];
   endDate: Scalars['DateTime'];
   startDate: Scalars['DateTime'];
   name: Scalars['String'];
+  allDay: Scalars['Boolean'];
   tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type SaveEventMutation = { __typename?: 'Mutation', saveEvent: { __typename?: 'CalendarEvent', name: string, id?: string | null, startDate: any, endDate: any, googleId: string, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } };
+export type SaveEventMutation = { __typename?: 'Mutation', saveEvent: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } };
 
 export type SavePostMutationVariables = Exact<{
   title: Scalars['String'];
@@ -311,12 +346,20 @@ export type GetGoogleCalendarsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetGoogleCalendarsQuery = { __typename?: 'Query', getGoogleCalendars: Array<{ __typename?: 'GoogleCalendar', name: string, id: string }> };
 
+export type GetGoogleEventQueryVariables = Exact<{
+  id: Scalars['String'];
+  calendarId: Scalars['String'];
+}>;
+
+
+export type GetGoogleEventQuery = { __typename?: 'Query', getGoogleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } };
+
 export type GetGoogleEventsQueryVariables = Exact<{
   calendarId: Scalars['String'];
 }>;
 
 
-export type GetGoogleEventsQuery = { __typename?: 'Query', getGoogleEvents: Array<{ __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id?: string | null, startDate: any, endDate: any, googleId: string, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any } }> };
+export type GetGoogleEventsQuery = { __typename?: 'Query', getGoogleEvents: Array<{ __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } }> };
 
 export type GetPostQueryVariables = Exact<{
   getPostId: Scalars['String'];
@@ -341,6 +384,13 @@ export type GetPublishedPostsQueryVariables = Exact<{
 
 export type GetPublishedPostsQuery = { __typename?: 'Query', getPublishedPosts: { __typename?: 'PaginatedPosts', numOfPages: number, posts: Array<{ __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null }> } };
 
+export type GetSavedEventQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetSavedEventQuery = { __typename?: 'Query', getSavedEvent: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string }> | null } };
+
 export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -359,6 +409,7 @@ export const CalendarEventFragmentDoc = gql`
   startDate
   endDate
   googleId
+  allDay
   tags {
     ...Tag
   }
@@ -370,6 +421,7 @@ export const GoogleEventFragmentDoc = gql`
   name
   startDate
   endDate
+  allDay
 }
     `;
 export const BothEventsFragmentDoc = gql`
@@ -484,6 +536,15 @@ export const DeleteDisciplineDocument = gql`
 export function useDeleteDisciplineMutation() {
   return Urql.useMutation<DeleteDisciplineMutation, DeleteDisciplineMutationVariables>(DeleteDisciplineDocument);
 };
+export const DeleteEventDocument = gql`
+    mutation DeleteEvent($id: String!) {
+  deleteEvent(id: $id)
+}
+    `;
+
+export function useDeleteEventMutation() {
+  return Urql.useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument);
+};
 export const DeletePostDocument = gql`
     mutation DeletePost($id: String!) {
   deletePost(id: $id)
@@ -493,13 +554,25 @@ export const DeletePostDocument = gql`
 export function useDeletePostMutation() {
   return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument);
 };
+export const GetEventsDocument = gql`
+    query GetEvents {
+  getEvents {
+    ...CalendarEvent
+  }
+}
+    ${CalendarEventFragmentDoc}`;
+
+export function useGetEventsQuery(options?: Omit<Urql.UseQueryArgs<GetEventsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetEventsQuery>({ query: GetEventsDocument, ...options });
+};
 export const SaveEventDocument = gql`
-    mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!, $tagIds: [String!], $id: String) {
+    mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!, $allDay: Boolean!, $tagIds: [String!], $id: String) {
   saveEvent(
     googleId: $googleId
     endDate: $endDate
     startDate: $startDate
     name: $name
+    allDay: $allDay
     id: $id
     tagIds: $tagIds
   ) {
@@ -551,6 +624,17 @@ export const GetGoogleCalendarsDocument = gql`
 export function useGetGoogleCalendarsQuery(options?: Omit<Urql.UseQueryArgs<GetGoogleCalendarsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetGoogleCalendarsQuery>({ query: GetGoogleCalendarsDocument, ...options });
 };
+export const GetGoogleEventDocument = gql`
+    query GetGoogleEvent($id: String!, $calendarId: String!) {
+  getGoogleEvent(id: $id, calendarId: $calendarId) {
+    ...GoogleEvent
+  }
+}
+    ${GoogleEventFragmentDoc}`;
+
+export function useGetGoogleEventQuery(options: Omit<Urql.UseQueryArgs<GetGoogleEventQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetGoogleEventQuery>({ query: GetGoogleEventDocument, ...options });
+};
 export const GetGoogleEventsDocument = gql`
     query GetGoogleEvents($calendarId: String!) {
   getGoogleEvents(calendarId: $calendarId) {
@@ -597,6 +681,17 @@ export const GetPublishedPostsDocument = gql`
 
 export function useGetPublishedPostsQuery(options?: Omit<Urql.UseQueryArgs<GetPublishedPostsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetPublishedPostsQuery>({ query: GetPublishedPostsDocument, ...options });
+};
+export const GetSavedEventDocument = gql`
+    query GetSavedEvent($id: String!) {
+  getSavedEvent(id: $id) {
+    ...CalendarEvent
+  }
+}
+    ${CalendarEventFragmentDoc}`;
+
+export function useGetSavedEventQuery(options: Omit<Urql.UseQueryArgs<GetSavedEventQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetSavedEventQuery>({ query: GetSavedEventDocument, ...options });
 };
 export const GetTagsDocument = gql`
     query GetTags {

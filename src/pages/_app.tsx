@@ -17,6 +17,7 @@ import {
   CreateTagMutation,
   DeleteCategoryMutationVariables,
   DeleteDisciplineMutationVariables,
+  DeleteEventMutationVariables,
   DeletePostMutationVariables,
   GetCategoriesDocument,
   GetCategoriesQuery,
@@ -30,7 +31,6 @@ dayjs.locale("sk");
 
 const invalidateAllPosts = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  console.log(allFields);
   const fieldInfos = allFields.filter((info) => info.fieldName == "getPosts");
   fieldInfos.forEach((fi) => {
     cache.invalidate("Query", "getPosts", fi.arguments);
@@ -39,7 +39,6 @@ const invalidateAllPosts = (cache: Cache) => {
 
 const invalidateAllCategories = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  console.log(allFields);
   const fieldInfos = allFields.filter(
     (info) => info.fieldName == "getCategories"
   );
@@ -50,7 +49,6 @@ const invalidateAllCategories = (cache: Cache) => {
 
 const invalidateAllEvents = (cache: Cache) => {
   const allFields = cache.inspectFields("Query");
-  console.log(allFields);
   const fieldInfos = allFields.filter(
     (info) => info.fieldName == "getGoogleEvents"
   );
@@ -114,6 +112,12 @@ const client = createClient({
                 return data;
               }
             );
+          },
+          deleteEvent(_result, args, cache, info) {
+            cache.invalidate({
+              __typename: "CalendarEvent",
+              id: (args as DeleteEventMutationVariables).id,
+            });
           },
         },
       },

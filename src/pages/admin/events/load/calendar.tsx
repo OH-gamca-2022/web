@@ -104,9 +104,14 @@ const AdminGoogleCalendar: NextPage = () => {
         !row.savedEvent ? "Pridať" : areEventsSame(row) ? "Uložené" : "Uložiť",
       cell: (row) =>
         !row.savedEvent ? (
-          <LoadEventModal googleEvent={row.googleEvent}>
-            {(onOpen) => <LoadButton row={row} onClick={onOpen} />}
-          </LoadEventModal>
+          <LoadButton
+            row={row}
+            onClick={() =>
+              router.push(
+                `/admin/events/load/event?googleId=${row.googleEvent.id}&calendarId=${id}`
+              )
+            }
+          />
         ) : areEventsSame(row) ? (
           <Button size="sm">Uložené</Button>
         ) : (

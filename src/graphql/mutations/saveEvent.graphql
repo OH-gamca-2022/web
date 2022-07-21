@@ -3,6 +3,7 @@ mutation SaveEvent(
   $endDate: DateTime!
   $startDate: DateTime!
   $name: String!
+  $allDay: Boolean!
   $tagIds: [String!]
   $id: String
 ) {
@@ -11,6 +12,7 @@ mutation SaveEvent(
     endDate: $endDate
     startDate: $startDate
     name: $name
+    allDay: $allDay
     id: $id
     tagIds: $tagIds
   ) {

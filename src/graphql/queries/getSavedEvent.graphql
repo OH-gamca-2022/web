@@ -1,0 +1,5 @@
+query GetSavedEvent($id: String!) {
+  getSavedEvent(id: $id) {
+    ...CalendarEvent
+  }
+}

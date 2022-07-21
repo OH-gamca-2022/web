@@ -50,7 +50,7 @@ export const NavBar: React.FC = () => {
         <Flex flex={1} alignItems="center">
           <NextLink href="/">
             <Link>
-              <Heading color="white">OH HOG Rider</Heading>
+              <Heading color="white">OH 2022</Heading>
             </Link>
           </NextLink>
         </Flex>
