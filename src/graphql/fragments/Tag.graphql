@@ -1,4 +1,6 @@
 fragment Tag on Tag {
   name
   id
+  categoryId
+  disciplineId
 }

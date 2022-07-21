@@ -44,4 +44,8 @@ export class CalendarEvent {
   @Field()
   @Column()
   allDay!: boolean;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  class?: string;
 }

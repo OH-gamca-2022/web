@@ -5,6 +5,8 @@ import {
   Field,
   Arg,
   Mutation,
+  UseMiddleware,
+  Ctx,
 } from "type-graphql";
 import fs from "fs";
 import { getCalendar, oauth2Client } from "../utils/google-signin";
@@ -13,6 +15,10 @@ import dayjs from "dayjs";
 import { CalendarEvent } from "../entities/CalendarEvent";
 import { getDataSource } from "../../lib/TypeORM";
 import { Tag } from "../entities/Tag";
+import { isAuth } from "../middleware/isAuth";
+import { getSession } from "next-auth/react";
+import { MyContext } from "../types/MyContext";
+import { User } from "../entities/User";
 
 const formatGoogleEvent = (event: calendar_v3.Schema$Event) => {
   const startDate = event.start?.date
@@ -135,10 +141,11 @@ export class EventResolver {
     @Arg("endDate") endDate: Date,
     @Arg("googleId") googleId: string,
     @Arg("allDay") allDay: boolean,
+    @Arg("className", { nullable: true }) className?: string,
     @Arg("tagIds", () => [String], { nullable: true }) tagIds?: string[],
     @Arg("id", { nullable: true }) id?: string
   ) {
-    console.log("here");
+    console.log(className);
     const dataSource = await getDataSource();
     let event;
     if (id) {
@@ -147,13 +154,16 @@ export class EventResolver {
         .findOne({ where: { id } });
     }
     if (!event) {
-      event = await dataSource
-        .getRepository(CalendarEvent)
-        .save(
-          dataSource
-            .getRepository(CalendarEvent)
-            .create({ name, startDate, endDate, googleId, allDay })
-        );
+      event = await dataSource.getRepository(CalendarEvent).save(
+        dataSource.getRepository(CalendarEvent).create({
+          name,
+          startDate,
+          endDate,
+          googleId,
+          allDay,
+          class: className,
+        })
+      );
     }
 
     if (tagIds && tagIds.length > 0) {
@@ -168,6 +178,7 @@ export class EventResolver {
     event.startDate = startDate;
     event.endDate = endDate;
     event.allDay = allDay;
+    event.class = className;
 
     dataSource.getRepository(CalendarEvent).save(event);
 
@@ -180,6 +191,26 @@ export class EventResolver {
     return dataSource
       .getRepository(CalendarEvent)
       .find({ relations: { tags: true } });
+  }
+
+  @Query(() => [CalendarEvent])
+  @UseMiddleware(isAuth)
+  async getMyEvents(@Ctx() { payload }: MyContext) {
+    const dataSource = await getDataSource();
+    const user = await dataSource
+      .getRepository(User)
+      .findOne({ where: { id: payload?.userId } });
+    const allEvents = await dataSource
+      .getRepository(CalendarEvent)
+      .find({ relations: { tags: true } });
+    const myEvents = allEvents.filter((item) => {
+      if (item.class && user && item.class !== user.class) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return myEvents;
   }
 
   @Mutation(() => Boolean)

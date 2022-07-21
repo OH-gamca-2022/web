@@ -6,6 +6,7 @@ mutation SaveEvent(
   $allDay: Boolean!
   $tagIds: [String!]
   $id: String
+  $className: String
 ) {
   saveEvent(
     googleId: $googleId
@@ -15,6 +16,7 @@ mutation SaveEvent(
     allDay: $allDay
     id: $id
     tagIds: $tagIds
+    className: $className
   ) {
     ...CalendarEvent
   }

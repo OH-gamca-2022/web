@@ -34,5 +34,5 @@ export const dateToString = (dateToF: Date, showTime = true) => {
     dateToF.getFullYear() == new Date().getFullYear()
       ? ""
       : ` ${dateToF.getFullYear()}`
-  }${showTime ? ` o ${hours}:${minutes}` : ""}`;
+  }${showTime ? ` ${hours}:${minutes}` : ""}`;
 };

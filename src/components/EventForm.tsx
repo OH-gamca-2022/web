@@ -1,4 +1,4 @@
-import { Flex, Button, Box, Heading } from "@chakra-ui/react";
+import { Flex, Button, Box, Heading, Select } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 import {
@@ -15,6 +15,8 @@ import { TagsInputField } from "./form/TagsInputField";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { dateFormat } from "../utils/constants";
+import { classes } from "../types/class";
+import { SelectInputField } from "./form/SelectInputField";
 
 interface EventFormProps {
   googleId?: string;
@@ -66,6 +68,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           googleEvent?.getGoogleEvent.endDate ||
           savedEvent?.getSavedEvent.endDate,
         tags: savedEvent?.getSavedEvent.tags || [],
+        class: null,
       }}
       onSubmit={async (values) => {
         const tagIds = values.tags.map((tag) => tag.id);
@@ -84,6 +87,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             false,
           tagIds,
           id: savedEvent?.getSavedEvent.id || undefined,
+          className: values.class,
         });
         if (result.error) {
           console.log(result.error);
@@ -100,6 +104,17 @@ export const EventForm: React.FC<EventFormProps> = ({
           </Box>
           <Box mt={4}>
             <InputField name="endDate" placeholder="do" label="Do:" />
+          </Box>
+          <Box mt={4}>
+            <SelectInputField
+              placeholder="Vybrať triedu"
+              name="class"
+              label="Vybrať triedu"
+            >
+              {classes.map((item) => (
+                <option>{item}</option>
+              ))}
+            </SelectInputField>
           </Box>
           <Box mt={4}>
             <TagsInputField label="Tagy" name="tags" />

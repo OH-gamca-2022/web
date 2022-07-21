@@ -3,11 +3,13 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
   Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
 } from "@chakra-ui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import NextLink from "next/link";
@@ -47,13 +49,18 @@ export const NavBar: React.FC = () => {
         flex={1}
         w="100%"
       >
-        <Flex flex={1} alignItems="center">
+        <HStack flex={1} alignItems="center">
           <NextLink href="/">
-            <Link>
+            <Link mr={4}>
               <Heading color="white">OH 2022</Heading>
             </Link>
           </NextLink>
-        </Flex>
+          <NextLink href="/calendar">
+            <Link>
+              <Text color="white">Kalendár</Text>
+            </Link>
+          </NextLink>
+        </HStack>
         {userButton}
       </Flex>
     </Flex>

@@ -5,6 +5,7 @@ fragment CalendarEvent on CalendarEvent {
   endDate
   googleId
   allDay
+  class
   tags {
     ...Tag
   }
