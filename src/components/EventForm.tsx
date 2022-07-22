@@ -68,7 +68,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           googleEvent?.getGoogleEvent.endDate ||
           savedEvent?.getSavedEvent.endDate,
         tags: savedEvent?.getSavedEvent.tags || [],
-        class: null,
+        class: savedEvent?.getSavedEvent.class || null,
       }}
       onSubmit={async (values) => {
         const tagIds = values.tags.map((tag) => tag.id);

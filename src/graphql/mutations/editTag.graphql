@@ -1,0 +1,5 @@
+mutation EditTag($id: String!, $name: String!) {
+  editTag(id: $id, name: $name) {
+    ...Tag
+  }
+}

@@ -48,8 +48,8 @@ export class Tag extends BaseEntity {
   @JoinColumn()
   discipline?: Relation<Discipline>;
 
-  @Field(() => String)
-  @Column(() => String)
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   disciplineId?: string;
 
   @Field(() => Category, { nullable: true })
@@ -60,7 +60,7 @@ export class Tag extends BaseEntity {
   @JoinColumn()
   category?: Relation<Category>;
 
-  @Field(() => String)
-  @Column(() => String)
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   categoryId?: string;
 }

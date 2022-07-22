@@ -19,6 +19,7 @@ import {
   DeleteDisciplineMutationVariables,
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
+  DeleteTagMutationVariables,
   GetCategoriesDocument,
   GetCategoriesQuery,
   GetTagsDocument,
@@ -62,6 +63,10 @@ const client = createClient({
   exchanges: [
     dedupExchange,
     cacheExchange({
+      keys: {
+        BothEvents: () => null,
+        PaginatedPosts: () => null,
+      },
       updates: {
         Mutation: {
           deletePost(_result, args, cache, info) {
@@ -97,6 +102,12 @@ const client = createClient({
             cache.invalidate({
               __typename: "Category",
               id: (args as DeleteCategoryMutationVariables).id,
+            });
+          },
+          deleteTag(_result, args, cache, info) {
+            cache.invalidate({
+              __typename: "Tag",
+              id: (args as DeleteTagMutationVariables).id,
             });
           },
           createDiscipline(_result, args, cache, info) {

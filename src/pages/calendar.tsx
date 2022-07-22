@@ -1,7 +1,11 @@
 import { EventContentArg } from "@fullcalendar/react";
 import { NextPage } from "next";
-import { Calendar } from "../components/Calendar";
+import dynamic from "next/dynamic";
 import { Layout } from "../components/Layout";
+
+const Calendar = dynamic(() => import("../components/Calendar"), {
+  ssr: false,
+});
 
 const CalendarPage: NextPage = () => {
   return (

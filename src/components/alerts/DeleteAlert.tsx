@@ -12,8 +12,7 @@ import React, { Children } from "react";
 
 interface DeleteAlertProps {
   headerText: string;
-  bodyText: string;
-
+  bodyText?: string;
   children: (onOpen: () => void) => React.ReactNode;
   onDelete?: () => void;
   cancelText?: string;
@@ -22,7 +21,7 @@ interface DeleteAlertProps {
 
 export const DeleteAlert: React.FC<DeleteAlertProps> = ({
   headerText,
-  bodyText,
+  bodyText = "Ste si istí? Túto akciu už nemôžete vrátiť.",
   children,
   onDelete,
   cancelText = "Zrušiť",
