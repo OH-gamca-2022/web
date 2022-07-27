@@ -226,6 +226,7 @@ export type QueryGetPostsArgs = {
 export type QueryGetPublishedPostsArgs = {
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -258,9 +259,9 @@ export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __t
 
 export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
 
-export type CategoryFragment = { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null };
+export type CategoryFragment = { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
-export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string };
+export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
 export type GoogleCalendarFragment = { __typename?: 'GoogleCalendar', name: string, id: string };
 
@@ -277,7 +278,7 @@ export type CreateCategoryMutationVariables = Exact<{
 }>;
 
 
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null } };
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } } };
 
 export type CreateDisciplineMutationVariables = Exact<{
   name: Scalars['String'];
@@ -285,7 +286,7 @@ export type CreateDisciplineMutationVariables = Exact<{
 }>;
 
 
-export type CreateDisciplineMutation = { __typename?: 'Mutation', createDiscipline: { __typename?: 'Discipline', id: string, name: string } };
+export type CreateDisciplineMutation = { __typename?: 'Mutation', createDiscipline: { __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } } };
 
 export type CreateTagMutationVariables = Exact<{
   name: Scalars['String'];
@@ -371,7 +372,7 @@ export type SavePostMutation = { __typename?: 'Mutation', savePost: { __typename
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null }> };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
 
 export type GetGoogleCalendarsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -479,8 +480,11 @@ export const DisciplineFragmentDoc = gql`
     fragment Discipline on Discipline {
   id
   name
+  tag {
+    ...Tag
+  }
 }
-    `;
+    ${TagFragmentDoc}`;
 export const CategoryFragmentDoc = gql`
     fragment Category on Category {
   id
@@ -488,8 +492,12 @@ export const CategoryFragmentDoc = gql`
   disciplines {
     ...Discipline
   }
+  tag {
+    ...Tag
+  }
 }
-    ${DisciplineFragmentDoc}`;
+    ${DisciplineFragmentDoc}
+${TagFragmentDoc}`;
 export const GoogleCalendarFragmentDoc = gql`
     fragment GoogleCalendar on GoogleCalendar {
   name

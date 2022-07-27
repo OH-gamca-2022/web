@@ -62,27 +62,38 @@ export class PostResolver {
   @Query(() => PaginatedPosts)
   async getPublishedPosts(
     @Arg("page", { nullable: true }) page: number,
-    @Arg("limit", { nullable: true }) limit: number
+    @Arg("limit", { nullable: true }) limit: number,
+    @Arg("tagIds", () => [String], { nullable: true }) tagIds?: string[]
   ): Promise<PaginatedPosts> {
     const dataSource = await getDataSource();
-    const posts = await dataSource
-      .getRepository(Post)
-      .createQueryBuilder("post")
-      .leftJoinAndSelect("post.tags", "tag")
-      .getMany();
+    const qb = dataSource.getRepository(Post).createQueryBuilder("post");
+
     const startIndex = limit && page ? limit * page : 0;
     const realLimit = limit ? limit : 50;
 
-    const publishedPosts = posts.filter((post) => post.published == true);
+    const filteredPostsQb = tagIds
+      ? qb.leftJoinAndSelect(
+          "post.tags",
+          "tag",
+          tagIds && "tag.id IN (:...ids)",
+          { ids: tagIds }
+        )
+      : qb.leftJoinAndSelect("post.tags", "tag");
 
-    const numOfPages = limit ? Math.ceil(publishedPosts.length / limit) : 1;
-
-    const paginatedPosts = publishedPosts.slice(
-      startIndex,
-      startIndex + realLimit
+    const publishedPostsQb = filteredPostsQb.where(
+      "post.published = :published",
+      { published: true }
     );
 
-    paginatedPosts.sort((a, b) => dayjs(b.publishDate).diff(a.publishDate));
+    const numOfPages = Math.ceil(
+      (await publishedPostsQb.getCount()) / realLimit
+    );
+
+    const paginatedPosts = await publishedPostsQb
+      .orderBy("post.publishDate", "DESC")
+      .skip(startIndex)
+      .take(realLimit)
+      .getMany();
 
     return {
       posts: paginatedPosts,

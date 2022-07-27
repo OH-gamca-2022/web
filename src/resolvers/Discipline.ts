@@ -11,7 +11,7 @@ export class DisciplineResolver {
     const dataSource = await getDataSource();
     return dataSource
       .getRepository(Discipline)
-      .find({ relations: { category: true } });
+      .find({ relations: { category: true, tag: true } });
   }
 
   @Mutation(() => Discipline)

@@ -12,8 +12,7 @@ export class CategoryResolver {
     const dataSource = await getDataSource();
     const result = await dataSource
       .getRepository(Category)
-      .find({ relations: { disciplines: true } });
-
+      .find({ relations: { disciplines: true, tag: true } });
     return result;
   }
 

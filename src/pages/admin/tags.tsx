@@ -6,9 +6,11 @@ import {
   HStack,
   IconButton,
   Input,
+  ListItem,
   Spinner,
   Stack,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
@@ -43,22 +45,46 @@ const AdminTags: NextPage = () => {
     );
   }
 
+  const categories = (
+    <>
+      <Heading>Kategórie</Heading>
+      <Stack>
+        <UnorderedList>
+          {data?.getTags
+            .filter((item) => Boolean(item.categoryId))
+            .map((item, index) => (
+              <ListItem key={index}>
+                <Text>{item.name}</Text>
+              </ListItem>
+            ))}
+        </UnorderedList>
+      </Stack>
+    </>
+  );
+
+  const disciplines = (
+    <>
+      <Heading>Disciplíny</Heading>
+      <Stack>
+        <UnorderedList>
+          {data?.getTags
+            .filter((item) => Boolean(item.disciplineId))
+            .map((item, index) => (
+              <ListItem key={index}>
+                <Text>{item.name}</Text>
+              </ListItem>
+            ))}
+        </UnorderedList>
+      </Stack>
+    </>
+  );
+
   return (
     <Layout>
       <Card>
         <Stack>
-          <Heading>Kategórie</Heading>
-          {data?.getTags
-            .filter((item) => Boolean(item.categoryId))
-            .map((item, index) => (
-              <Text>{item.name}</Text>
-            ))}
-          <Heading>Disciplíny</Heading>
-          {data?.getTags
-            .filter((item) => Boolean(item.disciplineId))
-            .map((item, index) => (
-              <Text>{item.name}</Text>
-            ))}
+          {categories}
+          {disciplines}
           <Heading>Tagy</Heading>
           <HStack>
             <IconButton

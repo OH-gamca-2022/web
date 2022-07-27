@@ -37,13 +37,15 @@ const AdminPosts = () => {
       name: "Podnadpis",
       selector: (row) => row.subtitle || "",
       grow: 2,
+      allowOverflow: false,
+      wrap: true,
     },
     {
       name: "Tagy",
       cell: (row, index, column, id) => (
-        <HStack overflow="scroll">
+        <HStack overflow="clip">
           {row.tags?.map((tag, index) => (
-            <Button key={index} size={"sm"}>
+            <Button key={index} size={"sm"} minW="unset">
               {tag.name}
             </Button>
           ))}
@@ -117,7 +119,11 @@ const AdminPosts = () => {
           <Button>Nový článok</Button>
         </NextLink>
       </Flex>
-      <DataTable columns={columns} data={posts.getPosts as PostFragment[]} />
+      <DataTable
+        columns={columns}
+        data={posts.getPosts as PostFragment[]}
+        responsive={false}
+      />
     </Layout>
   );
 };

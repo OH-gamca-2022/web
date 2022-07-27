@@ -6,6 +6,7 @@ import {
   HStack,
   Stack,
   Text,
+  Wrap,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -13,7 +14,6 @@ import { Layout } from "../../components/Layout";
 import { useGetPostQuery } from "../../generated/graphql";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useEffect, useState } from "react";
 import style from "../../styles/github-markdown-css.module.css";
 import { Card } from "../../components/Card";
 
@@ -32,13 +32,13 @@ const Post: NextPage = () => {
       <Card mb={4}>
         <Stack>
           <Heading>{data.getPost.title}</Heading>
-          <HStack>
+          <Wrap>
             {data.getPost.tags?.map((tag, index) => (
               <Button key={index} size={"sm"}>
                 {tag.name}
               </Button>
             ))}
-          </HStack>
+          </Wrap>
           <Text>{data.getPost.subtitle}</Text>
         </Stack>
       </Card>

@@ -1,4 +1,7 @@
 fragment Discipline on Discipline {
   id
   name
+  tag {
+    ...Tag
+  }
 }

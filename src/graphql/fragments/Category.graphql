@@ -4,4 +4,7 @@ fragment Category on Category {
   disciplines {
     ...Discipline
   }
+  tag {
+    ...Tag
+  }
 }

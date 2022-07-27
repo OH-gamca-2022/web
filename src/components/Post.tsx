@@ -7,6 +7,8 @@ import {
   LinkBox,
   Text,
   Link,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { PostSnippetFragment } from "../generated/graphql";
 import dayjs from "dayjs";
@@ -23,7 +25,7 @@ dayjs.extend(calendar);
 
 export const Post: React.FC<PostProps> = ({ post }) => {
   return (
-    <Card>
+    <Card flex={1}>
       <Flex justifyContent={"center"} flexDirection={"column"}>
         <NextLink href={`/post/${post.id}`}>
           <Link>
@@ -31,20 +33,20 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           </Link>
         </NextLink>
         <Text pb={3}>{post.subtitle}</Text>
-        <Flex
-          flexDirection="row"
-          justifyContent={"space-between"}
-          alignItems="center"
-        >
-          <HStack>
+        <Box overflowWrap="anywhere" alignItems="center">
+          <Wrap overflow="hidden" float="left" position="relative">
             {post.tags?.map((tag, index) => (
-              <Button key={index} size={"sm"}>
-                {tag.name}
-              </Button>
+              <WrapItem>
+                <Button key={index} size={"sm"} minW="unset">
+                  {tag.name}
+                </Button>
+              </WrapItem>
             ))}
-          </HStack>
-          <Text>{dateToString(new Date(post.publishDate), false)}</Text>
-        </Flex>
+          </Wrap>
+          <Text float="right" position="relative" ml={4}>
+            {dateToString(new Date(post.publishDate), false)}
+          </Text>
+        </Box>
       </Flex>
     </Card>
   );

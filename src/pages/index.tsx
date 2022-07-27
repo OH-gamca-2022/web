@@ -8,9 +8,19 @@ import { useGetPublishedPostsQuery } from "../generated/graphql";
 import { NavBar } from "../components/NavBar";
 import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
-import { Flex, Heading, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Stack,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { Pagination } from "../components/Pagination";
 import { useRouter } from "next/router";
+import { Card } from "../components/Card";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -40,20 +50,29 @@ const Home: NextPage = () => {
     router.push(`/?page=${value}`, undefined, { shallow: true });
   };
 
+  // "repeat(1, 1fr)"
+
   return (
     <Layout>
-      <Stack>
-        {data?.getPublishedPosts.posts.map((post, index) => (
-          <Post post={post} key={index} />
-        ))}
-        <Flex justifyContent="center">
-          <Pagination
-            count={data.getPublishedPosts.numOfPages}
-            page={page}
-            onChange={handleChange}
-          />
-        </Flex>
-      </Stack>
+      <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4}>
+        <GridItem colSpan={2}>
+          <Stack w="100%">
+            {data?.getPublishedPosts.posts.map((post, index) => (
+              <Post post={post} key={index} />
+            ))}
+            <Flex justifyContent="center">
+              <Pagination
+                count={data.getPublishedPosts.numOfPages}
+                page={page}
+                onChange={handleChange}
+              />
+            </Flex>
+          </Stack>
+        </GridItem>
+        <Card>
+          <Heading>Sponzori</Heading>
+        </Card>
+      </Grid>
     </Layout>
   );
 };
