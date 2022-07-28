@@ -17,6 +17,7 @@ import { dateToString } from "../utils/dateFormatter";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { Card } from "./Card";
+import { TagButton } from "./TagButton";
 
 interface PostProps {
   post: PostSnippetFragment;
@@ -37,11 +38,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           <Wrap overflow="hidden" float="left" position="relative">
             {post.tags?.map((tag, index) => (
               <WrapItem key={index}>
-                <NextLink href={`/posts?tagIds=${[tag.id]}`}>
-                  <Button size={"sm"} minW="unset">
-                    {tag.name}
-                  </Button>
-                </NextLink>
+                <TagButton tag={tag} />
               </WrapItem>
             ))}
           </Wrap>

@@ -46,7 +46,15 @@ const Home: NextPage = () => {
 
   const handleChange = (value: number) => {
     setPage(value);
-    router.push(`/?page=${value}`, undefined, { shallow: true });
+    router.push(
+      {
+        query: {
+          page: value,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   // "repeat(1, 1fr)"

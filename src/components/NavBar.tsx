@@ -18,7 +18,7 @@ import NextLink from "next/link";
 import { createRef, useEffect, useLayoutEffect, useState } from "react";
 import { useGetCategoriesQuery } from "../generated/graphql";
 import { AdminBar } from "./AdminBar";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export const NavBar: React.FC = () => {
   const [{ data }] = useGetCategoriesQuery();
@@ -29,11 +29,11 @@ export const NavBar: React.FC = () => {
     md: true,
   });
 
-  const variants = {
+  const variants: Variants = {
     visible: {
       height: "auto",
       display: "flex",
-      transition: { staggerChildren: 0.01, type: "tween" },
+      transition: { type: "tween", duration: bigMenu ? 0 : undefined },
       marginTop: bigMenu ? 0 : 10,
     },
     hidden: {
@@ -68,9 +68,9 @@ export const NavBar: React.FC = () => {
       gap={4}
       // display={{ base: isMenuOpen ? "flex" : "none", md: "flex" }}
     >
-      {data?.getCategories.map((item) => (
-        <Box as={motion.div}>
-          <NextLink href={`/`}>
+      {data?.getCategories.map((item, index) => (
+        <Box as={motion.div} key={index}>
+          <NextLink href={`/posts?tagIds=${[item.tag.id]}`}>
             <Link color="white">
               <Text>{item.name}</Text>
             </Link>
@@ -88,7 +88,13 @@ export const NavBar: React.FC = () => {
   );
 
   const navBarLeft = (
-    <Flex alignItems="center" as={motion.div} layout bg="black" zIndex={2}>
+    <Flex
+      alignItems="center"
+      as={motion.div}
+      layout={false}
+      bg="black"
+      zIndex={2}
+    >
       <IconButton
         aria-label="menu"
         icon={<HamburgerIcon />}
@@ -123,10 +129,9 @@ export const NavBar: React.FC = () => {
       {/* NavBar container*/}
       <Flex
         as={motion.div}
-        layout
+        layout={!bigMenu}
         bg="black"
         justifyContent="center"
-        alignItems={"center"}
         flex={1}
         p={3}
         w="100%"
@@ -143,13 +148,15 @@ export const NavBar: React.FC = () => {
           <Box
             as={motion.div}
             variants={variants}
-            initial={bigMenu ? "visible" : "hidden"}
+            initial={bigMenu ? false : "hidden"}
             animate={bigMenu ? "visible" : isMenuOpen ? "visible" : "hidden"}
           >
             {menuList}
           </Box>
         </Flex>
-        <motion.div layout="position">{userButton}</motion.div>
+        <Box as={motion.div} layout={false}>
+          {userButton}
+        </Box>
       </Flex>
     </Flex>
   );

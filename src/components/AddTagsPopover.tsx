@@ -29,12 +29,14 @@ interface AddTagsPopoverProps {
   children: React.ReactNode;
   selectedTags: TagFragment[];
   setSelectedTags: (tags: TagFragment[]) => void;
+  allowAdding?: boolean;
 }
 
 export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
   children,
   setSelectedTags,
   selectedTags,
+  allowAdding = true,
 }) => {
   const [{ data, fetching }] = useGetTagsQuery();
   const [filteredTags, setFilteredTags] = useState<TagFragment[]>([]);
@@ -111,28 +113,30 @@ export const AddTagsPopover: React.FC<AddTagsPopoverProps> = ({
               </VStack>
             )}
           </PopoverBody>
-          <PopoverFooter>
-            <Flex alignItems="center">
-              <Input
-                variant="unstyled"
-                placeholder="Nový tag"
-                value={newTagName}
-                onChange={(e) => {
-                  setNewTagName(e.target.value);
-                }}
-              />
-              <IconButton
-                aria-label="add tag"
-                size="sm"
-                icon={<AddIcon />}
-                onClick={() => {
-                  createTag({ name: newTagName });
-                  setNewTagName("");
-                }}
-                mr={2}
-              />
-            </Flex>
-          </PopoverFooter>
+          {allowAdding && (
+            <PopoverFooter>
+              <Flex alignItems="center">
+                <Input
+                  variant="unstyled"
+                  placeholder="Nový tag"
+                  value={newTagName}
+                  onChange={(e) => {
+                    setNewTagName(e.target.value);
+                  }}
+                />
+                <IconButton
+                  aria-label="add tag"
+                  size="sm"
+                  icon={<AddIcon />}
+                  onClick={() => {
+                    createTag({ name: newTagName });
+                    setNewTagName("");
+                  }}
+                  mr={2}
+                />
+              </Flex>
+            </PopoverFooter>
+          )}
         </PopoverContent>
       </Portal>
     </Popover>

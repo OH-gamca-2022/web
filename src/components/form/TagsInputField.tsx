@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { TagFragment, useGetTagsQuery } from "../../generated/graphql";
 import { AddIcon, CloseIcon, Icon } from "@chakra-ui/icons";
 import { AddTagsPopover } from "../AddTagsPopover";
+import { Tag } from "../Tag";
 
 type TagsInputFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
@@ -41,28 +42,15 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
           <IconButton icon={<AddIcon />} aria-label="add tags" size="sm" />
         </AddTagsPopover>
         {selectedTags.map((tag, index) => (
-          <Flex
+          <Tag
+            tag={tag}
             key={index}
-            justifyContent="flex-start"
-            bg={"gray.100"}
-            borderRadius={5}
-            alignItems="center"
-            p={1}
-            px={2}
-          >
-            <Text mr={2}>{tag.name}</Text>
-            <IconButton
-              onClick={() => {
-                onChange(
-                  selectedTags.filter((item, index) => item.id !== tag.id)
-                );
-              }}
-              aria-label="remove tag"
-              icon={<CloseIcon />}
-              bg="gray.200"
-              size="xs"
-            />
-          </Flex>
+            onRemove={() => {
+              onChange(
+                selectedTags.filter((item, index) => item.id !== tag.id)
+              );
+            }}
+          />
         ))}
       </HStack>
       {meta.error ? <FormErrorMessage>{meta.error}</FormErrorMessage> : null}

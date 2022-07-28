@@ -71,13 +71,14 @@ export class PostResolver {
     const startIndex = limit && page ? limit * page : 0;
     const realLimit = limit ? limit : 50;
 
-    const filteredPostsQb = tagIds
-      ? qb
-          .innerJoin("post.tags", "postTag", "postTag.id IN (:...tagIds)", {
-            tagIds,
-          })
-          .leftJoinAndSelect("post.tags", "tags")
-      : qb.leftJoinAndSelect("post.tags", "tag");
+    const filteredPostsQb =
+      tagIds && tagIds.length > 0
+        ? qb
+            .innerJoin("post.tags", "postTag", "postTag.id IN (:...tagIds)", {
+              tagIds,
+            })
+            .leftJoinAndSelect("post.tags", "tags")
+        : qb.leftJoinAndSelect("post.tags", "tag");
 
     const publishedPostsQb = filteredPostsQb.where(
       "post.published = :published",
