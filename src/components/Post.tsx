@@ -36,10 +36,12 @@ export const Post: React.FC<PostProps> = ({ post }) => {
         <Box overflowWrap="anywhere" alignItems="center">
           <Wrap overflow="hidden" float="left" position="relative">
             {post.tags?.map((tag, index) => (
-              <WrapItem>
-                <Button key={index} size={"sm"} minW="unset">
-                  {tag.name}
-                </Button>
+              <WrapItem key={index}>
+                <NextLink href={`/posts?tagIds=${[tag.id]}`}>
+                  <Button size={"sm"} minW="unset">
+                    {tag.name}
+                  </Button>
+                </NextLink>
               </WrapItem>
             ))}
           </Wrap>

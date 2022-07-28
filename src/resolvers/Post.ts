@@ -72,12 +72,11 @@ export class PostResolver {
     const realLimit = limit ? limit : 50;
 
     const filteredPostsQb = tagIds
-      ? qb.leftJoinAndSelect(
-          "post.tags",
-          "tag",
-          tagIds && "tag.id IN (:...ids)",
-          { ids: tagIds }
-        )
+      ? qb
+          .innerJoin("post.tags", "postTag", "postTag.id IN (:...tagIds)", {
+            tagIds,
+          })
+          .leftJoinAndSelect("post.tags", "tags")
       : qb.leftJoinAndSelect("post.tags", "tag");
 
     const publishedPostsQb = filteredPostsQb.where(

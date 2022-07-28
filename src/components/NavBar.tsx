@@ -34,7 +34,7 @@ export const NavBar: React.FC = () => {
       height: "auto",
       display: "flex",
       transition: { staggerChildren: 0.01, type: "tween" },
-      marginTop: 10,
+      marginTop: bigMenu ? 0 : 10,
     },
     hidden: {
       height: 0,
@@ -86,7 +86,31 @@ export const NavBar: React.FC = () => {
       </Box>
     </Flex>
   );
+
+  const navBarLeft = (
+    <Flex alignItems="center" as={motion.div} layout bg="black" zIndex={2}>
+      <IconButton
+        aria-label="menu"
+        icon={<HamburgerIcon />}
+        color="white"
+        variant="unstyled"
+        display={{ base: "block", md: "none" }}
+        onClick={() => {
+          setIsMenuOpen(!isMenuOpen);
+        }}
+      />
+      <NextLink href="/">
+        <Link mr={4}>
+          <Heading color="white" whiteSpace={"nowrap"}>
+            OH 2022
+          </Heading>
+        </Link>
+      </NextLink>
+    </Flex>
+  );
+
   return (
+    // Whole top part
     <Flex
       zIndex={2}
       position="sticky"
@@ -96,46 +120,26 @@ export const NavBar: React.FC = () => {
       flexDirection="column"
     >
       {session.data?.user.role == "ADMIN" && <AdminBar />}
+      {/* NavBar container*/}
       <Flex
         as={motion.div}
         layout
         bg="black"
         justifyContent="center"
+        alignItems={"center"}
         flex={1}
         p={3}
         w="100%"
         overflow="hidden"
       >
+        {/* Main navbar content */}
         <Flex
           flex={1}
           alignItems={{ base: "flex-start", md: "center" }}
           flexDirection={{ base: "column", md: "row" }}
         >
-          <Flex
-            alignItems="center"
-            as={motion.div}
-            layout
-            bg="black"
-            zIndex={2}
-          >
-            <IconButton
-              aria-label="menu"
-              icon={<HamburgerIcon />}
-              color="white"
-              variant="unstyled"
-              display={{ base: "block", md: "none" }}
-              onClick={() => {
-                setIsMenuOpen(!isMenuOpen);
-              }}
-            />
-            <NextLink href="/">
-              <Link mr={4}>
-                <Heading color="white" whiteSpace={"nowrap"}>
-                  OH 2022
-                </Heading>
-              </Link>
-            </NextLink>
-          </Flex>
+          {navBarLeft}
+          {/* Animated menulist */}
           <Box
             as={motion.div}
             variants={variants}

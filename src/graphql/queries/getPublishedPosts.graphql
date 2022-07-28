@@ -1,5 +1,5 @@
-query GetPublishedPosts($limit: Float, $page: Float) {
-  getPublishedPosts(limit: $limit, page: $page) {
+query GetPublishedPosts($limit: Float, $page: Float, $tagIds: [String!]) {
+  getPublishedPosts(limit: $limit, page: $page, tagIds: $tagIds) {
     numOfPages
     posts {
       ...PostSnippet

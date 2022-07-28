@@ -417,6 +417,7 @@ export type GetPostsQuery = { __typename?: 'Query', getPosts: Array<{ __typename
 export type GetPublishedPostsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
+  tagIds?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
@@ -749,8 +750,8 @@ export function useGetPostsQuery(options?: Omit<Urql.UseQueryArgs<GetPostsQueryV
   return Urql.useQuery<GetPostsQuery>({ query: GetPostsDocument, ...options });
 };
 export const GetPublishedPostsDocument = gql`
-    query GetPublishedPosts($limit: Float, $page: Float) {
-  getPublishedPosts(limit: $limit, page: $page) {
+    query GetPublishedPosts($limit: Float, $page: Float, $tagIds: [String!]) {
+  getPublishedPosts(limit: $limit, page: $page, tagIds: $tagIds) {
     numOfPages
     posts {
       ...PostSnippet

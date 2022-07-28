@@ -24,7 +24,6 @@ import { Card } from "../components/Card";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [page, setPage] = useState(0);
   const [{ data, fetching, error }, fetchPosts] = useGetPublishedPostsQuery({
     variables: {
