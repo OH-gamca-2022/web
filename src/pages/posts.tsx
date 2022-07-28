@@ -47,7 +47,6 @@ const Posts: NextPage = () => {
   }, [router.query.page]);
 
   useEffect(() => {
-    console.log("array", router.query.tagIds as string[]);
     const tagIdsArray =
       typeof router.query.tagIds == "string"
         ? [router.query.tagIds]
@@ -56,10 +55,6 @@ const Posts: NextPage = () => {
       setTagIds(tagIdsArray || []);
     }
   }, [router.query.tagIds]);
-
-  useEffect(() => {
-    console.log("query", router.query.tagIds);
-  });
 
   if (!data?.getPublishedPosts.posts || !router.isReady) {
     return <Heading>Loading...</Heading>;
@@ -82,7 +77,6 @@ const Posts: NextPage = () => {
   };
 
   const handleTagschange = (tags: string[]) => {
-    console.log("tags", tags);
     setTagIds(tags);
     router.push(
       {
@@ -115,7 +109,6 @@ const Posts: NextPage = () => {
                     <Tag
                       tag={tag}
                       onRemove={() => {
-                        console.log("remove", tagIds);
                         handleTagschange(
                           tagIds.filter((item) => item !== tag.id)
                         );

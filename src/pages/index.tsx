@@ -21,6 +21,7 @@ import {
 import { Pagination } from "../components/Pagination";
 import { useRouter } from "next/router";
 import { Card } from "../components/Card";
+import { UpcomingEvents } from "../components/UpcomingEvents";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -76,9 +77,12 @@ const Home: NextPage = () => {
             </Flex>
           </Stack>
         </GridItem>
-        <Card>
-          <Heading>Sponzori</Heading>
-        </Card>
+        <Stack>
+          <UpcomingEvents />
+          <Card>
+            <Heading>Sponzori</Heading>
+          </Card>
+        </Stack>
       </Grid>
     </Layout>
   );

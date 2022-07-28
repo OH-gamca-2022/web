@@ -190,7 +190,10 @@ export class EventResolver {
     const dataSource = await getDataSource();
     return dataSource
       .getRepository(CalendarEvent)
-      .find({ relations: { tags: true } });
+      .createQueryBuilder("event")
+      .leftJoinAndSelect("event.tags", "tags")
+      .orderBy("event.startDate", "DESC")
+      .getMany();
   }
 
   @Query(() => [CalendarEvent])
@@ -202,7 +205,10 @@ export class EventResolver {
       .findOne({ where: { id: payload?.userId } });
     const allEvents = await dataSource
       .getRepository(CalendarEvent)
-      .find({ relations: { tags: true } });
+      .createQueryBuilder("event")
+      .leftJoinAndSelect("event.tags", "tags")
+      .orderBy("event.startDate", "ASC")
+      .getMany();
     const myEvents = allEvents.filter((item) => {
       if (item.class && user && item.class !== user.class) {
         return false;

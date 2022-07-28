@@ -22,6 +22,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ row }) => {
           endDate: row.googleEvent.endDate,
           googleId: row.googleEvent.id,
           id: row.savedEvent?.id,
+          allDay: row.googleEvent?.allDay || row.savedEvent?.allDay || false,
         });
       }}
     >
