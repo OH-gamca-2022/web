@@ -1,0 +1,4 @@
+fragment SimpleDiscipline on Discipline {
+  id
+  name
+}

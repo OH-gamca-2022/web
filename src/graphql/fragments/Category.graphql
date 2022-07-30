@@ -2,8 +2,9 @@ fragment Category on Category {
   id
   name
   disciplines {
-    ...Discipline
+    ...SimpleDiscipline
   }
+  googleCalendarId
   tag {
     ...Tag
   }

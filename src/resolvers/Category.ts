@@ -10,6 +10,7 @@ export class CategoryResolver {
   @Query(() => [Category])
   async getCategories() {
     const dataSource = await getDataSource();
+    // await dataSource.getRepository(Category).delete({});
     const result = await dataSource
       .getRepository(Category)
       .find({ relations: { disciplines: true, tag: true } });
@@ -36,17 +37,42 @@ export class CategoryResolver {
     const dataSource = await getDataSource();
     const category = await dataSource
       .getRepository(Category)
-      .findOne({ where: { id }, relations: ["tag"] });
+      .findOne({ where: { id }, relations: { tag: true, disciplines: true } });
 
-    if (!category) {
+    if (
+      !category ||
+      (category.disciplines && category.disciplines.length > 0)
+    ) {
       return false;
     } else {
       const tag = await dataSource
         .getRepository(Tag)
         .find({ where: { id: category.tag.id } });
-      dataSource.getRepository(Category).remove(category);
-      dataSource.getRepository(Tag).remove(tag);
+
+      await dataSource.getRepository(Category).remove(category);
+      await dataSource.getRepository(Tag).remove(tag);
       return true;
+    }
+  }
+
+  @Mutation(() => Category)
+  async setCategoryCalendar(
+    @Arg("categoryId") categoryId: string,
+    @Arg("calendarId") calendarId: string
+  ) {
+    const dataSource = await getDataSource();
+    const allCategories = await dataSource
+      .getRepository(Category)
+      .update({ googleCalendarId: calendarId }, { googleCalendarId: null });
+    const category = await dataSource
+      .getRepository(Category)
+      .findOne({ where: { id: categoryId } });
+    if (category) {
+      category.googleCalendarId = calendarId;
+      await dataSource.getRepository(Category).save(category);
+      return category;
+    } else {
+      throw new Error("Category wasn't found");
     }
   }
 }

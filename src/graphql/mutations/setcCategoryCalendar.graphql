@@ -1,0 +1,5 @@
+mutation SetCategoryCalendar($categoryId: String!, $calendarId: String!) {
+  setCategoryCalendar(calendarId: $calendarId, categoryId: $categoryId) {
+    ...SimpleCategory
+  }
+}

@@ -34,10 +34,6 @@ export class Discipline extends BaseEntity {
   @Column()
   categoryId!: string;
 
-  @Field(() => [Post], { nullable: true })
-  @OneToMany(() => Post, (post) => post.discipline, { nullable: true })
-  posts?: Relation<Post>[];
-
   @Field(() => Tag)
   @OneToOne(() => Tag, (tag) => tag.discipline)
   tag!: Relation<Tag>;

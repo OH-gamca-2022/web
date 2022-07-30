@@ -1,0 +1,5 @@
+mutation EditDiscipline($id: String!, $name: String!) {
+  editDiscipline(id: $id, name: $name) {
+    ...SimpleDiscipline
+  }
+}

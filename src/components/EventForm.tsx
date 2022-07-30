@@ -5,6 +5,7 @@ import {
   useGetGoogleEventQuery,
   useGetPostQuery,
   useGetSavedEventQuery,
+  useGetTagsQuery,
   useSaveEventMutation,
   useSavePostMutation,
 } from "../generated/graphql";
@@ -22,11 +23,13 @@ interface EventFormProps {
   googleId?: string;
   calendarId?: string;
   id?: string;
+  tagId?: string;
 }
 export const EventForm: React.FC<EventFormProps> = ({
   googleId,
   calendarId,
   id,
+  tagId,
 }) => {
   const [{ data: googleEvent, fetching: googleEventFetching }] =
     useGetGoogleEventQuery({
@@ -39,6 +42,7 @@ export const EventForm: React.FC<EventFormProps> = ({
       variables: { id: id as string },
     });
   const [, saveEvent] = useSaveEventMutation();
+  const [{ data: tags }] = useGetTagsQuery();
 
   const router = useRouter();
 
@@ -67,7 +71,10 @@ export const EventForm: React.FC<EventFormProps> = ({
         endDate:
           googleEvent?.getGoogleEvent.endDate ||
           savedEvent?.getSavedEvent.endDate,
-        tags: savedEvent?.getSavedEvent.tags || [],
+        tags:
+          savedEvent?.getSavedEvent.tags ||
+          tags?.getTags.filter((item) => item.id == tagId) ||
+          [],
         class: savedEvent?.getSavedEvent.class || null,
       }}
       onSubmit={async (values) => {

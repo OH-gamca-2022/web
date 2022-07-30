@@ -19,7 +19,6 @@ export const getDataSource = async () => {
       database: "OH-gamca-2022",
       entities: [User, Post, Tag, CalendarEvent, Discipline, Category],
       synchronize: true,
-      logging: true,
     });
     await mainDataSource
       .initialize()

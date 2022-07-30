@@ -98,7 +98,7 @@ const client = createClient({
               id: (args as DeleteDisciplineMutationVariables).id,
             });
           },
-          deleteCategory(_result, args, cache, info) {
+          deleteCategory(result, args, cache, info) {
             cache.invalidate({
               __typename: "Category",
               id: (args as DeleteCategoryMutationVariables).id,
@@ -129,6 +129,9 @@ const client = createClient({
               __typename: "CalendarEvent",
               id: (args as DeleteEventMutationVariables).id,
             });
+          },
+          setCategoryCalendar(result, args, cache, info) {
+            invalidateAllCategories(cache);
           },
         },
       },

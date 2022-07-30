@@ -24,6 +24,7 @@ import {
   useGetCategoriesQuery,
   useCreateDisciplineMutation,
   useDeleteCategoryMutation,
+  useEditDisciplineMutation,
 } from "../../generated/graphql";
 import NextLink from "next/link";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -33,7 +34,7 @@ import { useIsAdminPage } from "../../utils/useIsAdminPage";
 
 const AdminDisciplines: NextPage = () => {
   useIsAdminPage();
-  const [{ data }] = useGetCategoriesQuery();
+  const [{ data, error }] = useGetCategoriesQuery();
   const [, deleteDiscipline] = useDeleteDisciplineMutation();
   const [, createDiscipline] = useCreateDisciplineMutation();
   const [newDiscipline, setNewDiscipline] = useState<{
@@ -41,9 +42,12 @@ const AdminDisciplines: NextPage = () => {
     category: string;
   } | null>(null);
   const [, deleteCategory] = useDeleteCategoryMutation();
+  const [, editDiscipline] = useEditDisciplineMutation();
+  const [editedItemId, setEditedItemId] = useState<string | null>(null);
+  const [editedItemName, setEditedItemName] = useState<string>("");
 
   useEffect(() => {
-    console.log(data);
+    console.log(data, error);
   });
 
   if (!data) {
@@ -86,20 +90,52 @@ const AdminDisciplines: NextPage = () => {
                   {cat.disciplines?.map((disc, index) => (
                     <ListItem key={index}>
                       <Flex justifyContent="space-between" alignItems="center">
-                        <NextLink href={`/discipline`}>
-                          <Link>{disc.name}</Link>
-                        </NextLink>
+                        {editedItemId == disc.id ? (
+                          <HStack alignItems="center">
+                            <Input
+                              placeholder="názov tagu"
+                              value={editedItemName || ""}
+                              onChange={(e) => {
+                                setEditedItemName(e.target.value);
+                              }}
+                            />
+                            <Button
+                              onClick={() => {
+                                editDiscipline({
+                                  id: editedItemId,
+                                  name: editedItemName,
+                                });
+                                setEditedItemId(null);
+                                setEditedItemName("");
+                              }}
+                            >
+                              Uložiť
+                            </Button>
+                          </HStack>
+                        ) : (
+                          <NextLink href={`/discipline`}>
+                            <Link>{disc.name}</Link>
+                          </NextLink>
+                        )}
+
                         <Flex>
                           <IconButton
                             size="sm"
                             variant="unstyled"
                             icon={<EditIcon />}
                             aria-label="edit discipline"
+                            onClick={() => {
+                              setEditedItemId(disc.id);
+                              setEditedItemName(disc.name);
+                            }}
                           />
                           <DeleteAlert
                             headerText="Vymazať disciplínu"
                             bodyText="Ste si isťí? Túto akciu už nemôžete vrátiť."
-                            onDelete={() => deleteDiscipline({ id: disc.id })}
+                            onDelete={() => {
+                              console.log(disc.id);
+                              deleteDiscipline({ id: disc.id });
+                            }}
                           >
                             {(onOpen) => (
                               <IconButton

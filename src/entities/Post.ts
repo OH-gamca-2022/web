@@ -42,10 +42,6 @@ export class Post extends BaseEntity {
   @JoinTable()
   tags?: Relation<Tag>[];
 
-  @Field(() => Discipline, { nullable: true })
-  @ManyToOne(() => Discipline, (disc) => disc.posts, { nullable: true })
-  discipline?: Relation<Discipline>;
-
   @Column({ default: false })
   @Field()
   published!: Boolean;

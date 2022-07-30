@@ -35,19 +35,45 @@ export class DisciplineResolver {
 
   @Mutation(() => Boolean)
   async deleteDiscipline(@Arg("id") id: string) {
+    console.log(id);
     const dataSource = await getDataSource();
     const discipline = await dataSource
       .getRepository(Discipline)
-      .findOne({ where: { id }, relations: ["tag"] });
+      .findOne({ where: { id }, relations: { tag: true } });
+    console.log(discipline);
     if (!discipline) {
       return false;
     } else {
       const tag = await dataSource
         .getRepository(Tag)
         .find({ where: { id: discipline.tag.id } });
-      dataSource.getRepository(Discipline).remove(discipline);
-      dataSource.getRepository(Tag).remove(tag);
+      await dataSource.getRepository(Tag).remove(tag);
+      await dataSource.getRepository(Discipline).remove(discipline);
       return true;
+    }
+  }
+
+  @Mutation(() => Discipline)
+  async editDiscipline(@Arg("name") name: string, @Arg("id") id: string) {
+    const dataSource = await getDataSource();
+    const discipline = await dataSource
+      .getRepository(Discipline)
+      .findOne({ where: { id }, relations: { tag: true } });
+    if (discipline) {
+      const tag = await dataSource
+        .getRepository(Tag)
+        .findOne({ where: { id: discipline.tag.id } });
+      discipline.name = name;
+      if (tag) {
+        tag.name = name;
+      } else {
+        throw new Error("An error occured");
+      }
+      await dataSource.getRepository(Tag).save(tag);
+      await dataSource.getRepository(Discipline).save(discipline);
+      return discipline;
+    } else {
+      throw new Error("Discipline wasn't found");
     }
   }
 }

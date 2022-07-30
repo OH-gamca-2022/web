@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Heading,
   Wrap,
@@ -8,6 +9,11 @@ import {
   HStack,
   Spinner,
   Tag,
+  Select,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { NextPage } from "next";
@@ -22,9 +28,12 @@ import { LoadEventModal } from "../../../../components/modals/LoadEventModal";
 import {
   BothEventsFragment,
   CalendarEventFragment,
+  useGetCategoriesQuery,
   useGetGoogleEventsQuery,
   useSaveEventMutation,
+  useSetCategoryCalendarMutation,
 } from "../../../../generated/graphql";
+import { dateFormat } from "../../../../utils/constants";
 import { useIsAdminPage } from "../../../../utils/useIsAdminPage";
 
 const areEventsSame = (event: BothEventsFragment) => {
@@ -45,9 +54,19 @@ const AdminGoogleCalendar: NextPage = () => {
   const router = useRouter();
   const { id, name } = router.query;
   const [{ data }] = useGetGoogleEventsQuery({
+    pause: !id,
     variables: { calendarId: id as string },
   });
-  const [{ fetching: saveEventFetching }, saveEvent] = useSaveEventMutation();
+  const [{ data: categories }] = useGetCategoriesQuery();
+  const [{ error }, setCategoryCalendar] = useSetCategoryCalendarMutation();
+
+  const category = categories?.getCategories.find(
+    (item) => item.googleCalendarId == id
+  );
+
+  useEffect(() => {
+    console.log(error);
+  });
 
   const columns: TableColumn<BothEventsFragment>[] = [
     {
@@ -71,16 +90,46 @@ const AdminGoogleCalendar: NextPage = () => {
     {
       name: "Začiatok",
       selector: (row) => row.googleEvent.startDate,
-      format: (row) => {
-        return dayjs(row.googleEvent.startDate).format("DD/MM/YYYY HH:mm");
+      cell: (row) => {
+        if (
+          row.savedEvent &&
+          row.googleEvent.startDate !== row.savedEvent.startDate
+        ) {
+          return (
+            <HStack spacing={1}>
+              <Text>{dayjs(row.savedEvent.startDate).format(dateFormat)}</Text>
+              <Text>{" -> "}</Text>
+              <Text color={"red"}>
+                {dayjs(row.googleEvent.startDate).format(dateFormat)}
+              </Text>
+            </HStack>
+          );
+        } else {
+          return dayjs(row.googleEvent.startDate).format(dateFormat);
+        }
       },
       sortable: true,
     },
     {
       name: "Koniec",
       selector: (row) => row.googleEvent.endDate,
-      format: (row) => {
-        return dayjs(row.googleEvent.endDate).format("DD/MM/YYYY HH:mm");
+      cell: (row) => {
+        if (
+          row.savedEvent &&
+          row.googleEvent.endDate !== row.savedEvent.endDate
+        ) {
+          return (
+            <HStack spacing={1}>
+              <Text>{dayjs(row.savedEvent.endDate).format(dateFormat)}</Text>
+              <Text>{" -> "}</Text>
+              <Text color={"red"}>
+                {dayjs(row.googleEvent.endDate).format(dateFormat)}
+              </Text>
+            </HStack>
+          );
+        } else {
+          return dayjs(row.googleEvent.endDate).format(dateFormat);
+        }
       },
       sortable: true,
     },
@@ -107,9 +156,14 @@ const AdminGoogleCalendar: NextPage = () => {
           <LoadButton
             row={row}
             onClick={() =>
-              router.push(
-                `/admin/events/load/event?googleId=${row.googleEvent.id}&calendarId=${id}`
-              )
+              router.push({
+                pathname: "/admin/events/load/event",
+                query: {
+                  googleId: row.googleEvent.id,
+                  calendarId: id,
+                  tagId: category?.tag.id,
+                },
+              })
             }
           />
         ) : areEventsSame(row) ? (
@@ -122,9 +176,39 @@ const AdminGoogleCalendar: NextPage = () => {
     },
   ];
 
+  if (!id) {
+    return (
+      <Layout>
+        <Heading>Kalendár nebol nájdený</Heading>
+      </Layout>
+    );
+  }
+
   return (
     <Layout wide={true}>
-      <Heading mb={4}>{name}</Heading>
+      <HStack align="center" alignItems="center">
+        <Heading pr={4}>{name}</Heading>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            {category?.name || "Kategória"}
+          </MenuButton>
+          <MenuList>
+            {categories?.getCategories.map((item, index) => (
+              <MenuItem
+                key={index}
+                onClick={() => {
+                  setCategoryCalendar({
+                    categoryId: item.id,
+                    calendarId: id as string,
+                  });
+                }}
+              >
+                {item.name}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </HStack>
       <DataTable
         defaultSortAsc={false}
         defaultSortFieldId={2}

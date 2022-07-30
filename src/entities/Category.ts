@@ -31,4 +31,8 @@ export class Category extends BaseEntity {
   @Field(() => Tag)
   @OneToOne(() => Tag, (tag) => tag.category)
   tag!: Relation<Tag>;
+
+  @Field(() => String, { nullable: true })
+  @Column("text", { nullable: true })
+  googleCalendarId?: string | null;
 }

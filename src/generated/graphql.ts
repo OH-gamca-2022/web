@@ -37,6 +37,7 @@ export type CalendarEvent = {
 export type Category = {
   __typename?: 'Category';
   disciplines?: Maybe<Array<Discipline>>;
+  googleCalendarId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
   tag: Tag;
@@ -81,9 +82,11 @@ export type Mutation = {
   deleteEvent: Scalars['Boolean'];
   deletePost: Scalars['Boolean'];
   deleteTag: Scalars['Boolean'];
+  editDiscipline: Discipline;
   editTag: Tag;
   saveEvent: CalendarEvent;
   savePost: Post;
+  setCategoryCalendar: Category;
 };
 
 
@@ -133,6 +136,12 @@ export type MutationDeleteTagArgs = {
 };
 
 
+export type MutationEditDisciplineArgs = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
 export type MutationEditTagArgs = {
   id: Scalars['String'];
   name: Scalars['String'];
@@ -158,6 +167,12 @@ export type MutationSavePostArgs = {
   tagIds?: InputMaybe<Array<Scalars['String']>>;
   text?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+};
+
+
+export type MutationSetCategoryCalendarArgs = {
+  calendarId: Scalars['String'];
+  categoryId: Scalars['String'];
 };
 
 export type PaginatedPosts = {
@@ -259,7 +274,7 @@ export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __t
 
 export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
 
-export type CategoryFragment = { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
+export type CategoryFragment = { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
 export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
@@ -271,6 +286,10 @@ export type PostFragment = { __typename?: 'Post', id: string, createdAt: any, up
 
 export type PostSnippetFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
 
+export type SimpleCategoryFragment = { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null };
+
+export type SimpleDisciplineFragment = { __typename?: 'Discipline', id: string, name: string };
+
 export type TagFragment = { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null };
 
 export type CreateCategoryMutationVariables = Exact<{
@@ -278,7 +297,7 @@ export type CreateCategoryMutationVariables = Exact<{
 }>;
 
 
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } } };
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } } };
 
 export type CreateDisciplineMutationVariables = Exact<{
   name: Scalars['String'];
@@ -330,6 +349,14 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
+export type EditDisciplineMutationVariables = Exact<{
+  id: Scalars['String'];
+  name: Scalars['String'];
+}>;
+
+
+export type EditDisciplineMutation = { __typename?: 'Mutation', editDiscipline: { __typename?: 'Discipline', id: string, name: string } };
+
 export type EditTagMutationVariables = Exact<{
   id: Scalars['String'];
   name: Scalars['String'];
@@ -369,10 +396,18 @@ export type SavePostMutationVariables = Exact<{
 
 export type SavePostMutation = { __typename?: 'Mutation', savePost: { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, text: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null } };
 
+export type SetCategoryCalendarMutationVariables = Exact<{
+  categoryId: Scalars['String'];
+  calendarId: Scalars['String'];
+}>;
+
+
+export type SetCategoryCalendarMutation = { __typename?: 'Mutation', setCategoryCalendar: { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null } };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
 
 export type GetGoogleCalendarsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -477,6 +512,26 @@ export const BothEventsFragmentDoc = gql`
 }
     ${CalendarEventFragmentDoc}
 ${GoogleEventFragmentDoc}`;
+export const SimpleDisciplineFragmentDoc = gql`
+    fragment SimpleDiscipline on Discipline {
+  id
+  name
+}
+    `;
+export const CategoryFragmentDoc = gql`
+    fragment Category on Category {
+  id
+  name
+  disciplines {
+    ...SimpleDiscipline
+  }
+  googleCalendarId
+  tag {
+    ...Tag
+  }
+}
+    ${SimpleDisciplineFragmentDoc}
+${TagFragmentDoc}`;
 export const DisciplineFragmentDoc = gql`
     fragment Discipline on Discipline {
   id
@@ -486,19 +541,6 @@ export const DisciplineFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
-export const CategoryFragmentDoc = gql`
-    fragment Category on Category {
-  id
-  name
-  disciplines {
-    ...Discipline
-  }
-  tag {
-    ...Tag
-  }
-}
-    ${DisciplineFragmentDoc}
-${TagFragmentDoc}`;
 export const GoogleCalendarFragmentDoc = gql`
     fragment GoogleCalendar on GoogleCalendar {
   name
@@ -534,6 +576,13 @@ export const PostSnippetFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
+export const SimpleCategoryFragmentDoc = gql`
+    fragment SimpleCategory on Category {
+  id
+  name
+  googleCalendarId
+}
+    `;
 export const CreateCategoryDocument = gql`
     mutation CreateCategory($name: String!) {
   createCategory(name: $name) {
@@ -612,6 +661,17 @@ export const DeleteTagDocument = gql`
 export function useDeleteTagMutation() {
   return Urql.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument);
 };
+export const EditDisciplineDocument = gql`
+    mutation EditDiscipline($id: String!, $name: String!) {
+  editDiscipline(id: $id, name: $name) {
+    ...SimpleDiscipline
+  }
+}
+    ${SimpleDisciplineFragmentDoc}`;
+
+export function useEditDisciplineMutation() {
+  return Urql.useMutation<EditDisciplineMutation, EditDisciplineMutationVariables>(EditDisciplineDocument);
+};
 export const EditTagDocument = gql`
     mutation EditTag($id: String!, $name: String!) {
   editTag(id: $id, name: $name) {
@@ -671,6 +731,17 @@ export const SavePostDocument = gql`
 
 export function useSavePostMutation() {
   return Urql.useMutation<SavePostMutation, SavePostMutationVariables>(SavePostDocument);
+};
+export const SetCategoryCalendarDocument = gql`
+    mutation SetCategoryCalendar($categoryId: String!, $calendarId: String!) {
+  setCategoryCalendar(calendarId: $calendarId, categoryId: $categoryId) {
+    ...SimpleCategory
+  }
+}
+    ${SimpleCategoryFragmentDoc}`;
+
+export function useSetCategoryCalendarMutation() {
+  return Urql.useMutation<SetCategoryCalendarMutation, SetCategoryCalendarMutationVariables>(SetCategoryCalendarDocument);
 };
 export const GetCategoriesDocument = gql`
     query GetCategories {

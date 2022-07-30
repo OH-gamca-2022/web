@@ -93,7 +93,6 @@ export class EventResolver {
     const events = (await getCalendar().events.list({ calendarId })).data.items;
     const dataSource = await getDataSource();
     const savedEvents = await dataSource.getRepository(CalendarEvent).find();
-    console.log(await dataSource.getRepository(CalendarEvent).find());
     if (events) {
       const eventsWithoutUndefined = events.filter((event) => {
         if (event.id && event.start && event.end && event.summary) {
