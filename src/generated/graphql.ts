@@ -49,7 +49,6 @@ export type Discipline = {
   categoryId: Scalars['String'];
   id: Scalars['String'];
   name: Scalars['String'];
-  posts?: Maybe<Array<Post>>;
   tag: Tag;
 };
 
@@ -184,7 +183,6 @@ export type PaginatedPosts = {
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
-  discipline?: Maybe<Discipline>;
   id: Scalars['String'];
   publishDate?: Maybe<Scalars['DateTime']>;
   published: Scalars['Boolean'];
@@ -210,6 +208,7 @@ export type Query = {
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
+  getResultsTagId: Scalars['String'];
   getSavedEvent: CalendarEvent;
   getTags: Array<Tag>;
   hello: Scalars['Boolean'];
@@ -457,6 +456,11 @@ export type GetPublishedPostsQueryVariables = Exact<{
 
 
 export type GetPublishedPostsQuery = { __typename?: 'Query', getPublishedPosts: { __typename?: 'PaginatedPosts', numOfPages: number, posts: Array<{ __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null }> } };
+
+export type GetResultsTagIdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetResultsTagIdQuery = { __typename?: 'Query', getResultsTagId: string };
 
 export type GetSavedEventQueryVariables = Exact<{
   id: Scalars['String'];
@@ -833,6 +837,15 @@ export const GetPublishedPostsDocument = gql`
 
 export function useGetPublishedPostsQuery(options?: Omit<Urql.UseQueryArgs<GetPublishedPostsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetPublishedPostsQuery>({ query: GetPublishedPostsDocument, ...options });
+};
+export const GetResultsTagIdDocument = gql`
+    query GetResultsTagId {
+  getResultsTagId
+}
+    `;
+
+export function useGetResultsTagIdQuery(options?: Omit<Urql.UseQueryArgs<GetResultsTagIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetResultsTagIdQuery>({ query: GetResultsTagIdDocument, ...options });
 };
 export const GetSavedEventDocument = gql`
     query GetSavedEvent($id: String!) {

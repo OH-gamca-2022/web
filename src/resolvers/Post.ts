@@ -71,32 +71,47 @@ export class PostResolver {
     const startIndex = limit && page ? limit * page : 0;
     const realLimit = limit ? limit : 50;
 
-    const filteredPostsQb =
-      tagIds && tagIds.length > 0
-        ? qb
-            .innerJoin("post.tags", "postTag", "postTag.id IN (:...tagIds)", {
-              tagIds,
-            })
-            .leftJoinAndSelect("post.tags", "tags")
-        : qb.leftJoinAndSelect("post.tags", "tag");
+    const publishedPostsQb = qb
+      .where("post.published = :published", {
+        published: true,
+      })
+      .leftJoinAndSelect("post.tags", "tags");
 
-    const publishedPostsQb = filteredPostsQb.where(
-      "post.published = :published",
-      { published: true }
-    );
+    let finalPosts: Post[] = [];
+    let numOfPages: number = 1;
 
-    const numOfPages = Math.ceil(
-      (await publishedPostsQb.getCount()) / realLimit
-    );
+    if (tagIds && tagIds.length > 0) {
+      const posts = await publishedPostsQb.getMany();
+      const filteredPosts = posts.filter((post) => {
+        const tags = post.tags?.map((tag) => tag.id);
 
-    const paginatedPosts = await publishedPostsQb
-      .orderBy("post.publishDate", "DESC")
-      .skip(startIndex)
-      .take(realLimit)
-      .getMany();
+        const hasAllTags = tagIds.every((item) => {
+          return tags?.includes(item);
+        });
+
+        if (hasAllTags) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      numOfPages = Math.ceil(filteredPosts.length / realLimit);
+      finalPosts = filteredPosts.slice(startIndex, startIndex + realLimit);
+    } else {
+      numOfPages = Math.ceil((await publishedPostsQb.getCount()) / realLimit);
+
+      const paginatedPosts = await publishedPostsQb
+        .orderBy("post.publishDate", "DESC")
+        .skip(startIndex)
+        .take(realLimit)
+        .getMany();
+
+      finalPosts = paginatedPosts;
+    }
 
     return {
-      posts: paginatedPosts,
+      posts: finalPosts,
       numOfPages,
     };
   }

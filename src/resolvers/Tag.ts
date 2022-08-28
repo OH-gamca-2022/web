@@ -45,4 +45,14 @@ export class TagResolver {
       return false;
     }
   }
+
+  @Query(() => String)
+  async getResultsTagId() {
+    const dataSource = await getDataSource();
+    return (
+      await dataSource
+        .getRepository(Tag)
+        .findOne({ where: { name: "Výsledky" } })
+    )?.id;
+  }
 }

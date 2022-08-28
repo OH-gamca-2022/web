@@ -16,17 +16,27 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { createRef, useEffect, useLayoutEffect, useState } from "react";
-import { useGetCategoriesQuery } from "../generated/graphql";
+import {
+  useGetCategoriesQuery,
+  useGetResultsTagIdQuery,
+} from "../generated/graphql";
 import { AdminBar } from "./AdminBar";
 import { motion, Variants } from "framer-motion";
+import { useRouter } from "next/router";
 
 export const NavBar: React.FC = () => {
+  const router = useRouter();
   const [{ data }] = useGetCategoriesQuery();
   const session = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const bigMenu = useBreakpointValue({
     base: false,
     md: true,
+  });
+  const [{ data: resultsTagId }] = useGetResultsTagIdQuery();
+
+  useEffect(() => {
+    console.log(resultsTagId);
   });
 
   const variants: Variants = {
@@ -70,11 +80,49 @@ export const NavBar: React.FC = () => {
     >
       {data?.getCategories.map((item, index) => (
         <Box as={motion.div} key={index}>
-          <NextLink href={`/posts?tagIds=${[item.tag.id]}`}>
-            <Link color="white">
-              <Text>{item.name}</Text>
-            </Link>
-          </NextLink>
+          <Menu>
+            <MenuButton
+              as={Button}
+              fontWeight="normal"
+              variant="link"
+              color="white"
+              iconSpacing={0}
+              _expanded={{ color: "white" }}
+              _active={{ color: "white" }}
+              rightIcon={<ChevronDownIcon />}
+            >
+              {item.name}
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                onClick={() =>
+                  router.push({
+                    pathname: "/posts",
+                    query: {
+                      tagIds: [item.tag.id],
+                    },
+                  })
+                }
+              >
+                Novinky
+              </MenuItem>
+              <MenuItem
+                onClick={() =>
+                  router.push({
+                    pathname: "/posts",
+                    query: {
+                      tagIds: [
+                        item.tag.id,
+                        resultsTagId?.getResultsTagId,
+                      ] as string[],
+                    },
+                  })
+                }
+              >
+                Výsledky
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Box>
       ))}
       <Box as={motion.div}>
