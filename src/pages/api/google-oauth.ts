@@ -8,7 +8,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession();
+  const session = await getSession({ req });
+  console.log(session);
   if (!hasPermission(session?.user.role as ROLES, ROLES.EDITOR)) {
     res.send("You do not have permission for this action");
   }

@@ -8,7 +8,10 @@ export const oauth2Client = new google.auth.OAuth2(
 );
 
 export const generateURL = () => {
-  const scopes = ["https://www.googleapis.com/auth/calendar"];
+  const scopes = [
+    "https://www.googleapis.com/auth/calendar",
+    "https://www.googleapis.com/auth/photoslibrary.readonly",
+  ];
 
   const url = oauth2Client.generateAuthUrl({
     // 'online' (default) or 'offline' (gets refresh_token)
@@ -41,4 +44,10 @@ export const getCalendar = () => {
   const refreshToken = loadRefreshToken();
   oauth2Client.setCredentials({ refresh_token: refreshToken });
   return google.calendar({ version: "v3", auth: oauth2Client });
+};
+
+export const getGoogleAuth = () => {
+  const refreshToken = loadRefreshToken();
+  oauth2Client.setCredentials({ refresh_token: refreshToken });
+  return oauth2Client;
 };

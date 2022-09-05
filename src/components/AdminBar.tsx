@@ -42,6 +42,9 @@ export const AdminBar = () => {
         <NextLink href={"/admin/tags"}>
           <Link>Tagy</Link>
         </NextLink>
+        <NextLink href={"/admin/albums"}>
+          <Link>Albumy</Link>
+        </NextLink>
       </HStack>
       <Button
         size="sm"

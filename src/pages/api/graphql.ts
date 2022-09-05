@@ -8,6 +8,7 @@ import { TagResolver } from "../../resolvers/Tag";
 import { DisciplineResolver } from "../../resolvers/Discipline";
 import { CategoryResolver } from "../../resolvers/Category";
 import { EventResolver } from "../../resolvers/Event";
+import { AlbumResolver } from "../../resolvers/Album";
 
 const cors = Cors();
 
@@ -29,6 +30,7 @@ export default cors(async function handler(req, res) {
           DisciplineResolver,
           CategoryResolver,
           EventResolver,
+          AlbumResolver,
         ],
       }),
       context: ({ req, res }) => ({ req, res }),
