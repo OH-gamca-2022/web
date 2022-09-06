@@ -30,4 +30,16 @@ export class Photo {
   @ManyToOne(() => Album, (album) => album.photos)
   @Field(() => Album)
   album!: Relation<Album>;
+
+  @Field()
+  @Column()
+  albumId!: string;
+
+  @Field()
+  @Column()
+  width!: number;
+
+  @Field()
+  @Column()
+  height!: number;
 }

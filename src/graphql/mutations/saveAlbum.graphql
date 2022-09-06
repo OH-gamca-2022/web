@@ -1,0 +1,3 @@
+mutation SaveAlbum($id: String!) {
+  saveAlbum(id: $id)
+}

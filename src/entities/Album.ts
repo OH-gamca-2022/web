@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
 import {
+  BaseEntity,
   Column,
   Entity,
   OneToMany,
@@ -10,10 +11,14 @@ import { Photo } from "./Photo";
 
 @Entity()
 @ObjectType()
-export class Album {
+export class Album extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   @Field()
   id!: string;
+
+  @Column()
+  @Field()
+  title!: string;
 
   @Column()
   @Field()

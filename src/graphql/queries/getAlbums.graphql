@@ -1,0 +1,5 @@
+query GetAlbums {
+  getAlbums {
+    ...Album
+  }
+}

@@ -1,0 +1,5 @@
+fragment GoogleAlbum on GoogleAlbum {
+  id
+  title
+  coverPhotoBaseUrl
+}

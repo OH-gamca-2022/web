@@ -1,0 +1,5 @@
+query GetGoogleAlbums {
+  getGoogleAlbums {
+    ...GoogleAlbum
+  }
+}

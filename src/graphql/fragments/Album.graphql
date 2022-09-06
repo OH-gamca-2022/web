@@ -1,0 +1,6 @@
+fragment Album on Album {
+  id
+  title
+  albumId
+  coverPhotoBaseUrl
+}

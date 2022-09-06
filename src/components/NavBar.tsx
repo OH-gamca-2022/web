@@ -132,6 +132,13 @@ export const NavBar: React.FC = () => {
           </Link>
         </NextLink>
       </Box>
+      <Box as={motion.div}>
+        <NextLink href="/gallery">
+          <Link color="white">
+            <Text>Fotky</Text>
+          </Link>
+        </NextLink>
+      </Box>
     </Flex>
   );
 

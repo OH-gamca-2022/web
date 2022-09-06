@@ -16,6 +16,16 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Album = {
+  __typename?: 'Album';
+  albumId: Scalars['String'];
+  coverPhotoBaseUrl: Scalars['String'];
+  coverPhotoMediaItemId: Scalars['String'];
+  id: Scalars['String'];
+  photos: Array<Photo>;
+  title: Scalars['String'];
+};
+
 export type BothEvents = {
   __typename?: 'BothEvents';
   googleEvent: GoogleEvent;
@@ -52,6 +62,13 @@ export type Discipline = {
   tag: Tag;
 };
 
+export type GoogleAlbum = {
+  __typename?: 'GoogleAlbum';
+  coverPhotoBaseUrl: Scalars['String'];
+  id: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type GoogleCalendar = {
   __typename?: 'GoogleCalendar';
   id: Scalars['String'];
@@ -83,6 +100,7 @@ export type Mutation = {
   deleteTag: Scalars['Boolean'];
   editDiscipline: Discipline;
   editTag: Tag;
+  saveAlbum: Scalars['Boolean'];
   saveEvent: CalendarEvent;
   savePost: Post;
   setCategoryCalendar: Category;
@@ -147,6 +165,11 @@ export type MutationEditTagArgs = {
 };
 
 
+export type MutationSaveAlbumArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationSaveEventArgs = {
   allDay: Scalars['Boolean'];
   className?: InputMaybe<Scalars['String']>;
@@ -180,6 +203,18 @@ export type PaginatedPosts = {
   posts: Array<Post>;
 };
 
+export type Photo = {
+  __typename?: 'Photo';
+  album: Album;
+  albumId: Scalars['String'];
+  baseUrl: Scalars['String'];
+  creationTime: Scalars['String'];
+  height: Scalars['Float'];
+  id: Scalars['String'];
+  mediaItemId: Scalars['String'];
+  width: Scalars['Float'];
+};
+
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
@@ -197,14 +232,18 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   checkSession: Scalars['Boolean'];
+  getAlbums: Array<Album>;
+  getAllPhotos: Scalars['Boolean'];
   getAllUsers: Array<User>;
   getCategories: Array<Category>;
   getDisciplines: Array<Discipline>;
   getEvents: Array<CalendarEvent>;
+  getGoogleAlbums: Array<GoogleAlbum>;
   getGoogleCalendars: Array<GoogleCalendar>;
   getGoogleEvent: GoogleEvent;
   getGoogleEvents: Array<BothEvents>;
   getMyEvents: Array<CalendarEvent>;
+  getPhotosFromAlbum: Scalars['Boolean'];
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
@@ -269,6 +308,8 @@ export type User = {
   role: Scalars['String'];
 };
 
+export type AlbumFragment = { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string };
+
 export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } };
 
 export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
@@ -276,6 +317,8 @@ export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string
 export type CategoryFragment = { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
 export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
+
+export type GoogleAlbumFragment = { __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string };
 
 export type GoogleCalendarFragment = { __typename?: 'GoogleCalendar', name: string, id: string };
 
@@ -369,6 +412,13 @@ export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null }> };
 
+export type SaveAlbumMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type SaveAlbumMutation = { __typename?: 'Mutation', saveAlbum: boolean };
+
 export type SaveEventMutationVariables = Exact<{
   googleId: Scalars['String'];
   endDate: Scalars['DateTime'];
@@ -403,10 +453,20 @@ export type SetCategoryCalendarMutationVariables = Exact<{
 
 export type SetCategoryCalendarMutation = { __typename?: 'Mutation', setCategoryCalendar: { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null } };
 
+export type GetAlbumsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAlbumsQuery = { __typename?: 'Query', getAlbums: Array<{ __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string }> };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
+
+export type GetGoogleAlbumsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGoogleAlbumsQuery = { __typename?: 'Query', getGoogleAlbums: Array<{ __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string }> };
 
 export type GetGoogleCalendarsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -474,6 +534,14 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> };
 
+export const AlbumFragmentDoc = gql`
+    fragment Album on Album {
+  id
+  title
+  albumId
+  coverPhotoBaseUrl
+}
+    `;
 export const TagFragmentDoc = gql`
     fragment Tag on Tag {
   name
@@ -545,6 +613,13 @@ export const DisciplineFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
+export const GoogleAlbumFragmentDoc = gql`
+    fragment GoogleAlbum on GoogleAlbum {
+  id
+  title
+  coverPhotoBaseUrl
+}
+    `;
 export const GoogleCalendarFragmentDoc = gql`
     fragment GoogleCalendar on GoogleCalendar {
   name
@@ -698,6 +773,15 @@ export const GetEventsDocument = gql`
 export function useGetEventsQuery(options?: Omit<Urql.UseQueryArgs<GetEventsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetEventsQuery>({ query: GetEventsDocument, ...options });
 };
+export const SaveAlbumDocument = gql`
+    mutation SaveAlbum($id: String!) {
+  saveAlbum(id: $id)
+}
+    `;
+
+export function useSaveAlbumMutation() {
+  return Urql.useMutation<SaveAlbumMutation, SaveAlbumMutationVariables>(SaveAlbumDocument);
+};
 export const SaveEventDocument = gql`
     mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!, $allDay: Boolean!, $tagIds: [String!], $id: String, $className: String) {
   saveEvent(
@@ -747,6 +831,17 @@ export const SetCategoryCalendarDocument = gql`
 export function useSetCategoryCalendarMutation() {
   return Urql.useMutation<SetCategoryCalendarMutation, SetCategoryCalendarMutationVariables>(SetCategoryCalendarDocument);
 };
+export const GetAlbumsDocument = gql`
+    query GetAlbums {
+  getAlbums {
+    ...Album
+  }
+}
+    ${AlbumFragmentDoc}`;
+
+export function useGetAlbumsQuery(options?: Omit<Urql.UseQueryArgs<GetAlbumsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAlbumsQuery>({ query: GetAlbumsDocument, ...options });
+};
 export const GetCategoriesDocument = gql`
     query GetCategories {
   getCategories {
@@ -757,6 +852,17 @@ export const GetCategoriesDocument = gql`
 
 export function useGetCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCategoriesQuery>({ query: GetCategoriesDocument, ...options });
+};
+export const GetGoogleAlbumsDocument = gql`
+    query GetGoogleAlbums {
+  getGoogleAlbums {
+    ...GoogleAlbum
+  }
+}
+    ${GoogleAlbumFragmentDoc}`;
+
+export function useGetGoogleAlbumsQuery(options?: Omit<Urql.UseQueryArgs<GetGoogleAlbumsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetGoogleAlbumsQuery>({ query: GetGoogleAlbumsDocument, ...options });
 };
 export const GetGoogleCalendarsDocument = gql`
     query GetGoogleCalendars {
