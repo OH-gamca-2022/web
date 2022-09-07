@@ -1,0 +1,7 @@
+fragment Photo on Photo {
+  id
+  baseUrl
+  creationTime
+  width
+  height
+}

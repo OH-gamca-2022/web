@@ -20,7 +20,7 @@ export class Album extends BaseEntity {
   @Field()
   title!: string;
 
-  @Column()
+  @Column({ unique: true })
   @Field()
   albumId!: string;
 

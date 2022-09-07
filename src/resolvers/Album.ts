@@ -6,6 +6,7 @@ import {
   Field,
   Mutation,
   Arg,
+  Int,
 } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Album } from "../entities/Album";
@@ -22,6 +23,15 @@ export class GoogleAlbum {
 
   @Field()
   coverPhotoBaseUrl!: string;
+}
+
+@ObjectType()
+export class BothAlbums {
+  @Field(() => Album, { nullable: true })
+  savedAlbum!: Album | null;
+
+  @Field(() => GoogleAlbum)
+  googleAlbum!: GoogleAlbum;
 }
 
 const getAllPhotosFromAlbum = async (albumId: string) => {
@@ -68,8 +78,9 @@ export class AlbumResolver {
     console.log(await dataSource.getRepository(Photo).find());
   }
 
-  @Query(() => [GoogleAlbum])
+  @Query(() => [BothAlbums])
   async getGoogleAlbums() {
+    const dataSource = await getDataSource();
     const token = (await getGoogleAuth().getAccessToken()).token;
     const result = await fetch(
       "https://photoslibrary.googleapis.com/v1/albums",
@@ -82,12 +93,21 @@ export class AlbumResolver {
       }
     );
     const formattedResult = await result.json();
-    console.log(formattedResult);
-    return formattedResult.albums.map((item: any) => {
+    const savedAlbums = await dataSource.getRepository(Album).find();
+    const googleAlbums = formattedResult.albums.map((item: any) => {
       return {
         id: item.id,
         title: item.title,
         coverPhotoBaseUrl: item.coverPhotoBaseUrl,
+      };
+    });
+    return googleAlbums.map((item: any) => {
+      const existingAlbum = savedAlbums.find(
+        (savedAlbum) => savedAlbum.albumId == item.id
+      );
+      return {
+        googleAlbum: item,
+        savedAlbum: existingAlbum ? existingAlbum : null,
       };
     });
   }
@@ -98,24 +118,22 @@ export class AlbumResolver {
     return dataSource.getRepository(Album).find();
   }
 
-  @Query(() => Boolean)
-  async getPhotosFromAlbum() {
-    const token = (await getGoogleAuth().getAccessToken()).token;
-    const response = await fetch(
-      "https://photoslibrary.googleapis.com/v1/mediaItems:search",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ albumId: "EDIT THIS", pageSize: 100 }),
-      }
-    );
-    console.log(
-      (await response.json()).mediaItems.map((item: any) => item.mediaMetadata)
-    );
+  @Query(() => [Photo])
+  async getPhotosFromAlbum(
+    @Arg("albumId") albumId: string,
+    @Arg("offset") offset: number,
+    @Arg("limit") limit: number
+  ) {
+    const dataSource = await getDataSource();
+    const photos = await dataSource
+      .getRepository(Photo)
+      .createQueryBuilder()
+      .select()
+      .where({ albumId: albumId })
+      .skip(offset)
+      .take(limit)
+      .getMany();
+    return photos;
   }
 
   @Mutation(() => Boolean)
@@ -156,5 +174,19 @@ export class AlbumResolver {
     console.log(result);
 
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  async deleteAlbum(@Arg("id") id: string) {
+    const dataSource = await getDataSource();
+    const album = await dataSource
+      .getRepository(Album)
+      .findOne({ where: { id: id } });
+    if (album) {
+      await dataSource.getRepository(Album).remove(album);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -1,0 +1,8 @@
+fragment BothAlbums on BothAlbums {
+  googleAlbum {
+    ...GoogleAlbum
+  }
+  savedAlbum {
+    ...Album
+  }
+}

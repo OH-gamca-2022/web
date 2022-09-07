@@ -27,7 +27,7 @@ export class Photo {
   @Column()
   creationTime!: string;
 
-  @ManyToOne(() => Album, (album) => album.photos)
+  @ManyToOne(() => Album, (album) => album.photos, { onDelete: "CASCADE" })
   @Field(() => Album)
   album!: Relation<Album>;
 

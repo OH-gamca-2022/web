@@ -12,6 +12,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "dayjs/locale/sk";
 import dayjs from "dayjs";
 import { cacheExchange, Cache } from "@urql/exchange-graphcache";
+import { simplePagination } from "@urql/exchange-graphcache/extras";
 import {
   CreateCategoryMutation,
   CreateTagMutation,
@@ -63,6 +64,14 @@ const client = createClient({
   exchanges: [
     dedupExchange,
     cacheExchange({
+      resolvers: {
+        Query: {
+          getPhotosFromAlbum: simplePagination({
+            limitArgument: "limit",
+            offsetArgument: "offset",
+          }),
+        },
+      },
       keys: {
         BothEvents: () => null,
         PaginatedPosts: () => null,

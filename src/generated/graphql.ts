@@ -26,6 +26,12 @@ export type Album = {
   title: Scalars['String'];
 };
 
+export type BothAlbums = {
+  __typename?: 'BothAlbums';
+  googleAlbum: GoogleAlbum;
+  savedAlbum?: Maybe<Album>;
+};
+
 export type BothEvents = {
   __typename?: 'BothEvents';
   googleEvent: GoogleEvent;
@@ -91,6 +97,7 @@ export type Mutation = {
   createDiscipline: Discipline;
   createPost: Post;
   createTag: Tag;
+  deleteAlbum: Scalars['Boolean'];
   deleteAllPosts: Scalars['Boolean'];
   deleteAllUsers: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
@@ -125,6 +132,11 @@ export type MutationCreateDisciplineArgs = {
 
 export type MutationCreateTagArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationDeleteAlbumArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -238,12 +250,12 @@ export type Query = {
   getCategories: Array<Category>;
   getDisciplines: Array<Discipline>;
   getEvents: Array<CalendarEvent>;
-  getGoogleAlbums: Array<GoogleAlbum>;
+  getGoogleAlbums: Array<BothAlbums>;
   getGoogleCalendars: Array<GoogleCalendar>;
   getGoogleEvent: GoogleEvent;
   getGoogleEvents: Array<BothEvents>;
   getMyEvents: Array<CalendarEvent>;
-  getPhotosFromAlbum: Scalars['Boolean'];
+  getPhotosFromAlbum: Array<Photo>;
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
@@ -262,6 +274,13 @@ export type QueryGetGoogleEventArgs = {
 
 export type QueryGetGoogleEventsArgs = {
   calendarId: Scalars['String'];
+};
+
+
+export type QueryGetPhotosFromAlbumArgs = {
+  albumId: Scalars['String'];
+  limit: Scalars['Float'];
+  offset: Scalars['Float'];
 };
 
 
@@ -310,6 +329,8 @@ export type User = {
 
 export type AlbumFragment = { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string };
 
+export type BothAlbumsFragment = { __typename?: 'BothAlbums', googleAlbum: { __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string }, savedAlbum?: { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string } | null };
+
 export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } };
 
 export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
@@ -323,6 +344,8 @@ export type GoogleAlbumFragment = { __typename?: 'GoogleAlbum', id: string, titl
 export type GoogleCalendarFragment = { __typename?: 'GoogleCalendar', name: string, id: string };
 
 export type GoogleEventFragment = { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean };
+
+export type PhotoFragment = { __typename?: 'Photo', id: string, baseUrl: string, creationTime: string, width: number, height: number };
 
 export type PostFragment = { __typename?: 'Post', id: string, createdAt: any, updatedAt: any, title: string, text: string, subtitle?: string | null, publishDate?: any | null, published: boolean, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
 
@@ -355,6 +378,13 @@ export type CreateTagMutationVariables = Exact<{
 
 
 export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
+
+export type DeleteAlbumMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteAlbumMutation = { __typename?: 'Mutation', deleteAlbum: boolean };
 
 export type DeleteCategoryMutationVariables = Exact<{
   id: Scalars['String'];
@@ -407,11 +437,6 @@ export type EditTagMutationVariables = Exact<{
 
 export type EditTagMutation = { __typename?: 'Mutation', editTag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
-export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null }> };
-
 export type SaveAlbumMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -463,10 +488,15 @@ export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
 
+export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEventsQuery = { __typename?: 'Query', getEvents: Array<{ __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null }> };
+
 export type GetGoogleAlbumsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGoogleAlbumsQuery = { __typename?: 'Query', getGoogleAlbums: Array<{ __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string }> };
+export type GetGoogleAlbumsQuery = { __typename?: 'Query', getGoogleAlbums: Array<{ __typename?: 'BothAlbums', googleAlbum: { __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string }, savedAlbum?: { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string } | null }> };
 
 export type GetGoogleCalendarsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -492,6 +522,15 @@ export type GetMyEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: Array<{ __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null }> };
+
+export type GetPhotosFromAlbumQueryVariables = Exact<{
+  albumId: Scalars['String'];
+  offset: Scalars['Float'];
+  limit: Scalars['Float'];
+}>;
+
+
+export type GetPhotosFromAlbumQuery = { __typename?: 'Query', getPhotosFromAlbum: Array<{ __typename?: 'Photo', id: string, baseUrl: string, creationTime: string, width: number, height: number }> };
 
 export type GetPostQueryVariables = Exact<{
   getPostId: Scalars['String'];
@@ -534,6 +573,13 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> };
 
+export const GoogleAlbumFragmentDoc = gql`
+    fragment GoogleAlbum on GoogleAlbum {
+  id
+  title
+  coverPhotoBaseUrl
+}
+    `;
 export const AlbumFragmentDoc = gql`
     fragment Album on Album {
   id
@@ -542,6 +588,17 @@ export const AlbumFragmentDoc = gql`
   coverPhotoBaseUrl
 }
     `;
+export const BothAlbumsFragmentDoc = gql`
+    fragment BothAlbums on BothAlbums {
+  googleAlbum {
+    ...GoogleAlbum
+  }
+  savedAlbum {
+    ...Album
+  }
+}
+    ${GoogleAlbumFragmentDoc}
+${AlbumFragmentDoc}`;
 export const TagFragmentDoc = gql`
     fragment Tag on Tag {
   name
@@ -613,17 +670,19 @@ export const DisciplineFragmentDoc = gql`
   }
 }
     ${TagFragmentDoc}`;
-export const GoogleAlbumFragmentDoc = gql`
-    fragment GoogleAlbum on GoogleAlbum {
-  id
-  title
-  coverPhotoBaseUrl
-}
-    `;
 export const GoogleCalendarFragmentDoc = gql`
     fragment GoogleCalendar on GoogleCalendar {
   name
   id
+}
+    `;
+export const PhotoFragmentDoc = gql`
+    fragment Photo on Photo {
+  id
+  baseUrl
+  creationTime
+  width
+  height
 }
     `;
 export const PostFragmentDoc = gql`
@@ -695,6 +754,15 @@ export const CreateTagDocument = gql`
 export function useCreateTagMutation() {
   return Urql.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument);
 };
+export const DeleteAlbumDocument = gql`
+    mutation DeleteAlbum($id: String!) {
+  deleteAlbum(id: $id)
+}
+    `;
+
+export function useDeleteAlbumMutation() {
+  return Urql.useMutation<DeleteAlbumMutation, DeleteAlbumMutationVariables>(DeleteAlbumDocument);
+};
 export const DeleteCategoryDocument = gql`
     mutation DeleteCategory($id: String!) {
   deleteCategory(id: $id)
@@ -761,17 +829,6 @@ export const EditTagDocument = gql`
 
 export function useEditTagMutation() {
   return Urql.useMutation<EditTagMutation, EditTagMutationVariables>(EditTagDocument);
-};
-export const GetEventsDocument = gql`
-    query GetEvents {
-  getEvents {
-    ...CalendarEvent
-  }
-}
-    ${CalendarEventFragmentDoc}`;
-
-export function useGetEventsQuery(options?: Omit<Urql.UseQueryArgs<GetEventsQueryVariables>, 'query'>) {
-  return Urql.useQuery<GetEventsQuery>({ query: GetEventsDocument, ...options });
 };
 export const SaveAlbumDocument = gql`
     mutation SaveAlbum($id: String!) {
@@ -853,13 +910,24 @@ export const GetCategoriesDocument = gql`
 export function useGetCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCategoriesQuery>({ query: GetCategoriesDocument, ...options });
 };
+export const GetEventsDocument = gql`
+    query GetEvents {
+  getEvents {
+    ...CalendarEvent
+  }
+}
+    ${CalendarEventFragmentDoc}`;
+
+export function useGetEventsQuery(options?: Omit<Urql.UseQueryArgs<GetEventsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetEventsQuery>({ query: GetEventsDocument, ...options });
+};
 export const GetGoogleAlbumsDocument = gql`
     query GetGoogleAlbums {
   getGoogleAlbums {
-    ...GoogleAlbum
+    ...BothAlbums
   }
 }
-    ${GoogleAlbumFragmentDoc}`;
+    ${BothAlbumsFragmentDoc}`;
 
 export function useGetGoogleAlbumsQuery(options?: Omit<Urql.UseQueryArgs<GetGoogleAlbumsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetGoogleAlbumsQuery>({ query: GetGoogleAlbumsDocument, ...options });
@@ -907,6 +975,17 @@ export const GetMyEventsDocument = gql`
 
 export function useGetMyEventsQuery(options?: Omit<Urql.UseQueryArgs<GetMyEventsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetMyEventsQuery>({ query: GetMyEventsDocument, ...options });
+};
+export const GetPhotosFromAlbumDocument = gql`
+    query GetPhotosFromAlbum($albumId: String!, $offset: Float!, $limit: Float!) {
+  getPhotosFromAlbum(albumId: $albumId, limit: $limit, offset: $offset) {
+    ...Photo
+  }
+}
+    ${PhotoFragmentDoc}`;
+
+export function useGetPhotosFromAlbumQuery(options: Omit<Urql.UseQueryArgs<GetPhotosFromAlbumQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetPhotosFromAlbumQuery>({ query: GetPhotosFromAlbumDocument, ...options });
 };
 export const GetPostDocument = gql`
     query GetPost($getPostId: String!) {

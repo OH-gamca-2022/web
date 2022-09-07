@@ -42,6 +42,7 @@
     "react-data-table-component": "^7.5.2",
     "react-dom": "18.1.0",
     "react-markdown": "^8.0.3",
+    "react-photo-gallery": "^8.0.0",
     "react-simplemde-editor": "^5.0.2",
     "reflect-metadata": "^0.1.13",
     "remark-gfm": "^3.0.1",
