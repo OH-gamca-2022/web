@@ -10,7 +10,6 @@ import {
 } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Album } from "../entities/Album";
-import { Photo } from "../entities/Photo";
 import { getGoogleAuth } from "../utils/google-signin";
 
 @ObjectType()
@@ -34,40 +33,94 @@ export class BothAlbums {
   googleAlbum!: GoogleAlbum;
 }
 
-const getAllPhotosFromAlbum = async (albumId: string) => {
+@ObjectType()
+export class Photo {
+  @Field()
+  id!: string;
+
+  @Field()
+  baseUrl!: string;
+
+  @Field()
+  height!: number;
+
+  @Field()
+  width!: number;
+
+  @Field()
+  creationTime!: string;
+}
+
+@ObjectType()
+export class PhotoResponse {
+  @Field(() => [Photo])
+  photos!: Photo[];
+
+  @Field({ nullable: true })
+  nextPageToken?: string;
+}
+
+const getAllPhotosFromAlbum = async (
+  albumId: string,
+  nextPageToken?: string
+) => {
   const token = (await getGoogleAuth().getAccessToken()).token;
-  const list = [];
   var response: any = {};
-  do {
-    // request to get the maximum amout of photos in the album (100 is the maximum)
-    response = await (
-      await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:search", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-type": "application/json",
-        },
-        // if we have the nextPageToken from previous request, use it as "pageToken" param
-        body: JSON.stringify(
-          response.nextPageToken
-            ? { albumId, pageSize: 100, pageToken: response.nextPageToken }
-            : { albumId, pageSize: 100 }
-        ),
-      })
-    ).json();
-    if (!response.mediaItems) break;
-    list.push(...response.mediaItems);
-  } while (response.nextPageToken); // repeat until we have all the photos (until there is no "nextPageToken")
-  return list.map((item) => {
+  // request to get the maximum amout of photos in the album (100 is the maximum)
+  response = await (
+    await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:search", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      // if we have the nextPageToken from previous request, use it as "pageToken" param
+      body: JSON.stringify(
+        nextPageToken
+          ? { albumId, pageSize: 10, pageToken: nextPageToken }
+          : { albumId, pageSize: 10 }
+      ),
+    })
+  ).json();
+  const photos = response.mediaItems.map((item: any) => {
     return {
-      mediaItemId: item.id,
+      id: item.id,
       baseUrl: item.baseUrl,
       creationTime: item.mediaMetadata.creationTime,
       width: item.mediaMetadata.width,
       height: item.mediaMetadata.height,
     };
   });
+  return [photos, response.nextPageToken];
+};
+
+const refreshAllAlbums = async () => {
+  const dataSource = await getDataSource();
+  const albums = await dataSource.getRepository(Album).find();
+  const token = (await getGoogleAuth().getAccessToken()).token;
+  const result = await fetch("https://photoslibrary.googleapis.com/v1/albums", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+  });
+  const formattedResult = await result.json();
+  const editedAlbums = albums.map((album, index) => {
+    const newUrl = formattedResult.albums.find(
+      (item: any) => item.id == album.albumId
+    ).coverPhotoBaseUrl;
+    if (newUrl) {
+      return {
+        ...album,
+        coverPhotoBaseUrl: newUrl,
+      };
+    } else {
+      return album;
+    }
+  });
+  await dataSource.getRepository(Album).save(editedAlbums);
 };
 
 @Resolver()
@@ -115,25 +168,37 @@ export class AlbumResolver {
   @Query(() => [Album])
   async getAlbums() {
     const dataSource = await getDataSource();
-    return dataSource.getRepository(Album).find();
+    // await refreshAllAlbums();
+    const albums = await dataSource.getRepository(Album).find();
+    console.log(albums);
+    return albums;
   }
 
-  @Query(() => [Photo])
+  @Query(() => PhotoResponse)
   async getPhotosFromAlbum(
     @Arg("albumId") albumId: string,
-    @Arg("offset") offset: number,
-    @Arg("limit") limit: number
-  ) {
+    @Arg("nextPageToken", { nullable: true }) nextPageToken?: string
+  ): Promise<PhotoResponse> {
     const dataSource = await getDataSource();
-    const photos = await dataSource
-      .getRepository(Photo)
-      .createQueryBuilder()
-      .select()
-      .where({ albumId: albumId })
-      .skip(offset)
-      .take(limit)
-      .getMany();
-    return photos;
+    const album = await dataSource
+      .getRepository(Album)
+      .findOne({ where: { id: albumId } });
+
+    if (album) {
+      const [photos, token] = await getAllPhotosFromAlbum(
+        album?.albumId,
+        nextPageToken
+      );
+      console.log(photos, token);
+      return {
+        photos,
+        nextPageToken: token,
+      };
+    } else {
+      return {
+        photos: [],
+      };
+    }
   }
 
   @Mutation(() => Boolean)
@@ -162,16 +227,6 @@ export class AlbumResolver {
         coverPhotoMediaItemId: formattedResult.coverPhotoMediaItemId,
       })
       .save();
-    const allPhotos = await getAllPhotosFromAlbum(formattedResult.id);
-    const result = await dataSource.getRepository(Photo).insert(
-      allPhotos.map((item) => {
-        return {
-          ...item,
-          albumId: album.id,
-        };
-      })
-    );
-    console.log(result);
 
     return true;
   }

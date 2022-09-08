@@ -22,7 +22,6 @@ export type Album = {
   coverPhotoBaseUrl: Scalars['String'];
   coverPhotoMediaItemId: Scalars['String'];
   id: Scalars['String'];
-  photos: Array<Photo>;
   title: Scalars['String'];
 };
 
@@ -217,14 +216,17 @@ export type PaginatedPosts = {
 
 export type Photo = {
   __typename?: 'Photo';
-  album: Album;
-  albumId: Scalars['String'];
   baseUrl: Scalars['String'];
   creationTime: Scalars['String'];
   height: Scalars['Float'];
   id: Scalars['String'];
-  mediaItemId: Scalars['String'];
   width: Scalars['Float'];
+};
+
+export type PhotoResponse = {
+  __typename?: 'PhotoResponse';
+  nextPageToken?: Maybe<Scalars['String']>;
+  photos: Array<Photo>;
 };
 
 export type Post = {
@@ -255,7 +257,7 @@ export type Query = {
   getGoogleEvent: GoogleEvent;
   getGoogleEvents: Array<BothEvents>;
   getMyEvents: Array<CalendarEvent>;
-  getPhotosFromAlbum: Array<Photo>;
+  getPhotosFromAlbum: PhotoResponse;
   getPost: Post;
   getPosts: Array<Post>;
   getPublishedPosts: PaginatedPosts;
@@ -279,8 +281,7 @@ export type QueryGetGoogleEventsArgs = {
 
 export type QueryGetPhotosFromAlbumArgs = {
   albumId: Scalars['String'];
-  limit: Scalars['Float'];
-  offset: Scalars['Float'];
+  nextPageToken?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -525,12 +526,11 @@ export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: Array<{ __ty
 
 export type GetPhotosFromAlbumQueryVariables = Exact<{
   albumId: Scalars['String'];
-  offset: Scalars['Float'];
-  limit: Scalars['Float'];
+  nextPageToken?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetPhotosFromAlbumQuery = { __typename?: 'Query', getPhotosFromAlbum: Array<{ __typename?: 'Photo', id: string, baseUrl: string, creationTime: string, width: number, height: number }> };
+export type GetPhotosFromAlbumQuery = { __typename?: 'Query', getPhotosFromAlbum: { __typename?: 'PhotoResponse', nextPageToken?: string | null, photos: Array<{ __typename?: 'Photo', id: string, baseUrl: string, creationTime: string, width: number, height: number }> } };
 
 export type GetPostQueryVariables = Exact<{
   getPostId: Scalars['String'];
@@ -977,9 +977,12 @@ export function useGetMyEventsQuery(options?: Omit<Urql.UseQueryArgs<GetMyEvents
   return Urql.useQuery<GetMyEventsQuery>({ query: GetMyEventsDocument, ...options });
 };
 export const GetPhotosFromAlbumDocument = gql`
-    query GetPhotosFromAlbum($albumId: String!, $offset: Float!, $limit: Float!) {
-  getPhotosFromAlbum(albumId: $albumId, limit: $limit, offset: $offset) {
-    ...Photo
+    query GetPhotosFromAlbum($albumId: String!, $nextPageToken: String) {
+  getPhotosFromAlbum(albumId: $albumId, nextPageToken: $nextPageToken) {
+    photos {
+      ...Photo
+    }
+    nextPageToken
   }
 }
     ${PhotoFragmentDoc}`;

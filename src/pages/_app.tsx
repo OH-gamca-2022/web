@@ -64,14 +64,14 @@ const client = createClient({
   exchanges: [
     dedupExchange,
     cacheExchange({
-      resolvers: {
-        Query: {
-          getPhotosFromAlbum: simplePagination({
-            limitArgument: "limit",
-            offsetArgument: "offset",
-          }),
-        },
-      },
+      // resolvers: {
+      //   Query: {
+      //     getPhotosFromAlbum: simplePagination({
+      //       limitArgument: "limit",
+      //       offsetArgument: "offset",
+      //     }),
+      //   },
+      // },
       keys: {
         BothEvents: () => null,
         PaginatedPosts: () => null,

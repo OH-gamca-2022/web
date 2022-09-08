@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from "typeorm";
-import { Photo } from "./Photo";
 
 @Entity()
 @ObjectType()
@@ -31,8 +30,4 @@ export class Album extends BaseEntity {
   @Column()
   @Field()
   coverPhotoMediaItemId!: string;
-
-  @OneToMany(() => Photo, (photo) => photo.album)
-  @Field(() => [Photo])
-  photos!: Relation<Photo>[];
 }

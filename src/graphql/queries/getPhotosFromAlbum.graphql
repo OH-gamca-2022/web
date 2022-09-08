@@ -1,5 +1,8 @@
-query GetPhotosFromAlbum($albumId: String!, $offset: Float!, $limit: Float!) {
-  getPhotosFromAlbum(albumId: $albumId, limit: $limit, offset: $offset) {
-    ...Photo
+query GetPhotosFromAlbum($albumId: String!, $nextPageToken: String) {
+  getPhotosFromAlbum(albumId: $albumId, nextPageToken: $nextPageToken) {
+    photos {
+      ...Photo
+    }
+    nextPageToken
   }
 }

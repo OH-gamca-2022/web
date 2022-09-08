@@ -35,10 +35,6 @@ export const NavBar: React.FC = () => {
   });
   const [{ data: resultsTagId }] = useGetResultsTagIdQuery();
 
-  useEffect(() => {
-    console.log(resultsTagId);
-  });
-
   const variants: Variants = {
     visible: {
       height: "auto",
