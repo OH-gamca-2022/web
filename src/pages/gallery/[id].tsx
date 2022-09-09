@@ -21,7 +21,10 @@ const Album: NextPage = () => {
     (entries: any) => {
       const target = entries[0];
       if (target.isIntersecting) {
-        setNextPageToken(data?.getPhotosFromAlbum.nextPageToken || null);
+        if (data?.getPhotosFromAlbum.nextPageToken) {
+          console.log(data.getPhotosFromAlbum.nextPageToken);
+          setNextPageToken(data?.getPhotosFromAlbum.nextPageToken);
+        }
       }
     },
     [data]
@@ -57,7 +60,17 @@ const Album: NextPage = () => {
           }) || []
         }
       />
-      <div ref={loader}></div>
+      {/* <div ref={loader}></div> */}
+      <Button
+        onClick={() => {
+          if (data.getPhotosFromAlbum.nextPageToken) {
+            console.log(data.getPhotosFromAlbum.nextPageToken);
+            setNextPageToken(data.getPhotosFromAlbum.nextPageToken);
+          }
+        }}
+      >
+        Load more
+      </Button>
     </Layout>
   );
 };

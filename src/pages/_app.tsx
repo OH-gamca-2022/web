@@ -7,11 +7,12 @@ import {
   Provider,
   debugExchange,
   dedupExchange,
+  stringifyVariables,
 } from "urql";
 import { ChakraProvider } from "@chakra-ui/react";
 import "dayjs/locale/sk";
 import dayjs from "dayjs";
-import { cacheExchange, Cache } from "@urql/exchange-graphcache";
+import { cacheExchange, Cache, Resolver } from "@urql/exchange-graphcache";
 import { simplePagination } from "@urql/exchange-graphcache/extras";
 import {
   CreateCategoryMutation,
@@ -59,19 +60,59 @@ const invalidateAllEvents = (cache: Cache) => {
   });
 };
 
+export const myPagination = (): Resolver => {
+  return (_parent, fieldArgs, cache, info) => {
+    const { parentKey: entityKey, fieldName } = info;
+    const allFields = cache.inspectFields(entityKey);
+    const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
+    const size = fieldInfos.length;
+    if (size === 0) {
+      return undefined;
+    }
+    const isItInCache = cache.resolve(
+      cache.resolve(
+        entityKey,
+        `${fieldName}(${stringifyVariables(fieldArgs)})`
+      ) as string,
+      "getPhotosFromAlbum"
+    );
+    info.partial = !isItInCache;
+    const results: string[] = [];
+
+    let nextPageToken: string | null = null;
+
+    fieldInfos.forEach((fi) => {
+      console.log(fi);
+      const key = cache.resolve(entityKey, fi.fieldKey) as string;
+      const data = cache.resolve(key, "photos") as string[];
+      const _nextPageToken = cache.resolve(key, "nextPageToken");
+      console.log(_nextPageToken);
+      console.log(data);
+
+      if (_nextPageToken) {
+        nextPageToken = _nextPageToken as string;
+      }
+      results.push(...data);
+    });
+
+    return {
+      __typename: "PhotoResponse",
+      nextPageToken: nextPageToken,
+      photos: results,
+    };
+  };
+};
+
 const client = createClient({
   url: `${process.env.BASE_URL}/api/graphql`,
   exchanges: [
     dedupExchange,
     cacheExchange({
-      // resolvers: {
-      //   Query: {
-      //     getPhotosFromAlbum: simplePagination({
-      //       limitArgument: "limit",
-      //       offsetArgument: "offset",
-      //     }),
-      //   },
-      // },
+      resolvers: {
+        Query: {
+          getPhotosFromAlbum: myPagination(),
+        },
+      },
       keys: {
         BothEvents: () => null,
         PaginatedPosts: () => null,
