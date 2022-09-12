@@ -29,11 +29,13 @@ export const Post: React.FC<PostProps> = ({ post }) => {
     <Card flex={1}>
       <Flex justifyContent={"center"} flexDirection={"column"}>
         <NextLink href={`/post/${post.id}`}>
-          <Link>
+          <Link color="#ddd">
             <Heading>{post.title}</Heading>
           </Link>
         </NextLink>
-        <Text pb={3}>{post.subtitle}</Text>
+        <Text color={"#919191"} pb={3}>
+          {post.subtitle}
+        </Text>
         <Box overflowWrap="anywhere" alignItems="center">
           <Wrap overflow="hidden" float="left" position="relative">
             {post.tags?.map((tag, index) => (
@@ -42,7 +44,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
               </WrapItem>
             ))}
           </Wrap>
-          <Text float="right" position="relative" ml={4}>
+          <Text float="right" position="relative" ml={4} color="white">
             {dateToString(new Date(post.publishDate), false)}
           </Text>
         </Box>

@@ -80,7 +80,7 @@ const Home: NextPage = () => {
         <Stack>
           <UpcomingEvents />
           <Card>
-            <Heading>Sponzori</Heading>
+            <Heading color={"#ddd"}>Sponzori</Heading>
           </Card>
         </Stack>
       </Grid>

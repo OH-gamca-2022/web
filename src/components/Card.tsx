@@ -6,7 +6,14 @@ interface CardProps extends BoxProps {
 
 export const Card: React.FC<CardProps> = (props) => {
   return (
-    <Box p={5} borderRadius={10} borderWidth={1} {...props}>
+    <Box
+      p={5}
+      borderRadius={10}
+      borderWidth={1}
+      borderColor={"#30363d"}
+      bgColor={"#04121e"}
+      {...props}
+    >
       {props.children}
     </Box>
   );

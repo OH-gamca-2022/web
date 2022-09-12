@@ -44,14 +44,18 @@ export const UpcomingEvents: React.FC = () => {
   return (
     <Card>
       <Stack>
-        <Heading size="lg">Najbližšie udalosti</Heading>
+        <Heading size="lg" color={"#ddd"}>
+          Najbližšie udalosti
+        </Heading>
         {groupedEvents?.map((item, index) => (
           <Box key={index}>
-            <Heading size={"sm"}>
+            <Heading size={"sm"} color={"#cacaca"}>
               {dateToString(new Date(item.date), false)}
             </Heading>
             {item.events.map((event, index) => (
-              <Text key={index}>{event.name}</Text>
+              <Text key={index} color={"#fff"}>
+                {event.name}
+              </Text>
             ))}
           </Box>
         ))}

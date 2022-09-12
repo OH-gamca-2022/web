@@ -9,7 +9,13 @@ interface TagProps {
 export const TagButton: React.FC<TagProps> = ({ tag }) => {
   return (
     <NextLink href={`/posts?tagIds=${[tag.id]}`}>
-      <Button size={"sm"} minW="unset">
+      <Button
+        size={"sm"}
+        minW="unset"
+        bgColor={"#1c2133"}
+        color="#ddd"
+        _hover={{ backgroundColor: "#2b334e" }}
+      >
         {tag.name}
       </Button>
     </NextLink>

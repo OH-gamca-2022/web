@@ -108,14 +108,10 @@ const client = createClient({
   exchanges: [
     dedupExchange,
     cacheExchange({
-      resolvers: {
-        Query: {
-          getPhotosFromAlbum: myPagination(),
-        },
-      },
       keys: {
         BothEvents: () => null,
         PaginatedPosts: () => null,
+        PhotoResponse: () => null,
       },
       updates: {
         Mutation: {

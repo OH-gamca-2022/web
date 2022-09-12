@@ -16,6 +16,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import style from "../../styles/github-markdown-css.module.css";
 import { Card } from "../../components/Card";
+import { TagButton } from "../../components/TagButton";
 
 const Post: NextPage = () => {
   const router = useRouter();
@@ -31,15 +32,13 @@ const Post: NextPage = () => {
     <Layout>
       <Card mb={4}>
         <Stack>
-          <Heading>{data.getPost.title}</Heading>
+          <Heading color="#ddd">{data.getPost.title}</Heading>
           <Wrap>
             {data.getPost.tags?.map((tag, index) => (
-              <Button key={index} size={"sm"}>
-                {tag.name}
-              </Button>
+              <TagButton key={index} tag={tag} />
             ))}
           </Wrap>
-          <Text>{data.getPost.subtitle}</Text>
+          <Text color="#919191">{data.getPost.subtitle}</Text>
         </Stack>
       </Card>
       <Card>

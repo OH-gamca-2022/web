@@ -168,7 +168,7 @@ export class AlbumResolver {
   @Query(() => [Album])
   async getAlbums() {
     const dataSource = await getDataSource();
-    // await refreshAllAlbums();
+    await refreshAllAlbums();
     const albums = await dataSource.getRepository(Album).find();
     console.log(albums);
     return albums;
