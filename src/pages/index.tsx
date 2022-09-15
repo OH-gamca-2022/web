@@ -14,6 +14,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  Link,
   Stack,
   Wrap,
   WrapItem,
@@ -81,6 +82,33 @@ const Home: NextPage = () => {
           <UpcomingEvents />
           <Card>
             <Heading color={"#ddd"}>Sponzori</Heading>
+            <Link>
+              <Box bgColor={"black"}>
+                <Image
+                  src={"/sponsors/BK.svg"}
+                  height={150}
+                  width={150}
+                  objectFit="contain"
+                />
+              </Box>
+              <Image
+                src={"/sponsors/B-SM.svg"}
+                height={150}
+                width={150}
+                objectFit="contain"
+              />
+
+              <Image
+                src={"/sponsors/Bratislava.svg"}
+                height={150}
+                width={150}
+                objectFit="contain"
+              />
+              <Box bgColor={"black"}>
+                <img src={"/sponsors/Skubla.svg"} height={100} width={200} />
+              </Box>
+              <img src={"/sponsors/stilus.svg"} height={150} width={150} />
+            </Link>
           </Card>
         </Stack>
       </Grid>

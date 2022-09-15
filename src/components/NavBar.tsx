@@ -89,8 +89,10 @@ export const NavBar: React.FC = () => {
             >
               {item.name}
             </MenuButton>
-            <MenuList>
+            <MenuList bg={"#040f1a"} color="#ddd" borderColor={"#30363d"}>
               <MenuItem
+                _hover={{ bgColor: "#2b334e" }}
+                _focus={{ bgColor: "#2b334e" }}
                 onClick={() =>
                   router.push({
                     pathname: "/posts",
@@ -103,6 +105,8 @@ export const NavBar: React.FC = () => {
                 Novinky
               </MenuItem>
               <MenuItem
+                _hover={{ bgColor: "#2b334e" }}
+                _focus={{ bgColor: "#2b334e" }}
                 onClick={() =>
                   router.push({
                     pathname: "/posts",

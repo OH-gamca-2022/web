@@ -14,7 +14,7 @@ import { Layout } from "../../components/Layout";
 import { useGetPostQuery } from "../../generated/graphql";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import style from "../../styles/github-markdown-css.module.css";
+import style from "../../styles/github-markdown-css-dark.module.css";
 import { Card } from "../../components/Card";
 import { TagButton } from "../../components/TagButton";
 
