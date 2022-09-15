@@ -11,7 +11,7 @@ export const Calendar: React.FC = () => {
   const renderEventContent = (eventContent: EventContentArg) => {
     return (
       <EventPopover event={eventContent.event.extendedProps.event}>
-        <Flex overflow={"hidden"}>
+        <Flex overflow={"hidden"} color="#ddd">
           <Text fontWeight="bold" mr={1}>
             {eventContent.timeText}
           </Text>

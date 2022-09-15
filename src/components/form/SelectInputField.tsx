@@ -30,7 +30,9 @@ export const SelectInputField: React.FC<SelectInputFieldProps> = ({
   );
   return (
     <FormControl isInvalid={!!meta.error}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      <FormLabel color="#ddd" htmlFor={field.name}>
+        {label}
+      </FormLabel>
       <Select
         onChange={onChange}
         value={field.value}

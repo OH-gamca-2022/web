@@ -20,10 +20,14 @@ import {
   useGetEventsQuery,
 } from "../../../generated/graphql";
 import dayjs from "dayjs";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, {
+  createTheme,
+  TableColumn,
+} from "react-data-table-component";
 import { DeleteAlert } from "../../../components/alerts/DeleteAlert";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Calendar } from "../../../components/Calendar";
+import { TagButton } from "../../../components/TagButton";
 
 const AdminEvents: NextPage = () => {
   const [{ data }] = useGetEventsQuery();
@@ -60,9 +64,7 @@ const AdminEvents: NextPage = () => {
       cell: (row, index, column, id) => (
         <HStack overflow="scroll">
           {row.tags?.map((tag, index) => (
-            <Button key={index} size={"sm"}>
-              {tag.name}
-            </Button>
+            <TagButton key={index} tag={tag} />
           ))}
         </HStack>
       ),
@@ -93,10 +95,33 @@ const AdminEvents: NextPage = () => {
       center: true,
     },
   ];
+
+  createTheme("myDark", {
+    text: {
+      primary: "#bbb",
+      secondary: "#2aa198",
+    },
+    background: {
+      default: "#040f1a",
+    },
+    context: {
+      background: "#cb4b16",
+      text: "#FFFFFF",
+    },
+    divider: {
+      default: "#30363d",
+    },
+    action: {
+      button: "rgba(0,0,0,.54)",
+      hover: "rgba(0,0,0,.08)",
+      disabled: "rgba(0,0,0,.12)",
+    },
+  });
+
   return (
     <Layout>
       <Flex justifyContent="space-between" alignItems="center">
-        <Heading>Udalosti</Heading>
+        <Heading color="#ddd">Udalosti</Heading>
         <NextLink href="/admin/events/load">
           <Button>Načítať udalosti</Button>
         </NextLink>
@@ -105,6 +130,7 @@ const AdminEvents: NextPage = () => {
       <DataTable
         columns={columns}
         data={data?.getEvents as CalendarEventFragment[]}
+        theme="myDark"
       />
     </Layout>
   );

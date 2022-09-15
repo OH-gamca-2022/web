@@ -2,29 +2,16 @@ import { AddIcon } from "@chakra-ui/icons";
 import {
   Popover,
   PopoverTrigger,
-  Button,
   Portal,
   PopoverContent,
   PopoverArrow,
   PopoverHeader,
   PopoverCloseButton,
   PopoverBody,
-  PopoverFooter,
-  HStack,
   Text,
   Flex,
-  Checkbox,
-  IconButton,
-  VStack,
-  Input,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import {
-  CalendarEventFragment,
-  TagFragment,
-  useCreateTagMutation,
-  useGetTagsQuery,
-} from "../generated/graphql";
+import { CalendarEventFragment } from "../generated/graphql";
 import { dateToString } from "../utils/dateFormatter";
 
 interface AddTagsPopoverProps {
@@ -37,28 +24,33 @@ export const EventPopover: React.FC<AddTagsPopoverProps> = ({
   event,
 }) => {
   return (
-    <Popover>
+    <Popover arrowShadowColor="#30363d">
       <PopoverTrigger>{children}</PopoverTrigger>
       <Portal>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverHeader fontWeight="bold">{event.name}</PopoverHeader>
-          <PopoverCloseButton />
+        <PopoverContent bgColor="#04121e" borderColor={"#30363d"}>
+          <PopoverArrow bgColor={"#04121e"} borderColor={"#30363d"} />
+          <PopoverHeader fontWeight="bold" borderColor={"#30363d"} color="#ddd">
+            {event.name}
+          </PopoverHeader>
+          <PopoverCloseButton color="#ddd" />
           <PopoverBody overflow="scroll" maxH={300}>
             <Flex>
-              <Text mr={1}>Od: </Text>
-              <Text fontWeight="bold">
+              <Text mr={1} color="#ddd">
+                Od:{" "}
+              </Text>
+              <Text fontWeight="bold" color="#ddd">
                 {dateToString(new Date(event.startDate), !event.allDay)}
               </Text>
             </Flex>
             <Flex>
-              <Text mr={1}>Do: </Text>
-              <Text fontWeight="bold">
+              <Text mr={1} color="#ddd">
+                Do:{" "}
+              </Text>
+              <Text fontWeight="bold" color="#ddd">
                 {dateToString(new Date(event.endDate), !event.allDay)}
               </Text>
             </Flex>
           </PopoverBody>
-          <PopoverFooter></PopoverFooter>
         </PopoverContent>
       </Portal>
     </Popover>

@@ -14,10 +14,14 @@ import {
   PostFragment,
 } from "../../generated/graphql";
 import NextLink from "next/link";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, {
+  createTheme,
+  TableColumn,
+} from "react-data-table-component";
 import { dateToString } from "../../utils/dateFormatter";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
+import { TagButton } from "../../components/TagButton";
 
 const AdminPosts = () => {
   const [{ data: posts, fetching }] = useGetPostsQuery();
@@ -45,9 +49,7 @@ const AdminPosts = () => {
       cell: (row, index, column, id) => (
         <HStack overflow="clip">
           {row.tags?.map((tag, index) => (
-            <Button key={index} size={"sm"} minW="unset">
-              {tag.name}
-            </Button>
+            <TagButton key={index} tag={tag} />
           ))}
         </HStack>
       ),
@@ -67,6 +69,7 @@ const AdminPosts = () => {
           size={"sm"}
           isLoading={publishFetching}
           colorScheme={row.published ? "gray" : "blue"}
+          color="#222"
           onClick={() => {
             savePost({
               title: row.title,
@@ -111,18 +114,42 @@ const AdminPosts = () => {
     return <Heading>Loading...</Heading>;
   }
 
+  createTheme("myDark", {
+    text: {
+      primary: "#bbb",
+      secondary: "#2aa198",
+    },
+    background: {
+      default: "#040f1a",
+    },
+    context: {
+      background: "#cb4b16",
+      text: "#FFFFFF",
+    },
+    divider: {
+      default: "#30363d",
+    },
+    action: {
+      button: "rgba(0,0,0,.54)",
+      hover: "rgba(0,0,0,.08)",
+      disabled: "rgba(0,0,0,.12)",
+    },
+  });
+
   return (
     <Layout wide>
       <Flex mb={4} justifyContent="space-between" alignItems="center" px={4}>
-        <Heading>Články</Heading>
+        <Heading color="#ddd">Články</Heading>
         <NextLink href="/admin/post/create">
           <Button>Nový článok</Button>
         </NextLink>
       </Flex>
       <DataTable
+        style={{ backgroundColor: "#040f1a" }}
         columns={columns}
         data={posts.getPosts as PostFragment[]}
         responsive={false}
+        theme="myDark"
       />
     </Layout>
   );

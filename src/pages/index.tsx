@@ -1,21 +1,19 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useGetPublishedPostsQuery } from "../generated/graphql";
-import { NavBar } from "../components/NavBar";
 import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
 import {
   Box,
+  Divider,
   Flex,
   Grid,
   GridItem,
   Heading,
+  HStack,
   Link,
   Stack,
+  VStack,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
@@ -82,33 +80,17 @@ const Home: NextPage = () => {
           <UpcomingEvents />
           <Card>
             <Heading color={"#ddd"}>Sponzori</Heading>
-            <Link>
-              <Box bgColor={"black"}>
-                <Image
-                  src={"/sponsors/BK.svg"}
-                  height={150}
-                  width={150}
-                  objectFit="contain"
-                />
-              </Box>
-              <Image
-                src={"/sponsors/B-SM.svg"}
-                height={150}
-                width={150}
-                objectFit="contain"
-              />
-
-              <Image
-                src={"/sponsors/Bratislava.svg"}
-                height={150}
-                width={150}
-                objectFit="contain"
-              />
-              <Box bgColor={"black"}>
-                <img src={"/sponsors/Skubla.svg"} height={100} width={200} />
-              </Box>
-              <img src={"/sponsors/stilus.svg"} height={150} width={150} />
-            </Link>
+            <VStack spacing={6} padding={2} mt={4}>
+              <img src={"/sponsors/BK.svg"} />
+              <Divider borderColor={"#30363d"} />
+              <img src={"/sponsors/B-SM.svg"} />
+              <Divider borderColor={"#30363d"} />
+              <img src={"/sponsors/Bratislava.svg"} />
+              <Divider borderColor={"#30363d"} />
+              <img src={"/sponsors/Skubla.svg"} />
+              <Divider borderColor={"#30363d"} />
+              <img src={"/sponsors/stilus.svg"} />
+            </VStack>
           </Card>
         </Stack>
       </Grid>

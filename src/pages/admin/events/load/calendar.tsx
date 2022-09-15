@@ -19,7 +19,10 @@ import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, {
+  createTheme,
+  TableColumn,
+} from "react-data-table-component";
 import { Card } from "../../../../components/Card";
 import { LoadButton } from "../../../../components/eventButtons/Load";
 import { SaveButton } from "../../../../components/eventButtons/Save";
@@ -167,7 +170,9 @@ const AdminGoogleCalendar: NextPage = () => {
             }
           />
         ) : areEventsSame(row) ? (
-          <Button size="sm">Uložené</Button>
+          <Button size="sm" color="#222">
+            Uložené
+          </Button>
         ) : (
           <SaveButton row={row} />
         ),
@@ -184,17 +189,43 @@ const AdminGoogleCalendar: NextPage = () => {
     );
   }
 
+  createTheme("myDark", {
+    text: {
+      primary: "#bbb",
+      secondary: "#2aa198",
+    },
+    background: {
+      default: "#040f1a",
+    },
+    context: {
+      background: "#cb4b16",
+      text: "#FFFFFF",
+    },
+    divider: {
+      default: "#30363d",
+    },
+    action: {
+      button: "rgba(0,0,0,.54)",
+      hover: "rgba(0,0,0,.08)",
+      disabled: "rgba(0,0,0,.12)",
+    },
+  });
+
   return (
     <Layout wide={true}>
       <HStack align="center" alignItems="center">
-        <Heading pr={4}>{name}</Heading>
+        <Heading color="#ddd" pr={4}>
+          {name}
+        </Heading>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
             {category?.name || "Kategória"}
           </MenuButton>
-          <MenuList>
+          <MenuList bg={"#040f1a"} color="#ddd" borderColor={"#30363d"}>
             {categories?.getCategories.map((item, index) => (
               <MenuItem
+                _hover={{ bgColor: "#2b334e" }}
+                _focus={{ bgColor: "#2b334e" }}
                 key={index}
                 onClick={() => {
                   setCategoryCalendar({
@@ -215,6 +246,7 @@ const AdminGoogleCalendar: NextPage = () => {
         columns={columns}
         data={data?.getGoogleEvents as BothEventsFragment[]}
         noDataComponent={<Spinner />}
+        theme="myDark"
       />
     </Layout>
   );

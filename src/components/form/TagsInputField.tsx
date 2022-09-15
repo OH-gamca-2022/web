@@ -36,7 +36,9 @@ export const TagsInputField: React.FC<TagsInputFieldProps> = ({
 
   return (
     <FormControl isInvalid={!!meta.error}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      <FormLabel color="#ddd" htmlFor={field.name}>
+        {label}
+      </FormLabel>
       <HStack>
         <AddTagsPopover setSelectedTags={onChange} selectedTags={selectedTags}>
           <IconButton icon={<AddIcon />} aria-label="add tags" size="sm" />

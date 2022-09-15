@@ -146,6 +146,7 @@ export class AlbumResolver {
       }
     );
     const formattedResult = await result.json();
+    console.log(formattedResult);
     const savedAlbums = await dataSource.getRepository(Album).find();
     const googleAlbums = formattedResult.albums.map((item: any) => {
       return {

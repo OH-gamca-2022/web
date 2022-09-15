@@ -10,7 +10,7 @@ const AdminLoadEvents: NextPage = () => {
   const [{ data }] = useGetGoogleCalendarsQuery();
   return (
     <Layout>
-      <Heading>Načítať udalosti</Heading>
+      <Heading color="#ddd">Načítať udalosti</Heading>
       <Wrap>
         {data?.getGoogleCalendars.map((item, index) => (
           <WrapItem key={index}>
@@ -18,7 +18,7 @@ const AdminLoadEvents: NextPage = () => {
               <NextLink
                 href={`/admin/events/load/calendar?id=${item.id}&name=${item.name}`}
               >
-                <Link>{item.name}</Link>
+                <Link color="#ddd">{item.name}</Link>
               </NextLink>
             </Card>
           </WrapItem>

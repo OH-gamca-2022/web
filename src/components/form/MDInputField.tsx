@@ -10,7 +10,7 @@ import { format } from "path";
 import { useCallback, useMemo } from "react";
 import ReactDOMServer from "react-dom/server";
 import ReactMarkdown from "react-markdown";
-import styles from "../../styles/github-markdown-css.module.css";
+import styles from "../../styles/github-markdown-css-dark.module.css";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -46,8 +46,11 @@ export const MDInputField: React.FC<MDInputFieldProps> = ({
 
   return (
     <FormControl isInvalid={!!meta.error}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      <FormLabel color="#ddd" htmlFor={field.name}>
+        {label}
+      </FormLabel>
       <SimpleMDE
+        style={{ backgroundColor: "white", borderRadius: 5 }}
         onChange={onChange}
         value={field.value}
         placeholder={props.placeholder}

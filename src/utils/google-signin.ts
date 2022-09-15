@@ -11,6 +11,7 @@ export const generateURL = () => {
   const scopes = [
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/photoslibrary.readonly",
+    "https://www.googleapis.com/auth/photoslibrary.sharing",
   ];
 
   const url = oauth2Client.generateAuthUrl({

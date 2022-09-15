@@ -57,7 +57,7 @@ const AdminDisciplines: NextPage = () => {
   return (
     <Layout>
       <Flex mb={4} justifyContent="space-between">
-        <Heading>Disciplíny</Heading>
+        <Heading color="#ddd">Disciplíny</Heading>
         <AddCategoryModal>
           {(onOpen) => <Button onClick={onOpen}>Pridať kategóriu</Button>}
         </AddCategoryModal>
@@ -67,7 +67,9 @@ const AdminDisciplines: NextPage = () => {
           <WrapItem key={index}>
             <Card>
               <Flex alignItems="center" justifyContent="space-between">
-                <Heading mb={2}>{cat.name}</Heading>
+                <Heading mb={2} color="#ddd">
+                  {cat.name}
+                </Heading>
                 <DeleteAlert
                   headerText="Vymazať kategóriu"
                   bodyText="Ste si isťí? Túto akciu už nemôžete vrátiť."
@@ -93,6 +95,8 @@ const AdminDisciplines: NextPage = () => {
                         {editedItemId == disc.id ? (
                           <HStack alignItems="center">
                             <Input
+                              color="#ddd"
+                              borderColor={"#30363d"}
                               placeholder="názov tagu"
                               value={editedItemName || ""}
                               onChange={(e) => {
@@ -114,7 +118,7 @@ const AdminDisciplines: NextPage = () => {
                           </HStack>
                         ) : (
                           <NextLink href={`/discipline`}>
-                            <Link>{disc.name}</Link>
+                            <Link color="#ddd">{disc.name}</Link>
                           </NextLink>
                         )}
 
@@ -124,6 +128,7 @@ const AdminDisciplines: NextPage = () => {
                             variant="unstyled"
                             icon={<EditIcon />}
                             aria-label="edit discipline"
+                            color="#ddd"
                             onClick={() => {
                               setEditedItemId(disc.id);
                               setEditedItemName(disc.name);
@@ -155,6 +160,8 @@ const AdminDisciplines: NextPage = () => {
                 </UnorderedList>
                 <HStack>
                   <Input
+                    borderColor={"#30363d"}
+                    color="#ddd"
                     value={
                       newDiscipline?.category == cat.id
                         ? newDiscipline?.name || ""
