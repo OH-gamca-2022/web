@@ -133,13 +133,13 @@ export const NavBar: React.FC = () => {
           </Link>
         </NextLink>
       </Box>
-      <Box as={motion.div}>
+      {/* <Box as={motion.div}>
         <NextLink href="/gallery">
           <Link color="white">
             <Text>Fotky</Text>
           </Link>
         </NextLink>
-      </Box>
+      </Box> */}
       {!bigMenu && (
         <Box as={motion.div} layout={false}>
           {userButton}

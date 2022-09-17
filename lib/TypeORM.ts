@@ -40,10 +40,10 @@ export const getDataSource = async () => {
 
 export const dataSource = new DataSource({
   type: "postgres",
-  database: process.env.DB_NAME,
-  username: process.env.PG_USERNAME,
-  password: process.env.PG_PASSWORD,
+  database: "ohgamca2022",
+  username: "postgres",
+  password: "postgres",
   entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
-  migrations: [path.join(__dirname, "./migrations/*")],
-  synchronize: !__prod__,
+  migrations: ["src/migrations/*.ts"],
+  synchronize: false,
 });

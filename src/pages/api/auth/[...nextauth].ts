@@ -4,6 +4,7 @@ import NextAuth from "next-auth/next";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { getDataSource } from "../../../../lib/TypeORM";
 import { User } from "../../../entities/User";
+import { ROLES } from "../../../types/roles";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -42,6 +43,10 @@ export const authOptions: NextAuthOptions = {
                 email: user.email,
                 name: user.name,
                 class: departmentResponse.data.department,
+                role:
+                  user.email == "bachraty1@gamca.sk"
+                    ? ("ADMIN" as ROLES)
+                    : ("USER" as ROLES),
               })
               .execute();
           }
