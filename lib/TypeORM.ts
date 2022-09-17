@@ -37,3 +37,13 @@ export const getDataSource = async () => {
     return mainDataSource;
   }
 };
+
+export const dataSource = new DataSource({
+  type: "postgres",
+  database: process.env.DB_NAME,
+  username: process.env.PG_USERNAME,
+  password: process.env.PG_PASSWORD,
+  entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
+  migrations: [path.join(__dirname, "./migrations/*")],
+  synchronize: !__prod__,
+});
