@@ -28,8 +28,10 @@ import { DeleteAlert } from "../../../components/alerts/DeleteAlert";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Calendar } from "../../../components/Calendar";
 import { TagButton } from "../../../components/TagButton";
+import { useIsAdminPage } from "../../../utils/useIsAdminPage";
 
 const AdminEvents: NextPage = () => {
+  useIsAdminPage();
   const [{ data }] = useGetEventsQuery();
   const [, deleteEvent] = useDeleteEventMutation();
   const columns: TableColumn<CalendarEventFragment>[] = [

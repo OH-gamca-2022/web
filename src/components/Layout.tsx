@@ -19,7 +19,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, wide = false }) => {
           as={motion.div}
           layout="position"
           mt={8}
-          pb={20}
+          pb={250}
           mx="auto"
           w="90%"
           maxW={wide ? 2000 : 1000}

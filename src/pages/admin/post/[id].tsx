@@ -3,8 +3,10 @@ import { useRouter } from "next/router";
 import { Layout } from "../../../components/Layout";
 
 import { PostForm } from "../../../components/PostForm";
+import { useIsAdminPage } from "../../../utils/useIsAdminPage";
 
 const Post = () => {
+  useIsAdminPage();
   const router = useRouter();
   const { id } = router.query;
 

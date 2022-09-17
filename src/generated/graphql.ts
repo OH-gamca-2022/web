@@ -92,6 +92,7 @@ export type GoogleEvent = {
 export type Mutation = {
   __typename?: 'Mutation';
   changeRoleOfMe: User;
+  changeRoleOfUser: User;
   createCategory: Category;
   createDiscipline: Discipline;
   createPost: Post;
@@ -115,6 +116,12 @@ export type Mutation = {
 
 export type MutationChangeRoleOfMeArgs = {
   role: Scalars['String'];
+};
+
+
+export type MutationChangeRoleOfUserArgs = {
+  role: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 
@@ -358,6 +365,16 @@ export type SimpleDisciplineFragment = { __typename?: 'Discipline', id: string, 
 
 export type TagFragment = { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null };
 
+export type UserFragment = { __typename?: 'User', id: string, email: string, name: string, class?: string | null, role: string };
+
+export type ChangeRoleOfUserMutationVariables = Exact<{
+  userId: Scalars['String'];
+  role: Scalars['String'];
+}>;
+
+
+export type ChangeRoleOfUserMutation = { __typename?: 'Mutation', changeRoleOfUser: { __typename?: 'User', id: string, email: string, name: string, class?: string | null, role: string } };
+
 export type CreateCategoryMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -483,6 +500,11 @@ export type GetAlbumsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAlbumsQuery = { __typename?: 'Query', getAlbums: Array<{ __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string }> };
+
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', id: string, email: string, name: string, class?: string | null, role: string }> };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -721,6 +743,26 @@ export const SimpleCategoryFragmentDoc = gql`
   googleCalendarId
 }
     `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  email
+  name
+  class
+  role
+}
+    `;
+export const ChangeRoleOfUserDocument = gql`
+    mutation ChangeRoleOfUser($userId: String!, $role: String!) {
+  changeRoleOfUser(userId: $userId, role: $role) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+
+export function useChangeRoleOfUserMutation() {
+  return Urql.useMutation<ChangeRoleOfUserMutation, ChangeRoleOfUserMutationVariables>(ChangeRoleOfUserDocument);
+};
 export const CreateCategoryDocument = gql`
     mutation CreateCategory($name: String!) {
   createCategory(name: $name) {
@@ -898,6 +940,17 @@ export const GetAlbumsDocument = gql`
 
 export function useGetAlbumsQuery(options?: Omit<Urql.UseQueryArgs<GetAlbumsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAlbumsQuery>({ query: GetAlbumsDocument, ...options });
+};
+export const GetAllUsersDocument = gql`
+    query GetAllUsers {
+  getAllUsers {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+
+export function useGetAllUsersQuery(options?: Omit<Urql.UseQueryArgs<GetAllUsersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllUsersQuery>({ query: GetAllUsersDocument, ...options });
 };
 export const GetCategoriesDocument = gql`
     query GetCategories {

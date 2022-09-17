@@ -24,6 +24,7 @@ import {
   useGetPublishedPostsQuery,
   useGetTagsQuery,
 } from "../generated/graphql";
+import { useIsAdminPage } from "../utils/useIsAdminPage";
 
 const Posts: NextPage = () => {
   const router = useRouter();

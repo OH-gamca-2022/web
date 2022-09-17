@@ -2,8 +2,10 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { EventForm } from "../../../../components/EventForm";
 import { Layout } from "../../../../components/Layout";
+import { useIsAdminPage } from "../../../../utils/useIsAdminPage";
 
 const AdminLoadEvent: NextPage = () => {
+  useIsAdminPage();
   const router = useRouter();
   const { googleId, calendarId, tagId } = router.query;
 

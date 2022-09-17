@@ -8,11 +8,13 @@ export const useIsAdminPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   useEffect(() => {
+    console.log(status);
     if (status == "unauthenticated") {
+      console.log("unauthenticated");
       router.push("/404");
     }
     if (session && !hasPermission(session.user.role as ROLES, ROLES.EDITOR)) {
       router.push("/404");
     }
-  }, []);
+  }, [status]);
 };

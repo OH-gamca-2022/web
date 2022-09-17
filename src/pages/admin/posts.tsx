@@ -22,8 +22,10 @@ import { dateToString } from "../../utils/dateFormatter";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 import { TagButton } from "../../components/TagButton";
+import { useIsAdminPage } from "../../utils/useIsAdminPage";
 
 const AdminPosts = () => {
+  useIsAdminPage();
   const [{ data: posts, fetching }] = useGetPostsQuery();
   const [, deletePost] = useDeletePostMutation();
   const [{ fetching: publishFetching }, savePost] = useSavePostMutation();

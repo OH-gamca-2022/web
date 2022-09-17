@@ -54,6 +54,7 @@ const areEventsSame = (event: BothEventsFragment) => {
 };
 
 const AdminGoogleCalendar: NextPage = () => {
+  useIsAdminPage();
   const router = useRouter();
   const { id, name } = router.query;
   const [{ data }] = useGetGoogleEventsQuery({

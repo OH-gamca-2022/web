@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   const [{ data, fetching, error }, fetchPosts] = useGetPublishedPostsQuery({
     variables: {
       page: page,
-      limit: 3,
+      limit: 10,
     },
   });
 
@@ -76,23 +76,35 @@ const Home: NextPage = () => {
             </Flex>
           </Stack>
         </GridItem>
-        <Stack>
-          <UpcomingEvents />
-          <Card>
-            <Heading color={"#ddd"}>Sponzori</Heading>
-            <VStack spacing={6} padding={2} mt={4}>
-              <img src={"/sponsors/BK.svg"} />
-              <Divider borderColor={"#30363d"} />
-              <img src={"/sponsors/B-SM.svg"} />
-              <Divider borderColor={"#30363d"} />
-              <img src={"/sponsors/Bratislava.svg"} />
-              <Divider borderColor={"#30363d"} />
-              <img src={"/sponsors/Skubla.svg"} />
-              <Divider borderColor={"#30363d"} />
-              <img src={"/sponsors/stilus.svg"} />
-            </VStack>
-          </Card>
-        </Stack>
+        <GridItem>
+          <Stack>
+            <UpcomingEvents />
+            <Card>
+              <Heading color={"#ddd"}>Sponzori</Heading>
+              <VStack spacing={6} padding={2} mt={4}>
+                <a href="https://bratislavskykraj.sk">
+                  <img src={"/sponsors/BK.svg"} />
+                </a>
+                <Divider borderColor={"#30363d"} />
+                <a href="https://www.staremesto.sk">
+                  <img src={"/sponsors/B-SM.svg"} />
+                </a>
+                <Divider borderColor={"#30363d"} />
+                <a href="https://bratislava.sk">
+                  <img src={"/sponsors/Bratislava.svg"} />
+                </a>
+                <Divider borderColor={"#30363d"} />
+                <a href="https://www.skubla.sk">
+                  <img src={"/sponsors/Skubla.svg"} />
+                </a>
+                <Divider borderColor={"#30363d"} />
+                <a href="https://www.stilus.sk/sk/">
+                  <img src={"/sponsors/stilus.svg"} />
+                </a>
+              </VStack>
+            </Card>
+          </Stack>
+        </GridItem>
       </Grid>
     </Layout>
   );

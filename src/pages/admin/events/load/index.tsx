@@ -1,12 +1,13 @@
 import { Heading, Link, Wrap, WrapItem } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useEffect } from "react";
 import { Card } from "../../../../components/Card";
 import { Layout } from "../../../../components/Layout";
 import { useGetGoogleCalendarsQuery } from "../../../../generated/graphql";
 import NextLink from "next/link";
+import { useIsAdminPage } from "../../../../utils/useIsAdminPage";
 
 const AdminLoadEvents: NextPage = () => {
+  useIsAdminPage();
   const [{ data }] = useGetGoogleCalendarsQuery();
   return (
     <Layout>

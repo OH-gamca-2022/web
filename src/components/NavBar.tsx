@@ -13,6 +13,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { createRef, useEffect, useLayoutEffect, useState } from "react";
@@ -139,6 +140,11 @@ export const NavBar: React.FC = () => {
           </Link>
         </NextLink>
       </Box>
+      {!bigMenu && (
+        <Box as={motion.div} layout={false}>
+          {userButton}
+        </Box>
+      )}
     </Flex>
   );
 
@@ -162,9 +168,18 @@ export const NavBar: React.FC = () => {
       />
       <NextLink href="/">
         <Link mr={4}>
-          <Heading color="white" whiteSpace={"nowrap"}>
-            OH 2022
-          </Heading>
+          <Flex alignItems={"center"}>
+            <img
+              src={"/logo.svg"}
+              height={50}
+              width={50}
+              color="white"
+              style={{ fill: "white", marginRight: 10 }}
+            />
+            <Heading color="white" whiteSpace={"nowrap"}>
+              HOKUS POKUS
+            </Heading>
+          </Flex>
         </Link>
       </NextLink>
     </Flex>
@@ -180,7 +195,8 @@ export const NavBar: React.FC = () => {
       justifyContent="center"
       flexDirection="column"
     >
-      {session.data?.user.role == "ADMIN" && <AdminBar />}
+      {(session.data?.user.role == "EDITOR" || session.data?.user.role) ==
+        "ADMIN" && <AdminBar />}
       {/* NavBar container*/}
       <Flex
         as={motion.div}
@@ -209,9 +225,11 @@ export const NavBar: React.FC = () => {
             {menuList}
           </Box>
         </Flex>
-        <Box as={motion.div} layout={false}>
-          {userButton}
-        </Box>
+        {bigMenu && (
+          <Box as={motion.div} layout={false}>
+            {userButton}
+          </Box>
+        )}
       </Flex>
     </Flex>
   );

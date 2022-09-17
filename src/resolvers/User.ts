@@ -1,9 +1,17 @@
 import { getSession } from "next-auth/react";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Post } from "../entities/Post";
 import { Tag } from "../entities/Tag";
 import { User } from "../entities/User";
+import { requirePersmission } from "../middleware/requirePermission";
 import { MyContext } from "../types/MyContext";
 import { ROLES } from "../types/roles";
 
@@ -15,6 +23,7 @@ export class UserResolver {
   }
 
   @Query(() => [User])
+  @UseMiddleware(requirePersmission(ROLES.ADMIN))
   async getAllUsers() {
     const dataSource = await getDataSource();
     return dataSource.getRepository(User).find();
@@ -55,6 +64,24 @@ export class UserResolver {
     if (user) {
       user.role = role as ROLES;
       console.log(user.role);
+      dataSource.getRepository(User).save(user);
+      return user;
+    } else {
+      throw new Error("error");
+    }
+  }
+
+  @Mutation(() => User)
+  async changeRoleOfUser(
+    @Arg("userId") userId: string,
+    @Arg("role") role: string
+  ) {
+    const dataSource = await getDataSource();
+    const user = await dataSource
+      .getRepository(User)
+      .findOne({ where: { id: userId } });
+    if (user) {
+      user.role = role as ROLES;
       dataSource.getRepository(User).save(user);
       return user;
     } else {

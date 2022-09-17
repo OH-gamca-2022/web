@@ -16,8 +16,10 @@ import {
   useGetGoogleAlbumsQuery,
   useSaveAlbumMutation,
 } from "../../generated/graphql";
+import { useIsAdminPage } from "../../utils/useIsAdminPage";
 
 const AdminAlbums: NextPage = () => {
+  useIsAdminPage();
   const [{ data }] = useGetGoogleAlbumsQuery();
   const [, saveAlbum] = useSaveAlbumMutation();
   const [, deleteAlbum] = useDeleteAlbumMutation();

@@ -23,8 +23,10 @@ import {
   useEditTagMutation,
   useGetTagsQuery,
 } from "../../generated/graphql";
+import { useIsAdminPage } from "../../utils/useIsAdminPage";
 
 const AdminTags: NextPage = () => {
+  useIsAdminPage();
   const [{ data, fetching, error }] = useGetTagsQuery();
   const [editedTagId, setEditedTagId] = useState<string | null>(null);
   const [editedTagName, setEditedTagName] = useState<string | null>(null);
@@ -47,13 +49,13 @@ const AdminTags: NextPage = () => {
 
   const categories = (
     <>
-      <Heading>Kategórie</Heading>
+      <Heading color="#ddd">Kategórie</Heading>
       <Stack>
         <UnorderedList>
           {data?.getTags
             .filter((item) => Boolean(item.categoryId))
             .map((item, index) => (
-              <ListItem key={index}>
+              <ListItem key={index} color="#ddd">
                 <Text>{item.name}</Text>
               </ListItem>
             ))}
@@ -64,13 +66,13 @@ const AdminTags: NextPage = () => {
 
   const disciplines = (
     <>
-      <Heading>Disciplíny</Heading>
+      <Heading color="#ddd">Disciplíny</Heading>
       <Stack>
         <UnorderedList>
           {data?.getTags
             .filter((item) => Boolean(item.disciplineId))
             .map((item, index) => (
-              <ListItem key={index}>
+              <ListItem key={index} color="#ddd">
                 <Text>{item.name}</Text>
               </ListItem>
             ))}
@@ -85,7 +87,7 @@ const AdminTags: NextPage = () => {
         <Stack>
           {categories}
           {disciplines}
-          <Heading>Tagy</Heading>
+          <Heading color="#ddd">Tagy</Heading>
           <HStack>
             <IconButton
               aria-label="add tag"
@@ -96,6 +98,7 @@ const AdminTags: NextPage = () => {
               }}
             />
             <Input
+              borderColor={"#30363d"}
               placeholder="názov tagu"
               onChange={(e) => {
                 setNewTagName(e.target.value);
@@ -115,6 +118,7 @@ const AdminTags: NextPage = () => {
                 <Flex alignItems="center">
                   <IconButton
                     aria-label="edit tag"
+                    color="#ddd"
                     icon={<EditIcon />}
                     variant="unstyled"
                     size={"sm"}
@@ -144,6 +148,8 @@ const AdminTags: NextPage = () => {
                 {editedTagId == item.id ? (
                   <HStack alignItems="center">
                     <Input
+                      color="#ddd"
+                      borderColor={"#30363d"}
                       placeholder="názov tagu"
                       value={editedTagName || ""}
                       onChange={(e) => {
@@ -161,7 +167,7 @@ const AdminTags: NextPage = () => {
                     </Button>
                   </HStack>
                 ) : (
-                  <Text>{item.name}</Text>
+                  <Text color="#ddd">{item.name}</Text>
                 )}
               </HStack>
             ))}

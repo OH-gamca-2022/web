@@ -11,11 +11,13 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { generateURL } from "../utils/google-signin";
 
 export const AdminBar = () => {
+  const session = useSession();
   const router = useRouter();
   return (
     <Flex
@@ -45,15 +47,22 @@ export const AdminBar = () => {
         <NextLink href={"/admin/albums"}>
           <Link>Albumy</Link>
         </NextLink>
+        {session.data?.user.role == "ADMIN" && (
+          <NextLink href={"/admin/users"}>
+            <Link>Používatelia</Link>
+          </NextLink>
+        )}
       </HStack>
-      <Button
-        size="sm"
-        onClick={() => {
-          router.push("/api/google-oauth");
-        }}
-      >
-        Sign In with Google
-      </Button>
+      {session.data?.user.role == "ADMIN" && (
+        <Button
+          size="sm"
+          onClick={() => {
+            router.push("/api/google-oauth");
+          }}
+        >
+          Sign In with Google
+        </Button>
+      )}
     </Flex>
   );
 };
