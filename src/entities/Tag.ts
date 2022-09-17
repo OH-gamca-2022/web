@@ -8,8 +8,8 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Relation,
 } from "typeorm";
+import type { Relation } from "typeorm";
 import { Category } from "./Category";
 import { Discipline } from "./Discipline";
 import { CalendarEvent } from "./CalendarEvent";

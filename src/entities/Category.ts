@@ -8,8 +8,8 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Relation,
 } from "typeorm";
+import type { Relation } from "typeorm";
 import { Discipline } from "./Discipline";
 import { Tag } from "./Tag";
 

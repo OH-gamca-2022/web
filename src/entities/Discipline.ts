@@ -9,8 +9,8 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Relation,
 } from "typeorm";
+import type { Relation } from "typeorm";
 import { Category } from "./Category";
 import { Post } from "./Post";
 import { Tag } from "./Tag";

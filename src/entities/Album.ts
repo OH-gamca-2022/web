@@ -5,8 +5,8 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  Relation,
 } from "typeorm";
+import type { Relation } from "typeorm";
 
 @Entity()
 @ObjectType()
