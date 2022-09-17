@@ -6,21 +6,25 @@ export const Footer: React.FC = () => {
   return (
     <Box
       width={"100%"}
-      height={200}
+      height={150}
       bg={"#061626"}
       position={"absolute"}
       bottom={0}
       padding={8}
     >
       <Flex
+        height="100%"
         flex={1}
         mx="auto"
         w="90%"
         maxW={1000}
         flexDirection="column"
         alignItems={"center"}
+        justifyContent="center"
       >
-        <img src="/logo.svg" height={150} width={150} />
+        <Text color="#ddd" fontWeight={"bold"}>
+          OH HOKUS POKUS
+        </Text>
         <Flex>
           <a href="https://www.instagram.com/ohgamca2022/">
             <img
