@@ -30,6 +30,7 @@ import {
   TagFragment,
   TagFragmentDoc,
 } from "../generated/graphql";
+import Head from "next/head";
 
 dayjs.locale("sk");
 
@@ -189,13 +190,19 @@ const client = createClient({
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session} basePath="/api/auth">
-      <Provider value={client}>
-        <ChakraProvider>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </Provider>
-    </SessionProvider>
+    <>
+      <Head>
+        <title>OH Hokus Pokus</title>
+        <link rel="shortcut icon" href="/logo.svg" />
+      </Head>
+      <SessionProvider session={session} basePath="/api/auth">
+        <Provider value={client}>
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </Provider>
+      </SessionProvider>
+    </>
   );
 }
 
