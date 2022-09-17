@@ -17,6 +17,9 @@ const nextConfig = {
     config.experiments.topLevelAwait = true;
     return config;
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = withTM(nextConfig);
