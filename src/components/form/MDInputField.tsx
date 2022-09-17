@@ -35,10 +35,9 @@ export const MDInputField: React.FC<MDInputFieldProps> = ({
     return {
       previewRender() {
         return ReactDOMServer.renderToString(
-          <ReactMarkdown
-            children={field.value}
-            className={styles.markdownBody}
-          />
+          <ReactMarkdown className={styles.markdownBody}>
+            {field.value}
+          </ReactMarkdown>
         );
       },
     };

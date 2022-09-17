@@ -118,8 +118,8 @@ export const EventForm: React.FC<EventFormProps> = ({
               name="class"
               label="Vybrať triedu"
             >
-              {classes.map((item) => (
-                <option>{item}</option>
+              {classes.map((item, index) => (
+                <option key={index}>{item}</option>
               ))}
             </SelectInputField>
           </Box>

@@ -28,7 +28,7 @@ const AdminAlbums: NextPage = () => {
     <Layout>
       <Wrap spacing={4}>
         {data?.getGoogleAlbums.map((item, index) => (
-          <WrapItem>
+          <WrapItem key={index}>
             <Box>
               <Image
                 src={item.googleAlbum.coverPhotoBaseUrl}

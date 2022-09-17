@@ -37,7 +37,7 @@ const Album: NextPage = () => {
       );
       setNextPageToken(data?.getPhotosFromAlbum.nextPageToken || null);
     }
-  }, [data]);
+  }, [data, photos]);
 
   const openLightbox = useCallback((_event: any, { index }: any) => {
     setCurrentImage(index);
