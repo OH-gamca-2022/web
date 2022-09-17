@@ -8,6 +8,9 @@ declare global {
       BASE_URL: string;
       GOOGLE_CLIENT_ID: string;
       GOOGLE_CLIENT_SECRET: string;
+      PG_USERNAME: string;
+      PG_PASSWORD: string;
+      DB_NAME: string;
     }
   }
 }

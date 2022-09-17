@@ -19,6 +19,8 @@ import { isAuth } from "../middleware/isAuth";
 import { getSession } from "next-auth/react";
 import { MyContext } from "../types/MyContext";
 import { User } from "../entities/User";
+import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 
 const formatGoogleEvent = (event: calendar_v3.Schema$Event) => {
   const startDate = event.start?.date
@@ -76,6 +78,7 @@ export class BothEvents {
 @Resolver()
 export class EventResolver {
   @Query(() => [GoogleCalendar])
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async getGoogleCalendars() {
     const calendars = (await getCalendar().calendarList.list()).data.items;
     return calendars?.map((cal, index) => {
@@ -87,6 +90,7 @@ export class EventResolver {
   }
 
   @Query(() => [BothEvents])
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async getGoogleEvents(
     @Arg("calendarId") calendarId: string
   ): Promise<BothEvents[]> {
@@ -116,6 +120,7 @@ export class EventResolver {
   }
 
   @Query(() => GoogleEvent)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async getGoogleEvent(
     @Arg("id") id: string,
     @Arg("calendarId") calendarId: string
@@ -134,6 +139,7 @@ export class EventResolver {
   }
 
   @Mutation(() => CalendarEvent)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async saveEvent(
     @Arg("name") name: string,
     @Arg("startDate") startDate: Date,

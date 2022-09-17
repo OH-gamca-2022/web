@@ -117,6 +117,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async savePost(
     @Arg("title") title: string,
     @Arg("published") published: boolean,
@@ -162,6 +163,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async deletePost(@Arg("id") id: string) {
     const dataSource = await getDataSource();
     const post = await dataSource
@@ -172,14 +174,6 @@ export class PostResolver {
     }
     await dataSource.getRepository(Post).remove(post);
     console.log(await dataSource.getRepository(Post).find());
-    return true;
-  }
-
-  @Mutation(() => Boolean)
-  async deleteAllPosts() {
-    const dataSource = await getDataSource();
-    const posts = await dataSource.getRepository(Post).find();
-    await dataSource.getRepository(Post).remove(posts);
     return true;
   }
 }

@@ -1,10 +1,11 @@
 import axios from "axios";
+import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { getDataSource } from "../../../../lib/TypeORM";
 import { User } from "../../../entities/User";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID,
@@ -64,8 +65,9 @@ export default NextAuth({
           session.user.role = user.role;
         }
       }
-      //console.log(session);
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);

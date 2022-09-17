@@ -5,9 +5,13 @@ import "@fullcalendar/common/main.css"; // @fullcalendar/react imports @fullcale
 import "@fullcalendar/daygrid/main.css"; // @fullcalendar/timegrid imports @fullcalendar/daygrid
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { EventPopover } from "./EventPopover";
+import { useEffect } from "react";
 
 export const Calendar: React.FC = () => {
-  const [{ data }] = useGetMyEventsQuery();
+  const [{ data }] = useGetEventsQuery();
+  useEffect(() => {
+    console.log(data);
+  });
   const renderEventContent = (eventContent: EventContentArg) => {
     return (
       <EventPopover event={eventContent.event.extendedProps.event}>
@@ -25,7 +29,7 @@ export const Calendar: React.FC = () => {
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"
       locale="sk"
-      events={data?.getMyEvents.map((item, index) => {
+      events={data?.getEvents.map((item, index) => {
         return {
           title: item.name,
           start: item.startDate as Date,

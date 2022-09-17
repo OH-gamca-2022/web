@@ -1,9 +1,11 @@
 import { google } from "googleapis";
-import { Arg, Resolver } from "type-graphql";
+import { Arg, Resolver, UseMiddleware } from "type-graphql";
 import { Query, Mutation } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Category } from "../entities/Category";
 import { Tag } from "../entities/Tag";
+import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 
 @Resolver()
 export class CategoryResolver {
@@ -18,6 +20,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => Category)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async createCategory(@Arg("name") name: string) {
     const dataSource = await getDataSource();
 
@@ -33,6 +36,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async deleteCategory(@Arg("id") id: string) {
     const dataSource = await getDataSource();
     const category = await dataSource
@@ -56,6 +60,7 @@ export class CategoryResolver {
   }
 
   @Mutation(() => Category)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async setCategoryCalendar(
     @Arg("categoryId") categoryId: string,
     @Arg("calendarId") calendarId: string

@@ -29,23 +29,6 @@ export class UserResolver {
     return dataSource.getRepository(User).find();
   }
 
-  @Mutation(() => Post)
-  async createPost(): Promise<Post> {
-    const dataSource = await getDataSource();
-    console.log("Create post");
-    const tag = await dataSource
-      .getRepository(Tag)
-      .create({ name: "tag1" })
-      .save();
-    const post = await dataSource
-      .getRepository(Post)
-      .create({ text: "something", title: "Post1" })
-      .save();
-    post.tags = [tag];
-    dataSource.getRepository(Post).save(post);
-    return post;
-  }
-
   @Query(() => Boolean)
   async checkSession(@Ctx() ctx: MyContext) {
     const session = await getSession({ req: ctx.req });
@@ -54,6 +37,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseMiddleware(requirePersmission(ROLES.ADMIN))
   async changeRoleOfMe(@Arg("role") role: string) {
     console.log(role as ROLES);
     console.log(ROLES.ADMIN);
@@ -72,6 +56,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseMiddleware(requirePersmission(ROLES.ADMIN))
   async changeRoleOfUser(
     @Arg("userId") userId: string,
     @Arg("role") role: string
@@ -87,12 +72,5 @@ export class UserResolver {
     } else {
       throw new Error("error");
     }
-  }
-
-  @Mutation(() => Boolean)
-  async deleteAllUsers() {
-    const dataSource = await getDataSource();
-    dataSource.getRepository(User).delete({});
-    return true;
   }
 }

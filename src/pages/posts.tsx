@@ -99,7 +99,7 @@ const Posts: NextPage = () => {
           <Flex justifyContent="space-between" alignItems="center">
             <Wrap align="center">
               <WrapItem>
-                <Heading size={"md"} pr={4}>
+                <Heading size={"md"} pr={4} color="#ddd">
                   Zobraziť tagy:{" "}
                 </Heading>
               </WrapItem>

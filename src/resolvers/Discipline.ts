@@ -1,8 +1,10 @@
-import { Arg, Resolver } from "type-graphql";
+import { Arg, Resolver, UseMiddleware } from "type-graphql";
 import { Query, Mutation } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Discipline } from "../entities/Discipline";
 import { Tag } from "../entities/Tag";
+import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 
 @Resolver()
 export class DisciplineResolver {
@@ -15,6 +17,7 @@ export class DisciplineResolver {
   }
 
   @Mutation(() => Discipline)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async createDiscipline(
     @Arg("name") name: string,
     @Arg("categoryId") categoryId: string
@@ -34,6 +37,7 @@ export class DisciplineResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async deleteDiscipline(@Arg("id") id: string) {
     console.log(id);
     const dataSource = await getDataSource();
@@ -54,6 +58,7 @@ export class DisciplineResolver {
   }
 
   @Mutation(() => Discipline)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async editDiscipline(@Arg("name") name: string, @Arg("id") id: string) {
     const dataSource = await getDataSource();
     const discipline = await dataSource

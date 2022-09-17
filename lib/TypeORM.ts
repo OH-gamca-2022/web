@@ -6,6 +6,7 @@ import { Discipline } from "../src/entities/Discipline";
 import { Post } from "../src/entities/Post";
 import { Tag } from "../src/entities/Tag";
 import { User } from "../src/entities/User";
+import { __prod__ } from "../src/utils/constants";
 
 let mainDataSource: DataSource;
 export const getDataSource = async () => {
@@ -17,9 +18,11 @@ export const getDataSource = async () => {
   } else {
     mainDataSource = new DataSource({
       type: "postgres",
-      database: "OH-gamca-2022",
+      database: process.env.DB_NAME,
+      username: process.env.PG_USERNAME,
+      password: process.env.PG_PASSWORD,
       entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
-      synchronize: true,
+      synchronize: !__prod__,
     });
     await mainDataSource
       .initialize()

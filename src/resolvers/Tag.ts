@@ -1,10 +1,13 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Tag } from "../entities/Tag";
+import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 
 @Resolver()
 export class TagResolver {
   @Mutation(() => Tag)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async createTag(@Arg("name") name: string) {
     const dataSource = await getDataSource();
     return dataSource.getRepository(Tag).create({ name }).save();
@@ -17,6 +20,7 @@ export class TagResolver {
   }
 
   @Mutation(() => Tag)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async editTag(@Arg("id") id: string, @Arg("name") name: string) {
     const dataSource = await getDataSource();
     const tag = await dataSource.getRepository(Tag).findOne({ where: { id } });
@@ -35,6 +39,7 @@ export class TagResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async deleteTag(@Arg("id") id: string) {
     const dataSource = await getDataSource();
     const tag = await dataSource.getRepository(Tag).findOne({ where: { id } });

@@ -7,9 +7,12 @@ import {
   Mutation,
   Arg,
   Int,
+  UseMiddleware,
 } from "type-graphql";
 import { getDataSource } from "../../lib/TypeORM";
 import { Album } from "../entities/Album";
+import { requirePersmission } from "../middleware/requirePermission";
+import { ROLES } from "../types/roles";
 import { getGoogleAuth } from "../utils/google-signin";
 
 @ObjectType()
@@ -132,6 +135,7 @@ export class AlbumResolver {
   }
 
   @Query(() => [BothAlbums])
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async getGoogleAlbums() {
     const dataSource = await getDataSource();
     const token = (await getGoogleAuth().getAccessToken()).token;
@@ -203,6 +207,7 @@ export class AlbumResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async saveAlbum(@Arg("id") id: string) {
     const dataSource = await getDataSource();
     const token = (await getGoogleAuth().getAccessToken()).token;
@@ -233,6 +238,7 @@ export class AlbumResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(requirePersmission(ROLES.EDITOR))
   async deleteAlbum(@Arg("id") id: string) {
     const dataSource = await getDataSource();
     const album = await dataSource

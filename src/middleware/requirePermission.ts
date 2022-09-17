@@ -3,10 +3,16 @@ import { MiddlewareFn } from "type-graphql";
 import { MyContext } from "../types/MyContext";
 import { ROLES, ROLE_LEVELS } from "../types/roles";
 import { hasPermission } from "../utils/hasPermission";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
 
 export function requirePersmission(required: ROLES): MiddlewareFn<MyContext> {
   return async ({ context }, next) => {
-    const session = await getSession({ req: context.req });
+    const session = await unstable_getServerSession(
+      context.req,
+      context.res,
+      authOptions
+    );
     console.log("session", session);
     if (!session) {
       throw new Error("not authenticated");
