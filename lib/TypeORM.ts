@@ -1,3 +1,4 @@
+import path from "path";
 import { DataSource } from "typeorm";
 import { Album } from "../src/entities/Album";
 import { CalendarEvent } from "../src/entities/CalendarEvent";
@@ -22,6 +23,7 @@ export const getDataSource = async () => {
       username: process.env.PG_USERNAME,
       password: process.env.PG_PASSWORD,
       entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
+      migrations: [path.join(__dirname, "./migrations/*")],
       synchronize: !__prod__,
     });
     await mainDataSource
