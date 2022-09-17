@@ -50,7 +50,7 @@
     "remark-gfm": "^3.0.1",
     "styled-components": "^5.3.5",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.3.6",
+    "typeorm": "^0.3.9",
     "urql": "^2.2.2"
   },
   "devDependencies": {
