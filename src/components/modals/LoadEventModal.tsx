@@ -77,6 +77,7 @@ export const LoadEventModal: React.FC<LoadEventModalProps> = ({
                     startDate: googleEvent.startDate,
                     endDate: googleEvent.endDate,
                     tagIds: values.tags.map((item) => (item as TagFragment).id),
+                    allDay: googleEvent.allDay,
                   });
                 }}
               >
