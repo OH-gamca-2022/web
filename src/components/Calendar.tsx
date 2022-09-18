@@ -1,7 +1,7 @@
 import FullCalendar, { EventContentArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useGetEventsQuery, useGetMyEventsQuery } from "../generated/graphql";
-// import "@fullcalendar/common/main.css"; // @fullcalendar/react imports @fullcalendar/common
+import "@fullcalendar/common/main.css"; // @fullcalendar/react imports @fullcalendar/common
 import "@fullcalendar/daygrid/main.css"; // @fullcalendar/timegrid imports @fullcalendar/daygrid
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { EventPopover } from "./EventPopover";
