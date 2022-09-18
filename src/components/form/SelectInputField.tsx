@@ -34,6 +34,7 @@ export const SelectInputField: React.FC<SelectInputFieldProps> = ({
         {label}
       </FormLabel>
       <Select
+        borderColor={"#30363d"}
         onChange={onChange}
         value={field.value}
         placeholder={props.placeholder}

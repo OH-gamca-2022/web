@@ -98,6 +98,7 @@ const AdminTags: NextPage = () => {
               }}
             />
             <Input
+              color="#ddd"
               borderColor={"#30363d"}
               placeholder="názov tagu"
               onChange={(e) => {
