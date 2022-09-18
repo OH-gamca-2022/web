@@ -195,8 +195,8 @@ export const NavBar: React.FC = () => {
       justifyContent="center"
       flexDirection="column"
     >
-      {(session.data?.user.role == "EDITOR" || session.data?.user.role) ==
-        "ADMIN" && <AdminBar />}
+      {(session.data?.user.role == "EDITOR" ||
+        session.data?.user.role == "ADMIN") && <AdminBar />}
       {/* NavBar container*/}
       <Flex
         as={motion.div}
