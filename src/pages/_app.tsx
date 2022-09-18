@@ -1,5 +1,6 @@
 import "../styles/globals.css";
-// import "../styles/calendar.css";
+import "../styles/calendar.css";
+import "../styles/calendar-main.css";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import {

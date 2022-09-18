@@ -1,7 +1,7 @@
 import FullCalendar, { EventContentArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useGetEventsQuery, useGetMyEventsQuery } from "../generated/graphql";
-import "@fullcalendar/common/main.css"; // @fullcalendar/react imports @fullcalendar/common
+// import "@fullcalendar/common/main.css"; // @fullcalendar/react imports @fullcalendar/common
 import "@fullcalendar/daygrid/main.css"; // @fullcalendar/timegrid imports @fullcalendar/daygrid
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { EventPopover } from "./EventPopover";
@@ -29,6 +29,7 @@ export const Calendar: React.FC = () => {
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"
       locale="sk"
+      firstDay={1}
       events={data?.getEvents.map((item, index) => {
         return {
           title: item.name,
