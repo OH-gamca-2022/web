@@ -1,4 +1,11 @@
-import { Box, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  ListItem,
+  Stack,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import {
@@ -49,14 +56,16 @@ export const UpcomingEvents: React.FC = () => {
         </Heading>
         {groupedEvents?.map((item, index) => (
           <Box key={index}>
-            <Heading size={"sm"} color={"#cacaca"}>
+            <Heading size={"sm"} color={"#ddd"}>
               {dateToString(new Date(item.date), false)}
             </Heading>
-            {item.events.map((event, index) => (
-              <Text key={index} color={"#fff"}>
-                {event.name}
-              </Text>
-            ))}
+            <UnorderedList>
+              {item.events.map((event, index) => (
+                <ListItem key={index} color={"#ccc"}>
+                  <Text>{event.name}</Text>
+                </ListItem>
+              ))}
+            </UnorderedList>
           </Box>
         ))}
       </Stack>
