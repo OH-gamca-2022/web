@@ -22,8 +22,10 @@ export const UpcomingEvents: React.FC = () => {
     pause: !session,
   });
   const [{ data: allEvents }] = useGetEventsQuery({
-    pause: Boolean(session),
+    pause: session.status == "authenticated",
   });
+
+  console.log(allEvents, myEvents);
 
   const events = (myEvents?.getMyEvents || allEvents?.getEvents)?.filter(
     (item) => {
@@ -48,13 +50,16 @@ export const UpcomingEvents: React.FC = () => {
     }
     return group;
   }, [] as { date: string; events: CalendarEventFragment[] }[]);
+
+  const slicedEvents = groupedEvents?.slice(0, 5);
+
   return (
     <Card>
       <Stack>
         <Heading size="lg" color={"#ddd"}>
           Najbližšie udalosti
         </Heading>
-        {groupedEvents?.map((item, index) => (
+        {slicedEvents?.map((item, index) => (
           <Box key={index}>
             <Heading size={"sm"} color={"#ddd"}>
               {dateToString(new Date(item.date), false)}
