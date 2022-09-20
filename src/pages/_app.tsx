@@ -194,6 +194,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       <Head>
         <title>OH Hokus Pokus</title>
         <link rel="shortcut icon" href="/logo.svg" />
+        <meta name="theme-color" content="#000" />
       </Head>
       <SessionProvider session={session} basePath="/api/auth">
         <Provider value={client}>

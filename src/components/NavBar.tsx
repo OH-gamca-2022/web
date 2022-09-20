@@ -58,7 +58,13 @@ export const NavBar: React.FC = () => {
           {session.data?.user.name}
         </MenuButton>
         <MenuList>
-          <MenuItem onClick={() => signOut()}>Odhlásiť sa</MenuItem>
+          <MenuItem
+            onClick={() => {
+              signOut({ callbackUrl: "/" });
+            }}
+          >
+            Odhlásiť sa
+          </MenuItem>
         </MenuList>
       </Menu>
     ) : (

@@ -33,6 +33,14 @@ export const UpcomingEvents: React.FC = () => {
     }
   );
 
+  events?.sort((a, b) => {
+    if (dayjs(a.startDate).isBefore(dayjs(b.startDate))) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+
   const groupedEvents = events?.reduce((group, event) => {
     const { startDate } = event;
     const existingDate = group.find((item) =>
