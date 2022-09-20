@@ -34,21 +34,6 @@ export const MDInputField: React.FC<MDInputFieldProps> = ({
     helpers.setValue(value);
   }, []);
 
-  const customRendererOptions = useMemo(() => {
-    return {
-      previewRender() {
-        return ReactDOMServer.renderToString(
-          <ReactMarkdown
-            className={styles.markdownBody}
-            remarkPlugins={[remarkGfm]}
-          >
-            {field.value}
-          </ReactMarkdown>
-        );
-      },
-    };
-  }, []);
-
   return (
     <FormControl isInvalid={!!meta.error}>
       <FormLabel color="#ddd" htmlFor={field.name}>
@@ -66,7 +51,6 @@ export const MDInputField: React.FC<MDInputFieldProps> = ({
               onChange={onChange}
               value={field.value}
               placeholder={props.placeholder}
-              options={customRendererOptions}
             />
           </TabPanel>
           <TabPanel>
