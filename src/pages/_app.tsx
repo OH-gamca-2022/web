@@ -181,6 +181,12 @@ const client = createClient({
           setCategoryCalendar(result, args, cache, info) {
             invalidateAllCategories(cache);
           },
+          answer(_result, args, cache, info) {
+            cache.invalidate("Query", "getAnswersOfMyClass");
+          },
+          saveCipher(_result, args, cache, info) {
+            cache.invalidate("Query", "getAllCiphers");
+          },
         },
       },
     }),

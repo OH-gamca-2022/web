@@ -1,0 +1,5 @@
+mutation Answer($cipherId: String!, $answer: String!) {
+  answer(cipherId: $cipherId, answer: $answer) {
+    ...Answer
+  }
+}

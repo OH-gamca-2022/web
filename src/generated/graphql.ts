@@ -25,6 +25,17 @@ export type Album = {
   title: Scalars['String'];
 };
 
+export type Answer = {
+  __typename?: 'Answer';
+  answer: Scalars['String'];
+  cipher: Cipher;
+  cipherId: Scalars['String'];
+  className: Scalars['String'];
+  correct: Scalars['Boolean'];
+  id: Scalars['String'];
+  time: Scalars['DateTime'];
+};
+
 export type BothAlbums = {
   __typename?: 'BothAlbums';
   googleAlbum: GoogleAlbum;
@@ -56,6 +67,17 @@ export type Category = {
   id: Scalars['String'];
   name: Scalars['String'];
   tag: Tag;
+};
+
+export type Cipher = {
+  __typename?: 'Cipher';
+  answers: Answer;
+  correctAnswer: Scalars['String'];
+  fileLink: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
+  publishDate?: Maybe<Scalars['DateTime']>;
+  published: Scalars['Boolean'];
 };
 
 export type Discipline = {
@@ -91,16 +113,15 @@ export type GoogleEvent = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  answer: Answer;
   changeRoleOfMe: User;
   changeRoleOfUser: User;
   createCategory: Category;
   createDiscipline: Discipline;
-  createPost: Post;
   createTag: Tag;
   deleteAlbum: Scalars['Boolean'];
-  deleteAllPosts: Scalars['Boolean'];
-  deleteAllUsers: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
+  deleteCipher: Scalars['Boolean'];
   deleteDiscipline: Scalars['Boolean'];
   deleteEvent: Scalars['Boolean'];
   deletePost: Scalars['Boolean'];
@@ -108,9 +129,16 @@ export type Mutation = {
   editDiscipline: Discipline;
   editTag: Tag;
   saveAlbum: Scalars['Boolean'];
+  saveCipher: Cipher;
   saveEvent: CalendarEvent;
   savePost: Post;
   setCategoryCalendar: Category;
+};
+
+
+export type MutationAnswerArgs = {
+  answer: Scalars['String'];
+  cipherId: Scalars['String'];
 };
 
 
@@ -151,6 +179,11 @@ export type MutationDeleteCategoryArgs = {
 };
 
 
+export type MutationDeleteCipherArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteDisciplineArgs = {
   id: Scalars['String'];
 };
@@ -185,6 +218,15 @@ export type MutationEditTagArgs = {
 
 export type MutationSaveAlbumArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationSaveCipherArgs = {
+  correctAnswer: Scalars['String'];
+  fileLink?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  published: Scalars['Boolean'];
 };
 
 
@@ -254,9 +296,14 @@ export type Query = {
   __typename?: 'Query';
   checkSession: Scalars['Boolean'];
   getAlbums: Array<Album>;
+  getAllAnswers: Array<Answer>;
+  getAllCiphers: Array<Cipher>;
   getAllPhotos: Scalars['Boolean'];
   getAllUsers: Array<User>;
+  getAnswersOfMyClass: Array<Answer>;
   getCategories: Array<Category>;
+  getCipher: Cipher;
+  getCiphers: Array<Cipher>;
   getDisciplines: Array<Discipline>;
   getEvents: Array<CalendarEvent>;
   getGoogleAlbums: Array<BothAlbums>;
@@ -272,6 +319,11 @@ export type Query = {
   getSavedEvent: CalendarEvent;
   getTags: Array<Tag>;
   hello: Scalars['Boolean'];
+};
+
+
+export type QueryGetCipherArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -337,6 +389,8 @@ export type User = {
 
 export type AlbumFragment = { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string };
 
+export type AnswerFragment = { __typename?: 'Answer', id: string, className: string, cipherId: string, answer: string, correct: boolean, time: any };
+
 export type BothAlbumsFragment = { __typename?: 'BothAlbums', googleAlbum: { __typename?: 'GoogleAlbum', id: string, title: string, coverPhotoBaseUrl: string }, savedAlbum?: { __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string } | null };
 
 export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null } | null, googleEvent: { __typename?: 'GoogleEvent', id: string, name: string, startDate: any, endDate: any, allDay: boolean } };
@@ -344,6 +398,8 @@ export type BothEventsFragment = { __typename?: 'BothEvents', savedEvent?: { __t
 export type CalendarEventFragment = { __typename?: 'CalendarEvent', name: string, id: string, startDate: any, endDate: any, googleId: string, allDay: boolean, class?: string | null, tags?: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> | null };
 
 export type CategoryFragment = { __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
+
+export type CipherFragment = { __typename?: 'Cipher', id: string, name: string, fileLink: string, correctAnswer: string, published: boolean, publishDate?: any | null };
 
 export type DisciplineFragment = { __typename?: 'Discipline', id: string, name: string, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } };
 
@@ -366,6 +422,14 @@ export type SimpleDisciplineFragment = { __typename?: 'Discipline', id: string, 
 export type TagFragment = { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null };
 
 export type UserFragment = { __typename?: 'User', id: string, email: string, name: string, class?: string | null, role: string };
+
+export type AnswerMutationVariables = Exact<{
+  cipherId: Scalars['String'];
+  answer: Scalars['String'];
+}>;
+
+
+export type AnswerMutation = { __typename?: 'Mutation', answer: { __typename?: 'Answer', id: string, className: string, cipherId: string, answer: string, correct: boolean, time: any } };
 
 export type ChangeRoleOfUserMutationVariables = Exact<{
   userId: Scalars['String'];
@@ -410,6 +474,13 @@ export type DeleteCategoryMutationVariables = Exact<{
 
 
 export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
+
+export type DeleteCipherMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteCipherMutation = { __typename?: 'Mutation', deleteCipher: boolean };
 
 export type DeleteDisciplineMutationVariables = Exact<{
   id: Scalars['String'];
@@ -462,6 +533,17 @@ export type SaveAlbumMutationVariables = Exact<{
 
 export type SaveAlbumMutation = { __typename?: 'Mutation', saveAlbum: boolean };
 
+export type SaveCipherMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  correctAnswer: Scalars['String'];
+  published: Scalars['Boolean'];
+  fileLink?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SaveCipherMutation = { __typename?: 'Mutation', saveCipher: { __typename?: 'Cipher', id: string, name: string, fileLink: string, correctAnswer: string, published: boolean, publishDate?: any | null } };
+
 export type SaveEventMutationVariables = Exact<{
   googleId: Scalars['String'];
   endDate: Scalars['DateTime'];
@@ -501,15 +583,42 @@ export type GetAlbumsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAlbumsQuery = { __typename?: 'Query', getAlbums: Array<{ __typename?: 'Album', id: string, title: string, albumId: string, coverPhotoBaseUrl: string }> };
 
+export type GetAllAnswersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllAnswersQuery = { __typename?: 'Query', getAllAnswers: Array<{ __typename?: 'Answer', id: string, className: string, cipherId: string, answer: string, correct: boolean, time: any }> };
+
+export type GetAllCiphersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCiphersQuery = { __typename?: 'Query', getAllCiphers: Array<{ __typename?: 'Cipher', id: string, name: string, fileLink: string, correctAnswer: string, published: boolean, publishDate?: any | null }> };
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', id: string, email: string, name: string, class?: string | null, role: string }> };
 
+export type GetAnswersOfMyClassQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAnswersOfMyClassQuery = { __typename?: 'Query', getAnswersOfMyClass: Array<{ __typename?: 'Answer', id: string, className: string, cipherId: string, answer: string, correct: boolean, time: any }> };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name: string, googleCalendarId?: string | null, disciplines?: Array<{ __typename?: 'Discipline', id: string, name: string }> | null, tag: { __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null } }> };
+
+export type GetCipherQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetCipherQuery = { __typename?: 'Query', getCipher: { __typename?: 'Cipher', id: string, name: string, fileLink: string, correctAnswer: string, published: boolean, publishDate?: any | null } };
+
+export type GetCiphersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCiphersQuery = { __typename?: 'Query', getCiphers: Array<{ __typename?: 'Cipher', id: string, name: string, fileLink: string, correctAnswer: string, published: boolean, publishDate?: any | null }> };
 
 export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -595,6 +704,16 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', name: string, id: string, categoryId?: string | null, disciplineId?: string | null }> };
 
+export const AnswerFragmentDoc = gql`
+    fragment Answer on Answer {
+  id
+  className
+  cipherId
+  answer
+  correct
+  time
+}
+    `;
 export const GoogleAlbumFragmentDoc = gql`
     fragment GoogleAlbum on GoogleAlbum {
   id
@@ -683,6 +802,16 @@ export const CategoryFragmentDoc = gql`
 }
     ${SimpleDisciplineFragmentDoc}
 ${TagFragmentDoc}`;
+export const CipherFragmentDoc = gql`
+    fragment Cipher on Cipher {
+  id
+  name
+  fileLink
+  correctAnswer
+  published
+  publishDate
+}
+    `;
 export const DisciplineFragmentDoc = gql`
     fragment Discipline on Discipline {
   id
@@ -752,6 +881,17 @@ export const UserFragmentDoc = gql`
   role
 }
     `;
+export const AnswerDocument = gql`
+    mutation Answer($cipherId: String!, $answer: String!) {
+  answer(cipherId: $cipherId, answer: $answer) {
+    ...Answer
+  }
+}
+    ${AnswerFragmentDoc}`;
+
+export function useAnswerMutation() {
+  return Urql.useMutation<AnswerMutation, AnswerMutationVariables>(AnswerDocument);
+};
 export const ChangeRoleOfUserDocument = gql`
     mutation ChangeRoleOfUser($userId: String!, $role: String!) {
   changeRoleOfUser(userId: $userId, role: $role) {
@@ -813,6 +953,15 @@ export const DeleteCategoryDocument = gql`
 
 export function useDeleteCategoryMutation() {
   return Urql.useMutation<DeleteCategoryMutation, DeleteCategoryMutationVariables>(DeleteCategoryDocument);
+};
+export const DeleteCipherDocument = gql`
+    mutation DeleteCipher($id: String!) {
+  deleteCipher(id: $id)
+}
+    `;
+
+export function useDeleteCipherMutation() {
+  return Urql.useMutation<DeleteCipherMutation, DeleteCipherMutationVariables>(DeleteCipherDocument);
 };
 export const DeleteDisciplineDocument = gql`
     mutation DeleteDiscipline($id: String!) {
@@ -881,6 +1030,23 @@ export const SaveAlbumDocument = gql`
 export function useSaveAlbumMutation() {
   return Urql.useMutation<SaveAlbumMutation, SaveAlbumMutationVariables>(SaveAlbumDocument);
 };
+export const SaveCipherDocument = gql`
+    mutation SaveCipher($id: String, $name: String!, $correctAnswer: String!, $published: Boolean!, $fileLink: String) {
+  saveCipher(
+    id: $id
+    name: $name
+    correctAnswer: $correctAnswer
+    published: $published
+    fileLink: $fileLink
+  ) {
+    ...Cipher
+  }
+}
+    ${CipherFragmentDoc}`;
+
+export function useSaveCipherMutation() {
+  return Urql.useMutation<SaveCipherMutation, SaveCipherMutationVariables>(SaveCipherDocument);
+};
 export const SaveEventDocument = gql`
     mutation SaveEvent($googleId: String!, $endDate: DateTime!, $startDate: DateTime!, $name: String!, $allDay: Boolean!, $tagIds: [String!], $id: String, $className: String) {
   saveEvent(
@@ -941,6 +1107,28 @@ export const GetAlbumsDocument = gql`
 export function useGetAlbumsQuery(options?: Omit<Urql.UseQueryArgs<GetAlbumsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAlbumsQuery>({ query: GetAlbumsDocument, ...options });
 };
+export const GetAllAnswersDocument = gql`
+    query GetAllAnswers {
+  getAllAnswers {
+    ...Answer
+  }
+}
+    ${AnswerFragmentDoc}`;
+
+export function useGetAllAnswersQuery(options?: Omit<Urql.UseQueryArgs<GetAllAnswersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllAnswersQuery>({ query: GetAllAnswersDocument, ...options });
+};
+export const GetAllCiphersDocument = gql`
+    query GetAllCiphers {
+  getAllCiphers {
+    ...Cipher
+  }
+}
+    ${CipherFragmentDoc}`;
+
+export function useGetAllCiphersQuery(options?: Omit<Urql.UseQueryArgs<GetAllCiphersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllCiphersQuery>({ query: GetAllCiphersDocument, ...options });
+};
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   getAllUsers {
@@ -952,6 +1140,17 @@ export const GetAllUsersDocument = gql`
 export function useGetAllUsersQuery(options?: Omit<Urql.UseQueryArgs<GetAllUsersQueryVariables>, 'query'>) {
   return Urql.useQuery<GetAllUsersQuery>({ query: GetAllUsersDocument, ...options });
 };
+export const GetAnswersOfMyClassDocument = gql`
+    query getAnswersOfMyClass {
+  getAnswersOfMyClass {
+    ...Answer
+  }
+}
+    ${AnswerFragmentDoc}`;
+
+export function useGetAnswersOfMyClassQuery(options?: Omit<Urql.UseQueryArgs<GetAnswersOfMyClassQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAnswersOfMyClassQuery>({ query: GetAnswersOfMyClassDocument, ...options });
+};
 export const GetCategoriesDocument = gql`
     query GetCategories {
   getCategories {
@@ -962,6 +1161,28 @@ export const GetCategoriesDocument = gql`
 
 export function useGetCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetCategoriesQuery>({ query: GetCategoriesDocument, ...options });
+};
+export const GetCipherDocument = gql`
+    query GetCipher($id: String!) {
+  getCipher(id: $id) {
+    ...Cipher
+  }
+}
+    ${CipherFragmentDoc}`;
+
+export function useGetCipherQuery(options: Omit<Urql.UseQueryArgs<GetCipherQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCipherQuery>({ query: GetCipherDocument, ...options });
+};
+export const GetCiphersDocument = gql`
+    query GetCiphers {
+  getCiphers {
+    ...Cipher
+  }
+}
+    ${CipherFragmentDoc}`;
+
+export function useGetCiphersQuery(options?: Omit<Urql.UseQueryArgs<GetCiphersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetCiphersQuery>({ query: GetCiphersDocument, ...options });
 };
 export const GetEventsDocument = gql`
     query GetEvents {

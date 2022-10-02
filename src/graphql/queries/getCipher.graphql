@@ -1,0 +1,5 @@
+query GetCipher($id: String!) {
+  getCipher(id: $id) {
+    ...Cipher
+  }
+}

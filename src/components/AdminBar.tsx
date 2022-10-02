@@ -47,6 +47,9 @@ export const AdminBar = () => {
         <NextLink href={"/admin/albums"}>
           <Link>Albumy</Link>
         </NextLink>
+        <NextLink href={"/admin/ciphers"}>
+          <Link>Šifry</Link>
+        </NextLink>
         {session.data?.user.role == "ADMIN" && (
           <NextLink href={"/admin/users"}>
             <Link>Používatelia</Link>

@@ -1,0 +1,8 @@
+fragment Answer on Answer {
+  id
+  className
+  cipherId
+  answer
+  correct
+  time
+}

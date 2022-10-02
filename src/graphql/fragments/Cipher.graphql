@@ -1,0 +1,8 @@
+fragment Cipher on Cipher {
+  id
+  name
+  fileLink
+  correctAnswer
+  published
+  publishDate
+}

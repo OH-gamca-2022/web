@@ -1,0 +1,5 @@
+query GetCiphers {
+  getCiphers {
+    ...Cipher
+  }
+}

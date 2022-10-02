@@ -14,8 +14,10 @@ export const isAuth: MiddlewareFn<MyContext> = async ({ context }, next) => {
 
   try {
     const userId = session.user.id;
+    const userClass = session.user.class;
     context.payload = {
       userId,
+      userClass,
     };
   } catch (err) {
     throw new Error("not authenticated");

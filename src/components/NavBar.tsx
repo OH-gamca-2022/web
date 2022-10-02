@@ -139,6 +139,13 @@ export const NavBar: React.FC = () => {
           </Link>
         </NextLink>
       </Box>
+      <Box as={motion.div}>
+        <NextLink href="/ciphers/submit">
+          <Link color="white">
+            <Text>Šifrovačka</Text>
+          </Link>
+        </NextLink>
+      </Box>
       {/* <Box as={motion.div}>
         <NextLink href="/gallery">
           <Link color="white">

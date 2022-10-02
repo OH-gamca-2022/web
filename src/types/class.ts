@@ -1,15 +1,14 @@
 export const classes = [
   "PrimaA",
-  "PrimaB",
   "SekundaA",
-  "SekundaB",
   "TerciaA",
   "TerciaB",
   "KvartaA",
   "KvartaB",
   "KvintaA",
   "KvintaB",
-  "Sexta",
+  "SextaA",
+  "SextaB",
   "Septima",
   "Oktava",
   "I.A",
@@ -23,4 +22,5 @@ export const classes = [
   "III.C",
   "IV.A",
   "IV.B",
+  "IV.C",
 ];

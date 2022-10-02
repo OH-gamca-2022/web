@@ -1,0 +1,17 @@
+mutation SaveCipher(
+  $id: String
+  $name: String!
+  $correctAnswer: String!
+  $published: Boolean!
+  $fileLink: String
+) {
+  saveCipher(
+    id: $id
+    name: $name
+    correctAnswer: $correctAnswer
+    published: $published
+    fileLink: $fileLink
+  ) {
+    ...Cipher
+  }
+}

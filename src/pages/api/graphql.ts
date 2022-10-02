@@ -9,6 +9,7 @@ import { DisciplineResolver } from "../../resolvers/Discipline";
 import { CategoryResolver } from "../../resolvers/Category";
 import { EventResolver } from "../../resolvers/Event";
 import { AlbumResolver } from "../../resolvers/Album";
+import { CipherResolver } from "../../resolvers/Cipher";
 
 const cors = Cors();
 
@@ -31,6 +32,7 @@ export default cors(async function handler(req, res) {
           CategoryResolver,
           EventResolver,
           AlbumResolver,
+          CipherResolver,
         ],
       }),
       context: ({ req, res }) => ({ req, res }),

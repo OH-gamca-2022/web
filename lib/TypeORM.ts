@@ -1,8 +1,10 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import { Album } from "../src/entities/Album";
+import { Answer } from "../src/entities/Answer";
 import { CalendarEvent } from "../src/entities/CalendarEvent";
 import { Category } from "../src/entities/Category";
+import { Cipher } from "../src/entities/Cipher";
 import { Discipline } from "../src/entities/Discipline";
 import { Post } from "../src/entities/Post";
 import { Tag } from "../src/entities/Tag";
@@ -22,7 +24,17 @@ export const getDataSource = async () => {
       database: process.env.DB_NAME,
       username: process.env.PG_USERNAME,
       password: process.env.PG_PASSWORD,
-      entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
+      entities: [
+        User,
+        Post,
+        Tag,
+        CalendarEvent,
+        Discipline,
+        Category,
+        Album,
+        Cipher,
+        Answer,
+      ],
       migrations: [path.join(__dirname, "./migrations/*")],
       synchronize: !__prod__,
     });
