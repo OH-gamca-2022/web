@@ -55,7 +55,17 @@ export const dataSource = new DataSource({
   database: "ohgamca2022",
   username: "postgres",
   password: "postgres",
-  entities: [User, Post, Tag, CalendarEvent, Discipline, Category, Album],
+  entities: [
+    User,
+    Post,
+    Tag,
+    CalendarEvent,
+    Discipline,
+    Category,
+    Album,
+    Cipher,
+    Answer,
+  ],
   migrations: ["src/migrations/*.ts"],
   synchronize: false,
 });
