@@ -10,7 +10,11 @@ const Cipher = () => {
   const { id } = router.query;
 
   if (!id) {
-    return <Heading>Clanok nebol najdeny</Heading>;
+    return (
+      <Layout>
+        <Heading color="#ccc">Clanok nebol najdeny</Heading>
+      </Layout>
+    );
   }
 
   return (

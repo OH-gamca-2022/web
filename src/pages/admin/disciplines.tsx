@@ -31,6 +31,7 @@ import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 import { AddCategoryModal } from "../../components/modals/AddCategoryModal";
 import { useIsAdminPage } from "../../utils/useIsAdminPage";
+import { LoadingScreen } from "../../components/LoadingScreen";
 
 const AdminDisciplines: NextPage = () => {
   useIsAdminPage();
@@ -51,7 +52,7 @@ const AdminDisciplines: NextPage = () => {
   });
 
   if (!data) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingScreen />;
   }
 
   return (

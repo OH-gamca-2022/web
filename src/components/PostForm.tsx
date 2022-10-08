@@ -1,4 +1,4 @@
-import { Flex, Button, Box, Heading } from "@chakra-ui/react";
+import { Flex, Button, Box, Heading, Spinner } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 import { useGetPostQuery, useSavePostMutation } from "../generated/graphql";
@@ -28,11 +28,15 @@ export const PostForm: React.FC<PostFormProps> = ({ id }) => {
   }, [data]);
 
   if (fetching) {
-    return <Heading>Loading...</Heading>;
+    return (
+      <Flex justifyContent={"center"} alignItems="center" width="100%">
+        <Spinner />
+      </Flex>
+    );
   }
 
   if (id && !data?.getPost) {
-    return <Heading>Clanok nebol najdeny</Heading>;
+    return <Heading color="#ccc">Clanok nebol najdeny</Heading>;
   }
 
   return (

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 import { Card } from "../../components/Card";
 import { Layout } from "../../components/Layout";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import {
   useCreateTagMutation,
   useDeleteTagMutation,
@@ -40,11 +41,7 @@ const AdminTags: NextPage = () => {
   });
 
   if (fetching) {
-    return (
-      <Layout>
-        <Spinner />
-      </Layout>
-    );
+    return <LoadingScreen />;
   }
 
   const categories = (

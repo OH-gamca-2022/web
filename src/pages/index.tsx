@@ -21,6 +21,7 @@ import { Pagination } from "../components/Pagination";
 import { useRouter } from "next/router";
 import { Card } from "../components/Card";
 import { UpcomingEvents } from "../components/UpcomingEvents";
+import { LoadingScreen } from "../components/LoadingScreen";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const Home: NextPage = () => {
   const [{ data, fetching, error }, fetchPosts] = useGetPublishedPostsQuery({
     variables: {
       page: page,
-      limit: 10,
+      limit: 3,
     },
   });
 
@@ -41,7 +42,7 @@ const Home: NextPage = () => {
   }, [router.query.page]);
 
   if (!data) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingScreen />;
   }
 
   const handleChange = (value: number) => {

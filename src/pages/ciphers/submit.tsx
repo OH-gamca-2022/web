@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { NextPage } from "next";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Layout } from "../../components/Layout";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import {
   CipherFragment,
   useAnswerMutation,
@@ -89,7 +90,7 @@ const submit: NextPage = () => {
   };
 
   if (!ciphers) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingScreen />;
   }
 
   return (

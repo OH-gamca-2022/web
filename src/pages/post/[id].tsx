@@ -17,6 +17,7 @@ import remarkGfm from "remark-gfm";
 import style from "../../styles/github-markdown-css-dark.module.css";
 import { Card } from "../../components/Card";
 import { TagButton } from "../../components/TagButton";
+import { LoadingScreen } from "../../components/LoadingScreen";
 
 const Post: NextPage = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Post: NextPage = () => {
   });
 
   if (!data?.getPost) {
-    return <Heading>Post was not found</Heading>;
+    return <LoadingScreen />;
   }
   return (
     <Layout>

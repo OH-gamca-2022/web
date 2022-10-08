@@ -10,8 +10,12 @@ const Post = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  if (!id) {
-    return <Heading>Clanok nebol najdeny</Heading>;
+  if (!id && router.isReady) {
+    return (
+      <Layout>
+        <Heading color="#ccc">Clanok nebol najdeny</Heading>
+      </Layout>
+    );
   }
 
   return (

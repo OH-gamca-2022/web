@@ -25,6 +25,7 @@ import {
   useGetTagsQuery,
 } from "../generated/graphql";
 import { useIsAdminPage } from "../utils/useIsAdminPage";
+import { LoadingScreen } from "../components/LoadingScreen";
 
 const Posts: NextPage = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const Posts: NextPage = () => {
   }, [router.query.tagIds]);
 
   if (!data?.getPublishedPosts.posts || !router.isReady) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingScreen />;
   }
 
   const handlePaginationChange = (value: number) => {

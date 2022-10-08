@@ -23,6 +23,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { DeleteAlert } from "../../components/alerts/DeleteAlert";
 import { TagButton } from "../../components/TagButton";
 import { useIsAdminPage } from "../../utils/useIsAdminPage";
+import { LoadingScreen } from "../../components/LoadingScreen";
 
 const AdminPosts = () => {
   useIsAdminPage();
@@ -113,7 +114,7 @@ const AdminPosts = () => {
   ];
 
   if (fetching || !posts) {
-    return <Heading>Loading...</Heading>;
+    return <LoadingScreen />;
   }
 
   createTheme("myDark", {
