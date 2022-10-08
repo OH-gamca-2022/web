@@ -29,7 +29,7 @@ const Home: NextPage = () => {
   const [{ data, fetching, error }, fetchPosts] = useGetPublishedPostsQuery({
     variables: {
       page: page,
-      limit: 3,
+      limit: 10,
     },
   });
 
