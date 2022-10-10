@@ -94,7 +94,8 @@ export class EventResolver {
   async getGoogleEvents(
     @Arg("calendarId") calendarId: string
   ): Promise<BothEvents[]> {
-    const events = (await getCalendar().events.list({ calendarId })).data.items;
+    const response = await getCalendar().events.list({ calendarId });
+    const events = response.data.items;
     const dataSource = await getDataSource();
     const savedEvents = await dataSource.getRepository(CalendarEvent).find();
     if (events) {

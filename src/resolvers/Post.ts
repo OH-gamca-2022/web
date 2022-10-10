@@ -97,6 +97,9 @@ export class PostResolver {
       });
 
       numOfPages = Math.ceil(filteredPosts.length / realLimit);
+      filteredPosts.sort((a, b) => {
+        return dayjs(b.publishDate).diff(a.publishDate);
+      });
       finalPosts = filteredPosts.slice(startIndex, startIndex + realLimit);
     } else {
       numOfPages = Math.ceil((await publishedPostsQb.getCount()) / realLimit);
