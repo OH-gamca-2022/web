@@ -133,6 +133,9 @@ const AdminEvents: NextPage = () => {
         columns={columns}
         data={data?.getEvents as CalendarEventFragment[]}
         theme="myDark"
+        pagination
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        paginationPerPage={50}
       />
     </Layout>
   );

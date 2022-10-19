@@ -44,6 +44,7 @@ const AdminUsers: NextPage = () => {
     {
       name: "Email",
       selector: (row) => row.email,
+      sortable: true,
     },
     {
       name: "Rola",
@@ -77,6 +78,9 @@ const AdminUsers: NextPage = () => {
         data={data?.getAllUsers as UserFragment[]}
         responsive={false}
         theme="myDark"
+        pagination
+        paginationPerPage={50}
+        paginationRowsPerPageOptions={[20, 50, 100]}
       />
     </Layout>
   );

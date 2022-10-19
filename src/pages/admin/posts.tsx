@@ -34,6 +34,7 @@ const AdminPosts = () => {
     {
       name: "Nadpis",
       selector: (row) => row.title,
+      sortable: true,
       cell: (row) => (
         <NextLink href={`/admin/post/${row.id}`}>
           <Link>{row.title}</Link>
@@ -62,6 +63,7 @@ const AdminPosts = () => {
     {
       name: "Dátum publikovania",
       selector: (row) => row.publishDate,
+      sortable: true,
       format: (row) =>
         row.publishDate ? dateToString(new Date(row.publishDate), false) : "",
     },
@@ -120,7 +122,7 @@ const AdminPosts = () => {
   createTheme("myDark", {
     text: {
       primary: "#bbb",
-      secondary: "#2aa198",
+      secondary: "#888",
     },
     background: {
       default: "#040f1a",
@@ -136,6 +138,12 @@ const AdminPosts = () => {
       button: "rgba(0,0,0,.54)",
       hover: "rgba(0,0,0,.08)",
       disabled: "rgba(0,0,0,.12)",
+    },
+    button: {
+      default: "#ccc",
+      hover: "rgba(0,0,0,.08)",
+      focus: "rgba(255,255,255,.12)",
+      disabled: "#444",
     },
   });
 
@@ -153,6 +161,9 @@ const AdminPosts = () => {
         data={posts.getPosts as PostFragment[]}
         responsive={false}
         theme="myDark"
+        pagination
+        paginationPerPage={50}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
       />
     </Layout>
   );
