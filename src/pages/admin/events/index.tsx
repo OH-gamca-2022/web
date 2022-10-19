@@ -118,6 +118,12 @@ const AdminEvents: NextPage = () => {
       hover: "rgba(0,0,0,.08)",
       disabled: "rgba(0,0,0,.12)",
     },
+    button: {
+      default: "#ccc",
+      hover: "rgba(0,0,0,.08)",
+      focus: "rgba(255,255,255,.12)",
+      disabled: "#444",
+    },
   });
 
   return (

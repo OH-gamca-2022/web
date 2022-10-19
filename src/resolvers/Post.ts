@@ -44,7 +44,7 @@ export class PostResolver {
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.tags", "tag")
       .skip(limit && page ? limit * page : 0)
-      .take(limit ? limit : 50)
+      .take(limit ? limit : 1000)
       .getMany();
 
     posts.sort((a, b) => dayjs(b.createdAt).diff(a.createdAt));
