@@ -146,6 +146,11 @@ export const NavBar: React.FC = () => {
           </Link>
         </NextLink>
       </Box>
+      <Box as={motion.div}>
+        <Link color="white" href="https://ohhokuspokus.myportfolio.com">
+          <Text>Galéria</Text>
+        </Link>
+      </Box>
       {/* <Box as={motion.div}>
         <NextLink href="/gallery">
           <Link color="white">
