@@ -81,24 +81,30 @@ const Home: NextPage = () => {
           <Stack>
             <UpcomingEvents />
             <Card>
-              <Heading color={"#ddd"}>Sponzori</Heading>
+              <Heading
+                // color={"#ddd"}
+                color="black"
+              >
+                Sponzori
+              </Heading>
               <VStack spacing={6} padding={2} mt={4}>
                 <a href="https://bratislavskykraj.sk">
                   <img src={"/sponsors/BK.svg"} />
                 </a>
-                <Divider borderColor={"#30363d"} />
+                {/* <Divider borderColor={"#30363d"} /> */}
+                <Divider borderColor={"#ccc"} />
                 <a href="https://www.staremesto.sk">
                   <img src={"/sponsors/B-SM.svg"} />
                 </a>
-                <Divider borderColor={"#30363d"} />
+                <Divider borderColor={"#ccc"} />
                 <a href="https://bratislava.sk">
                   <img src={"/sponsors/Bratislava.svg"} />
                 </a>
-                <Divider borderColor={"#30363d"} />
+                <Divider borderColor={"#ccc"} />
                 <a href="https://www.skubla.sk">
                   <img src={"/sponsors/Skubla.svg"} />
                 </a>
-                <Divider borderColor={"#30363d"} />
+                <Divider borderColor={"#ccc"} />
                 <a href="https://www.stilus.sk/sk/">
                   <img src={"/sponsors/stilus.svg"} />
                 </a>

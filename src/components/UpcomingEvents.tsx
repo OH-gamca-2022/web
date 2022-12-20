@@ -64,7 +64,11 @@ export const UpcomingEvents: React.FC = () => {
   return (
     <Card>
       <Stack>
-        <Heading size="lg" color={"#ddd"}>
+        <Heading
+          size="lg"
+          // color={"#ddd"}
+          color="black"
+        >
           Najbližšie udalosti
         </Heading>
         {slicedEvents?.map((item, index) => (
