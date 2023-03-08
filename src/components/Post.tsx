@@ -29,18 +29,11 @@ export const Post: React.FC<PostProps> = ({ post }) => {
     <Card flex={1}>
       <Flex justifyContent={"center"} flexDirection={"column"}>
         <NextLink href={`/post/${post.id}`}>
-          <Link
-            // color="#ddd"
-            color="black"
-          >
+          <Link color="#ddd">
             <Heading>{post.title}</Heading>
           </Link>
         </NextLink>
-        <Text
-          // color={"#919191"}
-          color="#555"
-          pb={3}
-        >
+        <Text color={"#919191"} pb={3}>
           {post.subtitle}
         </Text>
         <Box overflowWrap="anywhere" alignItems="center">

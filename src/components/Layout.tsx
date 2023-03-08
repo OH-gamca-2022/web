@@ -11,12 +11,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, wide = false }) => {
   return (
-    <Flex
-      flexDirection={"column"}
-      minHeight="100vh"
-      // bg={"#040f1a"}
-      bg="white"
-    >
+    <Flex flexDirection={"column"} minHeight="100vh" bg={"#040f1a"}>
       <LayoutGroup>
         <NavBar />
         <Box

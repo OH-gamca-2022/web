@@ -81,12 +81,7 @@ const Home: NextPage = () => {
           <Stack>
             <UpcomingEvents />
             <Card>
-              <Heading
-                // color={"#ddd"}
-                color="black"
-              >
-                Sponzori
-              </Heading>
+              <Heading color={"#ddd"}>Sponzori</Heading>
               <VStack spacing={6} padding={2} mt={4}>
                 <a href="https://bratislavskykraj.sk">
                   <img src={"/sponsors/BK.svg"} />
